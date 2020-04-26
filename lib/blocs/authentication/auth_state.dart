@@ -37,3 +37,21 @@ class Unauthenticated extends AuthState {
   // TODO: implement props
   List<Object> get props => null;
 }
+
+class LogInSuccess extends AuthState {
+  @override
+  String toString() => 'LogInSuccess';
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+}
+
+class LogInFailure extends AuthState {
+  @override
+  String toString() => 'LogInFailure';
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+}

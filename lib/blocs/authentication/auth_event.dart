@@ -33,3 +33,12 @@ class LoggedOut extends AuthEvent {
   // TODO: implement props
   List<Object> get props => null;
 }
+
+class LogInWithGooglePressed extends AuthEvent {
+  @override
+  String toString() => 'LogInWithGooglePressed';
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+}

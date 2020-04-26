@@ -24,6 +24,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield* _mapLoggedInToState();
     } else if (event is LoggedOut) {
       yield* _mapLoggedOutToState();
+    } else if (event is LogInWithGooglePressed) {
+      yield* _mapLoginWithGooglePressedToState();
     }
   }
 
@@ -44,12 +46,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _mapLoggedInToState() async* {
-    yield Authenticated(await _authRepository.getUser());
+    final name = await _authRepository.getUser();
+    yield Authenticated(name);
   }
 
   Stream<AuthState> _mapLoggedOutToState() async* {
     yield Unauthenticated();
 
     _authRepository.signOut();
+  }
+
+  Stream<AuthState> _mapLoginWithGooglePressedToState() async* {
+    try {
+      await _authRepository.signInWithGoogle();
+
+      yield LogInSuccess();
+    } catch (_) {
+      yield LogInFailure();
+    }
   }
 }
