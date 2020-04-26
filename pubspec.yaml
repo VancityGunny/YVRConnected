@@ -32,6 +32,9 @@ dependencies:
   contacts_service: ^0.3.10
   rxdart: ^0.18.0
   cloud_functions: ^0.4.2+3
+  bloc: ^4.0.0
+  equatable: ^1.1.1
+  flutter_bloc: ^4.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
