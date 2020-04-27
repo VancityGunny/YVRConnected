@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yvrconnected/blocs/authentication/index.dart';
+import 'package:yvrconnected/blocs/friend/friend_screen.dart';
+import 'package:yvrconnected/blocs/friend/index.dart';
 
 class HomeScreen extends StatelessWidget {
   final String name;
@@ -28,6 +30,7 @@ class HomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Center(child: Text('Welcome $name!')),
+          FriendScreen(friendBloc: FriendBloc())
         ],
       ),
     );
