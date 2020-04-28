@@ -44,26 +44,25 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) =>
-          _authenticationBloc, //bloc: _authenticationBloc,
-      child: MaterialApp(
-        home: BlocBuilder(
-          bloc: _authenticationBloc,
-          builder: (BuildContext context, AuthState state) {
-            if (state is Uninitialized) {
-              return SplashScreen();
-            }
-            if (state is Unauthenticated) {
-              return LoginScreen(authRepository: _authRepository);
-            }
-            if (state is Authenticated) {
-              return HomeScreen(name: state.displayName);
-            }
-            return Container();
-          },
-        ),
-      ),
-    );
+        create: (BuildContext context) =>
+            _authenticationBloc, //bloc: _authenticationBloc,
+        child: MaterialApp(
+          home: BlocBuilder(
+            bloc: _authenticationBloc,
+            builder: (BuildContext context, AuthState state) {
+              if (state is Uninitialized) {
+                return SplashScreen();
+              }
+              if (state is Unauthenticated) {
+                return LoginScreen(authRepository: _authRepository);
+              }
+              if (state is Authenticated) {
+                return HomeScreen(name: state.displayName);
+              }
+              return Container();
+            },
+          ),
+        ));
   }
 
   @override

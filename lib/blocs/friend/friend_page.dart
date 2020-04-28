@@ -9,7 +9,14 @@ class FriendPage extends StatefulWidget {
 }
 
 class _FriendPageState extends State<FriendPage> {
-  final _friendBloc = FriendBloc();
+  FriendBloc _friendBloc;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _friendBloc = FriendBloc();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +24,14 @@ class _FriendPageState extends State<FriendPage> {
       appBar: AppBar(
         title: Text('Friend'),
       ),
-      body: FriendScreen(friendBloc: _friendBloc),
+      body: FriendScreen(
+        friendBloc: this._friendBloc,
+      ),
+      floatingActionButton:
+          FloatingActionButton(child: Icon(Icons.add), onPressed: _addFriend),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
+
+  void _addFriend() {}
 }

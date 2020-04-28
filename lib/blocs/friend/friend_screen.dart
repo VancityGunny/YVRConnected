@@ -3,13 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 
 class FriendScreen extends StatefulWidget {
-  const FriendScreen({
+    final FriendBloc _friendBloc;
+
+   const FriendScreen({
     Key key,
     @required FriendBloc friendBloc,
   })  : _friendBloc = friendBloc,
         super(key: key);
 
-  final FriendBloc _friendBloc;
+
 
   @override
   FriendScreenState createState() {
@@ -18,13 +20,13 @@ class FriendScreen extends StatefulWidget {
 }
 
 class FriendScreenState extends State<FriendScreen> {
-  FriendScreenState();
 
   List<FriendModel> _friends;
   @override
   void initState() {
     super.initState();
     this._load();
+    widget._friendBloc.add(LoadingFriends()); // default to load all friends
   }
 
   @override
@@ -65,10 +67,7 @@ class FriendScreenState extends State<FriendScreen> {
           if (currentState is Loaded) {
             _friends = currentState.friends;
             return Column(children: <Widget>[
-              FloatingActionButton(
-                child: Icon(Icons.add),
-                onPressed: _addFriend,
-              ),
+              
               ListView.builder(
                 shrinkWrap: true,
                 itemBuilder: (BuildContext ctxt, int index) {
@@ -96,5 +95,4 @@ class FriendScreenState extends State<FriendScreen> {
     widget._friendBloc.add(LoadFriendEvent(isError));
   }
 
-  void _addFriend() {}
 }

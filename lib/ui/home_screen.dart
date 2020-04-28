@@ -8,6 +8,7 @@ import 'package:yvrconnected/blocs/friend/index.dart';
 class HomeScreen extends StatelessWidget {
   final String name;
 
+
   HomeScreen({Key key, @required this.name}) : super(key: key);
 
   @override
@@ -16,6 +17,12 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Home'),
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.contacts),
+            onPressed: () {
+              _goToContactScreen(context);
+            },
+          ),
           IconButton(
             icon: Icon(Icons.exit_to_app),
             onPressed: () {
@@ -30,9 +37,17 @@ class HomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Center(child: Text('Welcome $name!')),
-          FriendScreen(friendBloc: FriendBloc())
         ],
       ),
     );
+  }
+
+  void _goToContactScreen(context) {
+    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => FriendPage(),
+                    ),
+                  );
   }
 }

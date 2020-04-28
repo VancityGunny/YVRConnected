@@ -9,6 +9,8 @@ import 'login_form.dart';
 class LoginScreen extends StatefulWidget {
   final AuthRepository _authRepository;
 
+  static String route = 'login';
+
   LoginScreen({Key key, @required AuthRepository authRepository})
       : assert(authRepository != null),
         _authRepository = authRepository,
