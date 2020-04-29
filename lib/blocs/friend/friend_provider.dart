@@ -20,11 +20,9 @@ class FriendProvider {
       functionName: 'getFriends',
     );
     dynamic resp = await callable.call();
-    List<FriendModel> result = new List<FriendModel>();
-    result.add(FriendModel('Kobe@gmail.com','Kobe'));
-      result.add(FriendModel('Ooh@gmail.com','Ooh'));
-        result.add(FriendModel('Ab@gmail.com','Ab'));
-    return result;
+    var foundFriends = [];
+    resp.data.forEach((f)=> foundFriends.add(FriendModel.fromJson(f)));
+    return foundFriends;
   }
 
   Future<bool> addFriend(FriendModel newFriend) async {
@@ -34,7 +32,7 @@ class FriendProvider {
     dynamic resp = await callable.call(<String, dynamic>{
                       'friendName': newFriend.displayName,
                       'friendEmail': newFriend.email,
-                    },);
+                    });
     return true;    
   }
 

@@ -35,14 +35,14 @@ class FriendModel extends Equatable {
   @override
   List<Object> get props => [email, displayName];
 
-  factory FriendModel.fromJson(Map<String, dynamic> json) {
-    return FriendModel(json['email'] as String, json['displayName'] as String);
+  factory FriendModel.fromJson(Map<dynamic, dynamic> json) {
+    return FriendModel(json['friendEmail'] as String, json['friendName'] as String);
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    data['email'] = this.email;
-    data['displayName'] = this.displayName;
+    data['friendEmail'] = this.email;
+    data['friendName'] = this.displayName;
     return data;
   }
   
