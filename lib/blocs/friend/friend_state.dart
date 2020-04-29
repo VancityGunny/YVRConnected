@@ -12,31 +12,31 @@ abstract class FriendState extends Equatable {
 }
 
 /// Loaded all friends
-class Loaded extends FriendState {
+class LoadedState extends FriendState {
   final List<FriendModel> friends;
 
-  Loaded({@required this.friends});
+  LoadedState({@required this.friends});
 
   @override
   List<Object> get props => [friends];
 
   @override
-  String toString() => 'Loaded';
+  String toString() => 'LoadedState';
 }
 
-class FriendAdded extends FriendState {
+class FriendAddedState extends FriendState {
   final FriendModel friend;
-  FriendAdded({@required this.friend});
+  FriendAddedState({@required this.friend});
   @override
   List<Object> get props => [friend];
 
   @override
-  String toString() => 'FriendAdded';
+  String toString() => 'FriendAddedState';
 }
 
-class Uninitialized extends FriendState {
+class UninitializedState extends FriendState {
   @override
-  String toString() => 'Uninitialized';
+  String toString() => 'UninitializedState';
 
   @override
   // TODO: implement props

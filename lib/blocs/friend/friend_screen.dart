@@ -26,7 +26,7 @@ class FriendScreenState extends State<FriendScreen> {
   void initState() {
     super.initState();
     this._load();
-    widget._friendBloc.add(LoadingFriends()); // default to load all friends
+    widget._friendBloc.add(LoadingFriendsEvent()); // default to load all friends
   }
 
   @override
@@ -42,7 +42,7 @@ class FriendScreenState extends State<FriendScreen> {
           BuildContext context,
           FriendState currentState,
         ) {
-          if (currentState is Uninitialized) {
+          if (currentState is UninitializedState) {
             return Center(
               child: CircularProgressIndicator(),
             );
@@ -64,7 +64,7 @@ class FriendScreenState extends State<FriendScreen> {
               ],
             ));
           }
-          if (currentState is Loaded) {
+          if (currentState is LoadedState) {
             _friends = currentState.friends;
             return Column(children: <Widget>[
               

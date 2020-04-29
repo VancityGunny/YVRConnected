@@ -38,7 +38,7 @@ class MyAppState extends State<MyApp> {
 
     _authenticationBloc = AuthBloc(authRepository: _authRepository);
 
-    _authenticationBloc.add(AppStarted());
+    _authenticationBloc.add(AppStartedEvent());
   }
 
   @override
@@ -50,13 +50,13 @@ class MyAppState extends State<MyApp> {
           home: BlocBuilder(
             bloc: _authenticationBloc,
             builder: (BuildContext context, AuthState state) {
-              if (state is Uninitialized) {
+              if (state is UninitializedState) {
                 return SplashScreen();
               }
-              if (state is Unauthenticated) {
+              if (state is UnauthenticatedState) {
                 return LoginScreen(authRepository: _authRepository);
               }
-              if (state is Authenticated) {
+              if (state is AuthenticatedState) {
                 return HomeScreen(name: state.displayName);
               }
               return Container();

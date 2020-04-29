@@ -12,19 +12,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         _authRepository = authRepository;
 
   @override
-  AuthState get initialState => Uninitialized();
+  AuthState get initialState => UninitializedState();
 
   @override
   Stream<AuthState> mapEventToState(
     AuthEvent event,
   ) async* {
-    if (event is AppStarted) {
+    if (event is AppStartedEvent) {
       yield* _mapAppStartedToState();
-    } else if (event is LoggedIn) {
+    } else if (event is LoggedInEvent) {
       yield* _mapLoggedInToState();
-    } else if (event is LoggedOut) {
+    } else if (event is LoggedOutEvent) {
       yield* _mapLoggedOutToState();
-    } else if (event is LogInWithGooglePressed) {
+    } else if (event is LogInWithGooglePressedEvent) {
       yield* _mapLoginWithGooglePressedToState();
     }
   }
@@ -36,22 +36,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (isSignedIn) {
         final name = await _authRepository.getUser();
 
-        yield Authenticated(name);
+        yield AuthenticatedState(name);
       } else {
-        yield Unauthenticated();
+        yield UnauthenticatedState();
       }
     } catch (_) {
-      yield Unauthenticated();
+      yield UnauthenticatedState();
     }
   }
 
   Stream<AuthState> _mapLoggedInToState() async* {
     final name = await _authRepository.getUser();
-    yield Authenticated(name);
+    yield AuthenticatedState(name);
   }
 
   Stream<AuthState> _mapLoggedOutToState() async* {
-    yield Unauthenticated();
+    yield UnauthenticatedState();
 
     _authRepository.signOut();
   }
@@ -60,9 +60,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await _authRepository.signInWithGoogle();
 
-      yield LogInSuccess();
+      yield LogInSuccessState();
     } catch (_) {
-      yield LogInFailure();
+      yield LogInFailureState();
     }
   }
 }

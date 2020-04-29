@@ -7,36 +7,36 @@ abstract class AuthEvent extends Equatable {
   AuthEvent([List props = const []]) : super();
 }
 
-class AppStarted extends AuthEvent {
+class AppStartedEvent extends AuthEvent {
   @override
-  String toString() => 'AppStarted';
+  String toString() => 'AppStartedEvent';
 
   @override
   // TODO: implement props
   List<Object> get props => null;
 }
 
-class LoggedIn extends AuthEvent {
+class LoggedInEvent extends AuthEvent {
   @override
-  String toString() => 'LoggedIn';
+  String toString() => 'LoggedInEvent';
 
   @override
   // TODO: implement props
   List<Object> get props => null;
 }
 
-class LoggedOut extends AuthEvent {
+class LoggedOutEvent extends AuthEvent {
   @override
-  String toString() => 'LoggedOut';
+  String toString() => 'LoggedOutEvent';
 
   @override
   // TODO: implement props
   List<Object> get props => null;
 }
 
-class LogInWithGooglePressed extends AuthEvent {
+class LogInWithGooglePressedEvent extends AuthEvent {
   @override
-  String toString() => 'LogInWithGooglePressed';
+  String toString() => 'LogInWithGooglePressedEvent';
 
   @override
   // TODO: implement props

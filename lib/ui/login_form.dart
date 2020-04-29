@@ -33,7 +33,7 @@ class _LoginFormState extends State<LoginForm> {
     return BlocListener(
       bloc: _authBloc,
       listener: (BuildContext context, AuthState state) {
-        if (state is LogInFailure) {
+        if (state is LogInFailureState) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -47,8 +47,8 @@ class _LoginFormState extends State<LoginForm> {
             );
         }
 
-        if (state is LogInSuccess) {
-          _authBloc.add(LoggedIn());
+        if (state is LogInSuccessState) {
+          _authBloc.add(LoggedInEvent());
         }
       },
       child: BlocBuilder(
@@ -95,7 +95,7 @@ class GoogleLoginButton extends StatelessWidget {
       icon: Icon(FontAwesomeIcons.google, color: Colors.white),
       onPressed: () {
         BlocProvider.of<AuthBloc>(context).add(
-          LogInWithGooglePressed(),
+          LogInWithGooglePressedEvent(),
         );
       },
       label: Text('Sign in with Google', style: TextStyle(color: Colors.white)),

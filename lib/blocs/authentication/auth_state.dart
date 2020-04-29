@@ -7,49 +7,49 @@ abstract class AuthState extends Equatable {
   AuthState([List props = const []]) : super();
 }
 
-class Uninitialized extends AuthState {
+class UninitializedState extends AuthState {
   @override
-  String toString() => 'Uninitialized';
+  String toString() => 'UninitializedState';
 
   @override
   // TODO: implement props
   List<Object> get props => null;
 }
 
-class Authenticated extends AuthState {
+class AuthenticatedState extends AuthState {
   final String displayName;
 
-  Authenticated(this.displayName) : super([displayName]);
+  AuthenticatedState(this.displayName) : super([displayName]);
 
   @override
-  String toString() => 'Authenticated { displayName: $displayName }';
-
-  @override
-  // TODO: implement props
-  List<Object> get props => null;
-}
-
-class Unauthenticated extends AuthState {
-  @override
-  String toString() => 'Unauthenticated';
+  String toString() => 'AuthenticatedState { displayName: $displayName }';
 
   @override
   // TODO: implement props
   List<Object> get props => null;
 }
 
-class LogInSuccess extends AuthState {
+class UnauthenticatedState extends AuthState {
   @override
-  String toString() => 'LogInSuccess';
+  String toString() => 'UnauthenticatedState';
 
   @override
   // TODO: implement props
   List<Object> get props => null;
 }
 
-class LogInFailure extends AuthState {
+class LogInSuccessState extends AuthState {
   @override
-  String toString() => 'LogInFailure';
+  String toString() => 'LogInSuccessState';
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+}
+
+class LogInFailureState extends AuthState {
+  @override
+  String toString() => 'LogInFailureState';
 
   @override
   // TODO: implement props

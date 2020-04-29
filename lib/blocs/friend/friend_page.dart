@@ -37,6 +37,6 @@ class _FriendPageState extends State<FriendPage> {
   void _addFriend() async {
     final EmailContact contact = await FlutterContactPicker.pickEmailContact();
     FriendModel newFriend = new FriendModel(contact.email.email, contact.fullName);
-    _friendBloc.add(AddingFriend(newFriend));
+    _friendBloc.add(AddingFriendEvent(newFriend));
   }
 }

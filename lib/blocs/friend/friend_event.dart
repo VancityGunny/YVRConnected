@@ -10,10 +10,13 @@ abstract class FriendEvent {
   final FriendRepository _friendRepository = FriendRepository();
 }
 
-class AddingFriend extends FriendEvent{
-  FriendModel newFriend;
+class AddingFriendEvent extends FriendEvent{
+    @override
+  String toString() => 'AddingFriendEvent';
 
-  AddingFriend(this.newFriend);
+  final FriendModel newFriend;
+
+  AddingFriendEvent(this.newFriend);
   @override
   Stream<FriendState> applyAsync({FriendState currentState, FriendBloc bloc}) {
     // TODO: implement applyAsync
@@ -23,15 +26,15 @@ class AddingFriend extends FriendEvent{
 
 }
 
-class LoadingFriends extends FriendEvent {
+class LoadingFriendsEvent extends FriendEvent {
   @override
-  String toString() => 'LoadingFriends';
+  String toString() => 'LoadingFriendsEvent';
 
   @override
   Stream<FriendState> applyAsync(
       {FriendState currentState, FriendBloc bloc}) async* {
     List<FriendModel> friends = await this._friendRepository.fetchFriends();
-    yield Loaded(friends: friends);
+    yield LoadedState(friends: friends);
   }
 }
 
@@ -47,7 +50,7 @@ class LoadFriendEvent extends FriendEvent {
       {FriendState currentState, FriendBloc bloc}) async* {
     try {
       List<FriendModel> friends = await _friendRepository.fetchFriends();
-      yield Loaded(friends: friends);
+      yield LoadedState(friends: friends);
     } catch (_, stackTrace) {
       developer.log('$_',
           name: 'LoadFriendEvent', error: _, stackTrace: stackTrace);

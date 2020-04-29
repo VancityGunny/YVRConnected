@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
             icon: Icon(Icons.exit_to_app),
             onPressed: () {
               BlocProvider.of<AuthBloc>(context).add(
-                LoggedOut(),
+                LoggedOutEvent(),
               );
             },
           )
