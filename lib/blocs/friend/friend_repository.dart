@@ -11,4 +11,8 @@ class FriendRepository {
   void test(bool isError) {
     this._friendProvider.test(isError);
   }
+
+  Future<bool> AddFriend(FriendModel newFriend){
+    return this._friendProvider.addFriend(newFriend);
+  }
 }

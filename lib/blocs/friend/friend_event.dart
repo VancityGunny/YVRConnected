@@ -10,6 +10,19 @@ abstract class FriendEvent {
   final FriendRepository _friendRepository = FriendRepository();
 }
 
+class AddingFriend extends FriendEvent{
+  FriendModel newFriend;
+
+  AddingFriend(this.newFriend);
+  @override
+  Stream<FriendState> applyAsync({FriendState currentState, FriendBloc bloc}) {
+    // TODO: implement applyAsync
+    _friendRepository.AddFriend(this.newFriend);
+    return null;
+  }
+
+}
+
 class LoadingFriends extends FriendEvent {
   @override
   String toString() => 'LoadingFriends';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 
 class FriendPage extends StatefulWidget {
@@ -33,5 +34,9 @@ class _FriendPageState extends State<FriendPage> {
     );
   }
 
-  void _addFriend() {}
+  void _addFriend() async {
+    final EmailContact contact = await FlutterContactPicker.pickEmailContact();
+    FriendModel newFriend = new FriendModel(contact.email.email, contact.fullName);
+    _friendBloc.add(AddingFriend(newFriend));
+  }
 }

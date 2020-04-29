@@ -27,6 +27,17 @@ class FriendProvider {
     return result;
   }
 
+  Future<bool> addFriend(FriendModel newFriend) async {
+    final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
+      functionName: 'addFriend',
+    );
+    dynamic resp = await callable.call(<String, dynamic>{
+                      'friendName': newFriend.displayName,
+                      'friendEmail': newFriend.email,
+                    },);
+    return true;    
+  }
+
   void test(bool isError) {
     if (isError == true) {
       throw Exception('manual error');
