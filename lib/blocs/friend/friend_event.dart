@@ -18,10 +18,11 @@ class AddingFriendEvent extends FriendEvent{
 
   AddingFriendEvent(this.newFriend);
   @override
-  Stream<FriendState> applyAsync({FriendState currentState, FriendBloc bloc}) {
+  Stream<FriendState> applyAsync({FriendState currentState, FriendBloc bloc}) async*{
     // TODO: implement applyAsync
-    _friendRepository.AddFriend(this.newFriend);
-    return null;
+    await _friendRepository.AddFriend(this.newFriend);
+    yield FriendAddedState(friend: this.newFriend);
+    bloc.add(LoadingFriendsEvent()); // refresh Friends List
   }
 
 }

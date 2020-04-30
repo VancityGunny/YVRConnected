@@ -4,7 +4,6 @@ import 'package:yvrconnected/blocs/friend/index.dart';
 
 class FriendScreen extends StatefulWidget {
     final FriendBloc _friendBloc;
-
    const FriendScreen({
     Key key,
     @required FriendBloc friendBloc,
@@ -21,12 +20,12 @@ class FriendScreen extends StatefulWidget {
 
 class FriendScreenState extends State<FriendScreen> {
 
-  List<FriendModel> _friends;
+  
   @override
   void initState() {
     super.initState();
     this._load();
-    widget._friendBloc.add(LoadingFriendsEvent()); // default to load all friends
+    
   }
 
   @override
@@ -65,7 +64,7 @@ class FriendScreenState extends State<FriendScreen> {
             ));
           }
           if (currentState is LoadedState) {
-            _friends = currentState.friends;
+            FriendPage.of(context).friends = currentState.friends;
             return Column(children: <Widget>[
               
               ListView.builder(
@@ -75,7 +74,7 @@ class FriendScreenState extends State<FriendScreen> {
                     child: Column(
                       children: <Widget>[
                         Image.asset('assets/macbook.jpg'),
-                        Text(_friends[index].displayName,
+                        Text(FriendPage.of(context).friends[index].displayName,
                             style: TextStyle(color: Colors.deepPurple))
                       ],
                     ),

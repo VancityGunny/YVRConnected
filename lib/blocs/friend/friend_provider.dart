@@ -20,7 +20,7 @@ class FriendProvider {
       functionName: 'getFriends',
     );
     dynamic resp = await callable.call();
-    var foundFriends = [];
+    List<FriendModel> foundFriends = [];
     resp.data.forEach((f)=> foundFriends.add(FriendModel.fromJson(f)));
     return foundFriends;
   }
