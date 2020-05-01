@@ -3,14 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 
 class FriendScreen extends StatefulWidget {
-    final FriendBloc _friendBloc;
-   const FriendScreen({
+  final FriendBloc _friendBloc;
+  const FriendScreen({
     Key key,
     @required FriendBloc friendBloc,
   })  : _friendBloc = friendBloc,
         super(key: key);
-
-
 
   @override
   FriendScreenState createState() {
@@ -19,13 +17,10 @@ class FriendScreen extends StatefulWidget {
 }
 
 class FriendScreenState extends State<FriendScreen> {
-
-  
   @override
   void initState() {
     super.initState();
     this._load();
-    
   }
 
   @override
@@ -65,24 +60,23 @@ class FriendScreenState extends State<FriendScreen> {
           }
           if (currentState is LoadedState) {
             FriendPage.of(context).friends = currentState.friends;
-            return Column(children: <Widget>[
-              
-              ListView.builder(
-                shrinkWrap: true,
-                itemBuilder: (BuildContext ctxt, int index) {
-                  return Card(
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset('assets/macbook.jpg'),
-                        Text(FriendPage.of(context).friends[index].displayName,
-                            style: TextStyle(color: Colors.deepPurple))
-                      ],
-                    ),
-                  );
-                },
-                itemCount: currentState.friends.length,
-              )
-            ]);
+            return GridView.builder(
+              itemCount: currentState.friends.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+              ),
+              itemBuilder: (context, index) {
+                return Card(
+                  child: Column(
+                    children: <Widget>[
+                      Container(child: Image.asset('graphics/default_user_thumbnail.png'), height: 80),
+                      Text(FriendPage.of(context).friends[index].displayName,
+                          style: TextStyle(color: Colors.deepPurple))
+                    ],
+                  ),
+                );
+              },
+            );
           }
           return Center(
             child: CircularProgressIndicator(),
@@ -93,5 +87,4 @@ class FriendScreenState extends State<FriendScreen> {
   void _load([bool isError = false]) {
     widget._friendBloc.add(LoadFriendEvent(isError));
   }
-
 }

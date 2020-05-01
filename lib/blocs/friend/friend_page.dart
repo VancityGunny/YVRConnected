@@ -53,6 +53,7 @@ class _FriendPageState extends State<FriendPage> {
   void _addFriend() async {
     // make sure that the friend is not already in the list
     final EmailContact contact = await FlutterContactPicker.pickEmailContact();
+    
     FriendModel newFriend = new FriendModel(contact.email.email, contact.fullName);
     FriendModel dupFriend = friends.firstWhere((f) => f.email == newFriend.email, orElse: () => null);
     if(dupFriend==null){
