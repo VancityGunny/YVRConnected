@@ -29,11 +29,11 @@ class FriendProvider {
     final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
       functionName: 'addFriend',
     );
-    dynamic resp = await callable.call(<String, dynamic>{
+    dynamic success = await callable.call(<String, dynamic>{
                       'friendName': newFriend.displayName,
                       'friendEmail': newFriend.email,
                     });
-    return true;    
+    return success.data;    
   }
 
   void test(bool isError) {

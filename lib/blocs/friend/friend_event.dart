@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:meta/meta.dart';
 
@@ -10,21 +9,22 @@ abstract class FriendEvent {
   final FriendRepository _friendRepository = FriendRepository();
 }
 
-class AddingFriendEvent extends FriendEvent{
-    @override
+class AddingFriendEvent extends FriendEvent {
+  @override
   String toString() => 'AddingFriendEvent';
 
   final FriendModel newFriend;
 
   AddingFriendEvent(this.newFriend);
   @override
-  Stream<FriendState> applyAsync({FriendState currentState, FriendBloc bloc}) async*{
-    // TODO: implement applyAsync
-    await _friendRepository.AddFriend(this.newFriend);
-    yield FriendAddedState(friend: this.newFriend);
-    bloc.add(LoadingFriendsEvent()); // refresh Friends List
+  Stream<FriendState> applyAsync(
+      {FriendState currentState, FriendBloc bloc}) async* {
+    var success = await _friendRepository.AddFriend(this.newFriend);
+    if (success) {
+      yield FriendAddedState(friend: this.newFriend);
+      bloc.add(LoadingFriendsEvent()); // refresh Friends List
+    }
   }
-
 }
 
 class LoadingFriendsEvent extends FriendEvent {
