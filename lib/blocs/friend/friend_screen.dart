@@ -66,15 +66,24 @@ class FriendScreenState extends State<FriendScreen> {
                 crossAxisCount: 3,
               ),
               itemBuilder: (context, index) {
-                return Card(
-                  child: Column(
-                    children: <Widget>[
-                      Container(child: Image.asset('graphics/default_user_thumbnail.png'), height: 80),
-                      Text(FriendPage.of(context).friends[index].displayName,
-                          style: TextStyle(color: Colors.deepPurple))
-                    ],
-                  ),
-                );
+                return GestureDetector(
+                    onLongPress:
+                        openActionOptions, // open action option, miss, remind, grateful
+                    onLongPressUp:
+                        selectActionOption, // long press release so select whatever was selected
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                              child: Image.asset(
+                                  'graphics/default_user_thumbnail.png'),
+                              height: 80),
+                          Text(
+                              FriendPage.of(context).friends[index].displayName,
+                              style: TextStyle(color: Colors.deepPurple))
+                        ],
+                      ),
+                    ));
               },
             );
           }
@@ -87,4 +96,36 @@ class FriendScreenState extends State<FriendScreen> {
   void _load([bool isError = false]) {
     widget._friendBloc.add(LoadFriendEvent(isError));
   }
+
+  void openActionOptions() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(            
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
+              child: ListView(
+                children: <Widget>[
+                  ListTile(
+                    leading: Icon(Icons.favorite),
+                    title: Text('Miss You'),                    
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.favorite),
+                    title: Text('Thinking of You'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.favorite),
+                    title: Text('Reminded of You'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.favorite),
+                    title: Text('Nostalgia over old time'),
+                  ),
+                ],
+              ));
+        });
+  }
+
+  void selectActionOption() {}
 }
