@@ -1,14 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepository {
   final FirebaseAuth _firebaseAuth;
-
+  static final _firestore = Firestore.instance;
   final GoogleSignIn _googleSignIn;
 
-  AuthRepository(
-      {FirebaseAuth firebaseAuth, GoogleSignIn googleSignin})
+  AuthRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn();
 
@@ -24,8 +24,23 @@ class AuthRepository {
     );
 
     await _firebaseAuth.signInWithCredential(credential);
+    var user = await _firebaseAuth.currentUser();
+    bool foundUser = false;
 
-    return _firebaseAuth.currentUser();
+    // check if user record does not exist then create the record
+    var userRef = await _firestore
+        .collection('/users')
+        .document(user.uid)
+        .get();
+    if (!userRef.exists) {
+      _firestore.collection('/users').document(user.uid).setData({
+        'email': user.email,
+        'phone': user.phoneNumber,
+        'displayName': user.displayName
+      });
+    }
+
+    return user;
   }
 
   Future<void> signOut() async {
