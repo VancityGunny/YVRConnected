@@ -35,7 +35,7 @@ class LoadingFriendsEvent extends FriendEvent {
   Stream<FriendState> applyAsync(
       {FriendState currentState, FriendBloc bloc}) async* {
     List<FriendModel> friends = await this._friendRepository.fetchFriends();
-    yield LoadedState(friends: friends);
+    yield FriendsLoadedState(friends: friends);
   }
 }
 
@@ -51,7 +51,7 @@ class LoadFriendEvent extends FriendEvent {
       {FriendState currentState, FriendBloc bloc}) async* {
     try {
       List<FriendModel> friends = await _friendRepository.fetchFriends();
-      yield LoadedState(friends: friends);
+      yield FriendsLoadedState(friends: friends);
     } catch (_, stackTrace) {
       developer.log('$_',
           name: 'LoadFriendEvent', error: _, stackTrace: stackTrace);

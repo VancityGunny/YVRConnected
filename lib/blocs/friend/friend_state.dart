@@ -12,10 +12,10 @@ abstract class FriendState extends Equatable {
 }
 
 /// Loaded all friends
-class LoadedState extends FriendState {
+class FriendsLoadedState extends FriendState {
   final List<FriendModel> friends;
 
-  LoadedState({@required this.friends});
+  FriendsLoadedState({@required this.friends});
 
   @override
   List<Object> get props => [friends];

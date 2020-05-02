@@ -58,7 +58,7 @@ class FriendScreenState extends State<FriendScreen> {
               ],
             ));
           }
-          if (currentState is LoadedState) {
+          if (currentState is FriendsLoadedState) {
             FriendPage.of(context).friends = currentState.friends;
             return GridView.builder(
               itemCount: currentState.friends.length,
