@@ -50,7 +50,7 @@ class MyAppState extends State<MyApp> {
           home: BlocBuilder(
             bloc: _authenticationBloc,
             builder: (BuildContext context, AuthState state) {
-              if (state is UninitializedState) {
+              if (state is UninitAuthState) {
                 return SplashScreen();
               }
               if (state is UnauthenticatedState) {

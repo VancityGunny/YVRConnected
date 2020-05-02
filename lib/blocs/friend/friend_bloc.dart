@@ -19,7 +19,7 @@ class FriendBloc extends Bloc<FriendEvent, FriendState> {
   }
 
   @override
-  FriendState get initialState => UninitializedState();
+  FriendState get initialState => UninitFriendState();
 
   @override
   Stream<FriendState> mapEventToState(

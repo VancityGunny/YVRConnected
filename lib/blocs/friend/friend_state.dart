@@ -34,9 +34,9 @@ class FriendAddedState extends FriendState {
   String toString() => 'FriendAddedState';
 }
 
-class UninitializedState extends FriendState {
+class UninitFriendState extends FriendState {
   @override
-  String toString() => 'UninitializedState';
+  String toString() => 'UninitFriendState';
 
   @override
   // TODO: implement props

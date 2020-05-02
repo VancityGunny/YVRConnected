@@ -36,7 +36,7 @@ class FriendScreenState extends State<FriendScreen> {
           BuildContext context,
           FriendState currentState,
         ) {
-          if (currentState is UninitializedState) {
+          if (currentState is UninitFriendState) {
             return Center(
               child: CircularProgressIndicator(),
             );

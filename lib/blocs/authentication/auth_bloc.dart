@@ -12,7 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         _authRepository = authRepository;
 
   @override
-  AuthState get initialState => UninitializedState();
+  AuthState get initialState => UninitAuthState();
 
   @override
   Stream<AuthState> mapEventToState(

@@ -7,9 +7,9 @@ abstract class AuthState extends Equatable {
   AuthState([List props = const []]) : super();
 }
 
-class UninitializedState extends AuthState {
+class UninitAuthState extends AuthState {
   @override
-  String toString() => 'UninitializedState';
+  String toString() => 'UninitAuthState';
 
   @override
   // TODO: implement props
