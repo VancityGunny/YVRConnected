@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
+import 'package:yvrconnected/blocs/thought/index.dart';
 
 class FriendScreen extends StatefulWidget {
   final FriendBloc _friendBloc;
+
   const FriendScreen({
     Key key,
     @required FriendBloc friendBloc,
@@ -17,9 +19,12 @@ class FriendScreen extends StatefulWidget {
 }
 
 class FriendScreenState extends State<FriendScreen> {
+  ThoughtBloc _thoughtBloc;
+
   @override
   void initState() {
     super.initState();
+    _thoughtBloc = new ThoughtBloc();
     this._load();
   }
 
@@ -67,8 +72,9 @@ class FriendScreenState extends State<FriendScreen> {
               ),
               itemBuilder: (context, index) {
                 return GestureDetector(
-                    onLongPress:
-                        openActionOptions, // open action option, miss, remind, grateful
+                    onLongPress: () {
+                      openActionOptions(currentState.friends[index]);
+                    }, // open action option, miss, remind, grateful
                     onLongPressUp:
                         selectActionOption, // long press release so select whatever was selected
                     child: Card(
@@ -97,35 +103,55 @@ class FriendScreenState extends State<FriendScreen> {
     widget._friendBloc.add(LoadFriendEvent(isError));
   }
 
-  void openActionOptions() {
+  void openActionOptions(FriendModel friend) {
     showDialog(
         context: context,
         builder: (context) {
-          return Dialog(            
+          return Dialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
               child: ListView(
                 children: <Widget>[
-                  ListTile(
-                    leading: Icon(Icons.favorite),
-                    title: Text('Miss You'),                    
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.favorite),
-                    title: Text('Thinking of You'),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.favorite),
-                    title: Text('Reminded of You'),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.favorite),
-                    title: Text('Nostalgia over old time'),
-                  ),
+                  InkWell(
+                      onTap: () {
+                        sendThought(friend, 'MIS');
+                      },
+                      child: ListTile(
+                        leading: Icon(Icons.favorite),
+                        title: Text('Miss You'),
+                      )),
+                  InkWell(
+                      onTap: () {
+                        sendThought(friend, 'THN');
+                      },
+                      child: ListTile(
+                        leading: Icon(Icons.favorite),
+                        title: Text('Thinking of You'),
+                      )),
+                  InkWell(
+                      onTap: () {
+                        sendThought(friend, 'RMN');
+                      },
+                      child: ListTile(
+                        leading: Icon(Icons.favorite),
+                        title: Text('Reminded of You'),
+                      )),
+                  InkWell(
+                      onTap: () {
+                        sendThought(friend, 'NST');
+                      },
+                      child: ListTile(
+                        leading: Icon(Icons.favorite),
+                        title: Text('Nostalgia over old time'),
+                      )),
                 ],
               ));
         });
   }
 
   void selectActionOption() {}
+
+  sendThought(FriendModel friend, String thoughtOptionCode) {
+    //_thoughtBloc.add(AddingThoughtEvent(new thoughtmodel()));
+  }
 }

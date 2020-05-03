@@ -68,7 +68,6 @@ class MyAppState extends State<MyApp> {
   @override
   void dispose() {
     _authenticationBloc.close();
-
     super.dispose();
   }
 }

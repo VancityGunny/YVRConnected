@@ -17,21 +17,18 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  AuthBloc _authBloc;
 
   AuthRepository get _authRepository => widget._authRepository;
 
   @override
   void initState() {
     super.initState();
-
-    _authBloc = BlocProvider.of<AuthBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener(
-      bloc: _authBloc,
+      bloc: BlocProvider.of<AuthBloc>(context),
       listener: (BuildContext context, AuthState state) {
         if (state is LogInFailureState) {
           Scaffold.of(context)
@@ -48,11 +45,11 @@ class _LoginFormState extends State<LoginForm> {
         }
 
         if (state is LogInSuccessState) {
-          _authBloc.add(LoggedInEvent());
+          BlocProvider.of<AuthBloc>(context).add(LoggedInEvent());
         }
       },
       child: BlocBuilder(
-        bloc: _authBloc,
+        bloc: BlocProvider.of<AuthBloc>(context),
         builder: (BuildContext context, AuthState state) {
           return Padding(
             padding: EdgeInsets.all(20.0),
@@ -61,7 +58,7 @@ class _LoginFormState extends State<LoginForm> {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Image.asset('assets/flutter_logo.png', height: 200),
+                    child: Image.asset('graphics/logo.png', height: 200),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 20),
