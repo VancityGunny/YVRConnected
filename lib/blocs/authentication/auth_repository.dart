@@ -25,22 +25,23 @@ class AuthRepository {
 
     await _firebaseAuth.signInWithCredential(credential);
     var user = await _firebaseAuth.currentUser();
-    bool foundUser = false;
 
-    // check if user record does not exist then create the record
-    var userRef = await _firestore
+    var foundUsers = await _firestore
         .collection('/users')
-        .document(user.uid)
-        .get();
-    if (!userRef.exists) {
-      _firestore.collection('/users').document(user.uid).setData({
+        .where('uid', isEqualTo: user.uid)
+        .getDocuments();
+    var newUser = null;
+    if (foundUsers.documents.length == 0) {
+// check if user record does not exist then create the record
+      newUser = _firestore.collection('/users').document().setData({
+        'uid': user.uid,
         'email': user.email,
         'phone': user.phoneNumber,
         'displayName': user.displayName
       });
     }
 
-    return user;
+    return newUser;
   }
 
   Future<void> signOut() async {
