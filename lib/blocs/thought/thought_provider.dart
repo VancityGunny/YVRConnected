@@ -27,7 +27,7 @@ class ThoughtProvider {
 
   Future<List<String>> getThoughtOptions() async {}
 
-  Future<String> addThought(ThoughtModel newThought) async {
+  Future<bool> addThought(ThoughtModel newThought) async {
     //TODO: add checking so you can't send thought to the same person within 24 hours of each thoughs
     var user = await _firebaseAuth.currentUser();
     var newDoc = await _firestore
@@ -48,6 +48,7 @@ class ThoughtProvider {
     //   return e.toString();
     // }
     //TODO: to be implement
-    return newDoc.documentID;
+    //return newDoc.documentID;
+    return true;
   }
 }
