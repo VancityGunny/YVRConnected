@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:yvrconnected/blocs/authentication/auth_repository.dart';
 import 'package:yvrconnected/blocs/authentication/index.dart';
 
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
 
@@ -34,9 +35,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final isSignedIn = await _authRepository.isSignedIn();
 
       if (isSignedIn) {
-        final name = await _authRepository.getUser();
+        final user = await _authRepository.getUser();
 
-        yield AuthenticatedState(name);
+        yield AuthenticatedState(user.displayName);
       } else {
         yield UnauthenticatedState();
       }
@@ -46,8 +47,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _mapLoggedInToState() async* {
-    final name = await _authRepository.getUser();
-    yield AuthenticatedState(name);
+    final user = await _authRepository.getUser();
+
+    yield AuthenticatedState(user.displayName);
   }
 
   Stream<AuthState> _mapLoggedOutToState() async* {

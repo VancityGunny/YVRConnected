@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:yvrconnected/blocs/friend/friend_repository.dart';
 
+import 'package:yvrconnected/common/global_object.dart' as globals;
+
 import 'friend_model.dart';
 
 Firestore _firestore = Firestore.instance;
@@ -23,14 +25,17 @@ class FriendProvider {
   Future<List<FriendModel>> fetchFriends() async {
     var user = await _firebaseAuth.currentUser();
 
-    var friendsRef =
-        await _firestore.collection('/users').document(user.uid).get();
+    var friendsRef = await _firestore
+        .collection('/users')
+        .document(globals.currentUserId)
+        .get();
     var friendsUserId = friendsRef.data['friends'];
 
     List<FriendModel> foundFriends = [];
 
     for (var friendUserId in friendsUserId) {
-      var eachFriend = await _firestore.collection('/users').document(friendUserId).get();
+      var eachFriend =
+          await _firestore.collection('/users').document(friendUserId).get();
       foundFriends.add(new FriendModel(
           eachFriend.data['email'], eachFriend.data['displayName']));
     }

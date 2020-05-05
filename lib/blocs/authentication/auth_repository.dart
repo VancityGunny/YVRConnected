@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:yvrconnected/blocs/user/user_model.dart';
+import 'package:yvrconnected/common/global_object.dart' as globals;
 
 class AuthRepository {
   final FirebaseAuth _firebaseAuth;
@@ -37,7 +39,8 @@ class AuthRepository {
         'uid': user.uid,
         'email': user.email,
         'phone': user.phoneNumber,
-        'displayName': user.displayName
+        'displayName': user.displayName,
+        'friends': []
       });
     }
 
@@ -57,7 +60,12 @@ class AuthRepository {
     return currentUser != null;
   }
 
-  Future<String> getUser() async {
-    return (await _firebaseAuth.currentUser()).email;
+  Future<UserModel> getUser() async {
+    var user = await _firebaseAuth.currentUser();
+    var foundUsers = await _firestore.collection('/users').where('uid', isEqualTo: user.uid).getDocuments();    
+    var loggedInUser = UserModel.fromJson(foundUsers.documents[0].data);
+    globals.loggedInUser = loggedInUser;
+    globals.currentUserId = foundUsers.documents[0].documentID;
+    return loggedInUser;
   }
 }

@@ -28,11 +28,9 @@ class ThoughtProvider {
 
   Future<bool> addThought(ThoughtModel newThought) async {
     //TODO: add checking so you can't send thought to the same person within 24 hours of each thoughs
-    var user = await _firebaseAuth.currentUser();
+    var user = await _firebaseAuth.currentUser();  
     var newDoc = await _firestore
         .collection('/thoughts')
-        .document(user.uid)
-        .collection('sent')
         .document();
         newDoc.setData({
       'fromUserId': user.uid,
