@@ -29,12 +29,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  @override
-  Future<void> close() async{
-    // dispose objects
-    await super.close();
-  }
-  
   Stream<AuthState> _mapAppStartedToState() async* {
     try {
       final isSignedIn = await _authRepository.isSignedIn();

@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:yvrconnected/blocs/thought/thought_model.dart';
 
 class ThoughtProvider {
-  
   static final _firestore = Firestore.instance;
-  
+  static final _firebaseAuth = FirebaseAuth.instance;
+
   Future<void> loadAsync(String token) async {
     /// write from keystore/keychain
     await Future.delayed(Duration(seconds: 2));
@@ -19,17 +20,27 @@ class ThoughtProvider {
   }
 
   void test(bool isError) {
-    if (isError == true){
+    if (isError == true) {
       throw Exception('manual error');
     }
   }
-  Future<List<String>> getThoughtOptions() async{
-    
-  }
-  Future<bool> addThought(ThoughtModel newThought) async {
-     final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
-      functionName: 'addThought',
-    );
+
+  Future<List<String>> getThoughtOptions() async {}
+
+  Future<String> addThought(ThoughtModel newThought) async {
+    //TODO: add checking so you can't send thought to the same person within 24 hours of each thoughs
+    var user = await _firebaseAuth.currentUser();
+    var newDoc = await _firestore
+        .collection('/thoughts')
+        .document(user.uid)
+        .collection('sent')
+        .document();
+        newDoc.setData({
+      'fromUserId': user.uid,
+      'toUserId': newThought.toUserId,
+      'thoughtOptionCode': newThought.thoughtOptionCode,
+      'createdDate': DateTime.now()
+    });
     // try {
     //   await _firestore.collection('/posts').add(newPost.toMap());
     //   return true;
@@ -37,7 +48,6 @@ class ThoughtProvider {
     //   return e.toString();
     // }
     //TODO: to be implement
-    return true;
+    return newDoc.documentID;
   }
 }
-
