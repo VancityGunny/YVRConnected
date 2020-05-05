@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:yvrconnected/blocs/friend/friend_repository.dart';
 
@@ -23,56 +22,48 @@ class FriendProvider {
 
   Future<List<FriendModel>> fetchFriends() async {
     var user = await _firebaseAuth.currentUser();
-    // check if user record does not exist then create the record
-    var friendsRef = await _firestore
-        .collection('/users')
-        .document(user.uid)
-        .collection('friends')
-        .getDocuments();
+
+    var friendsRef =
+        await _firestore.collection('/users').document(user.uid).get();
+    var friendsUserId = friendsRef.data['friends'];
 
     List<FriendModel> foundFriends = [];
 
-    var allFriends = friendsRef.documents;
-    allFriends.forEach((f)=> foundFriends.add(FriendModel.fromJson(f.data)));
-    // final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
-    //   functionName: 'getFriends',
-    // );
-    // dynamic resp = await callable.call();
-
-    // resp.data.forEach((f) => foundFriends.add(FriendModel.fromJson(f)));
+    for (var friendUserId in friendsUserId) {
+      var eachFriend = await _firestore.collection('/users').document(friendUserId).get();
+      foundFriends.add(new FriendModel(
+          eachFriend.data['email'], eachFriend.data['displayName']));
+    }
     return foundFriends;
   }
 
   Future<bool> addFriend(FriendModel newFriend) async {
     var user = await _firebaseAuth.currentUser();
+    var friendId = null;
     // check if user record does not exist then create the record
     var friendsRef = await _firestore
         .collection('/users')
-        .document(user.uid)
-        .collection('friends')
-        .where('friendEmail', isEqualTo: newFriend.email)
+        .where('email', isEqualTo: newFriend.email)
         .getDocuments();
+
     if (friendsRef.documents.length == 0) {
-      // if it's not already exists then add it
-      _firestore
-          .collection('/users')
-          .document(user.uid)
-          .collection('friends')
-          .document()
-          .setData({
-        'friendEmail': newFriend.email,
-        'friendName': newFriend.displayName
+      // if it's not already exists then add new user first
+      var newFriendUserObj = _firestore.collection('/users').document();
+      newFriendUserObj.setData(
+          {'email': newFriend.email, 'displayName': newFriend.displayName});
+      friendId = newFriendUserObj.documentID;
+    } else {
+      friendId = friendsRef.documents[0].documentID;
+    }
+
+    if (friendId != null) {
+      // now add that new user id as your friend
+      _firestore.collection('/users').document(user.uid).updateData({
+        'friends': FieldValue.arrayUnion([friendId])
       });
     }
 
-    final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
-      functionName: 'addFriend',
-    );
-    dynamic success = await callable.call(<String, dynamic>{
-      'friendName': newFriend.displayName,
-      'friendEmail': newFriend.email,
-    });
-    return success.data;
+    return true;
   }
 
   void test(bool isError) {
