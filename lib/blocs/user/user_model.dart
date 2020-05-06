@@ -5,7 +5,7 @@ class UserModel extends Equatable {
   final String email;
   final String displayName;
   final String phone;
-  final List<dynamic> friends;
+  final List<String> friends;
 
   UserModel(this.uid, this.email, this.displayName, this.phone, this.friends);
 
@@ -17,7 +17,7 @@ class UserModel extends Equatable {
                       , json['email'] as String
                       , json['displayName'] as String
                       , json['phone'] as String
-                      , json['friends'] as List<dynamic>);
+                      , json['friends'].cast<String>() as List<String>);
   }
 
   Map<String, dynamic> toJson() {

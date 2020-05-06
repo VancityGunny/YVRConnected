@@ -63,7 +63,7 @@ class FriendProvider {
 
     if (friendId != null) {
       // now add that new user id as your friend
-      _firestore.collection('/users').document(user.uid).updateData({
+      _firestore.collection('/users').document(globals.currentUserId).updateData({
         'friends': FieldValue.arrayUnion([friendId])
       });
     }
