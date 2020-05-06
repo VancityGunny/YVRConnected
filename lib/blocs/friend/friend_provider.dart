@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:yvrconnected/blocs/friend/friend_repository.dart';
+import 'package:yvrconnected/blocs/user/user_model.dart';
+import 'package:yvrconnected/blocs/user/user_provider.dart';
 
 import 'package:yvrconnected/common/global_object.dart' as globals;
 
@@ -49,14 +51,12 @@ class FriendProvider {
     var friendsRef = await _firestore
         .collection('/users')
         .where('email', isEqualTo: newFriend.email)
-        .getDocuments();
+        .limit(1).getDocuments();
 
     if (friendsRef.documents.length == 0) {
       // if it's not already exists then add new user first
-      var newFriendUserObj = _firestore.collection('/users').document();
-      newFriendUserObj.setData(
-          {'email': newFriend.email, 'displayName': newFriend.displayName});
-      friendId = newFriendUserObj.documentID;
+      UserProvider userProvider = UserProvider();
+      friendId = userProvider.addUser(UserModel(null,newFriend.email,newFriend.displayName,null,[]));
     } else {
       friendId = friendsRef.documents[0].documentID;
     }
