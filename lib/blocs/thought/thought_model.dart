@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 /// generate by https://javiercbk.github.io/json_to_dart/
@@ -44,7 +45,8 @@ class ThoughtModel extends Equatable {
         json['fromUserId'] as String,
         json['toUserId'] as String,
         json['thoughtOptionCode'] as String,
-        json['createdDate'] as DateTime);
+       
+        json['createdDate'].toDate() as DateTime);
   }
 
   Map<String, dynamic> toJson() {

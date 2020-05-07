@@ -5,6 +5,7 @@ import 'package:yvrconnected/blocs/authentication/index.dart';
 import 'package:yvrconnected/blocs/friend/friend_screen.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
+import 'package:yvrconnected/ui/home_latest_widget.dart';
 
 class HomeScreen extends StatefulWidget{
   final String name;
@@ -56,12 +57,7 @@ class HomeScreenState extends State<HomeScreen> {
               )
             ],
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Center(child: Text('Welcome '+widget.name+'!')),
-            ],
-          ),
+          body: HomeLatestWidget()
         ));
   }
 
