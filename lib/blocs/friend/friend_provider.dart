@@ -57,7 +57,7 @@ class FriendProvider {
     if (friendsRef.documents.length == 0) {
       // if it's not already exists then add new user first
       UserProvider userProvider = UserProvider();
-      friendId = userProvider.addUser(
+      friendId = await userProvider.addUser(
           UserModel(null, newFriend.email, newFriend.displayName, null, []));
     } else {
       friendId = friendsRef.documents[0].documentID;

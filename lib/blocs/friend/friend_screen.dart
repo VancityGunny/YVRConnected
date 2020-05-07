@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 
 class FriendScreen extends StatefulWidget {
-  final FriendBloc _friendBloc;
 
-  const FriendScreen({
-    Key key,
-    @required FriendBloc friendBloc,
-  })  : _friendBloc = friendBloc,
-        super(key: key);
 
   @override
   FriendScreenState createState() {
@@ -36,7 +31,7 @@ class FriendScreenState extends State<FriendScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FriendBloc, FriendState>(
-        bloc: widget._friendBloc,
+        bloc: BlocProvider.of<FriendBloc>(context),
         builder: (
           BuildContext context,
           FriendState currentState,
@@ -100,7 +95,7 @@ class FriendScreenState extends State<FriendScreen> {
   }
 
   void _load([bool isError = false]) {
-    widget._friendBloc.add(LoadFriendEvent(isError));
+    BlocProvider.of<FriendBloc>(context).add(LoadFriendEvent(isError));
   }
 
   void openActionOptions(FriendModel friend) {

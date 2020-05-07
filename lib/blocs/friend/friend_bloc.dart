@@ -5,19 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 
 class FriendBloc extends Bloc<FriendEvent, FriendState> {
-  // todo: check singleton for logic in project
-  static final FriendBloc _friendBlocSingleton = FriendBloc._internal();
-  factory FriendBloc() {
-    return _friendBlocSingleton;
-  }
-  FriendBloc._internal();
   
-  @override
-  Future<void> close() async{
-    // dispose objects
-    await super.close();
-  }
-
   @override
   FriendState get initialState => UninitFriendState();
 

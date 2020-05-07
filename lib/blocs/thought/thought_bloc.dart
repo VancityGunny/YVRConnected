@@ -5,19 +5,6 @@ import 'package:bloc/bloc.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 
 class ThoughtBloc extends Bloc<ThoughtEvent, ThoughtState> {
-  // todo: check singleton for logic in project
-  static final ThoughtBloc _thoughtBlocSingleton = ThoughtBloc._internal();
-  factory ThoughtBloc() {
-    return _thoughtBlocSingleton;
-  }
-  ThoughtBloc._internal();
-  
-  @override
-  Future<void> close() async{
-    // dispose objects
-    await super.close();
-  }
-
   @override
   ThoughtState get initialState => UninitThoughtState();
 
