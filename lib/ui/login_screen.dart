@@ -33,11 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Login')),
-      body: BlocProvider<AuthBloc>(
-        create: (BuildContext context) => BlocProvider.of<AuthBloc>(context), //bloc: _authBloc,
-
-        child: LoginForm(userRepository: _authRepository),
-      ),
+      body: LoginForm(userRepository: _authRepository),
     );
   }
 
