@@ -152,6 +152,6 @@ class FriendScreenState extends State<FriendScreen> {
   void selectActionOption() {}
 
   sendThought(FriendModel friend, String thoughtOptionCode) {
-    _thoughtBloc.add(AddingThoughtEvent(new ThoughtModel('from',friend.email,thoughtOptionCode,DateTime.now())));
+    _thoughtBloc.add(AddingThoughtEvent(new ThoughtModel(null,friend.friendUserId,thoughtOptionCode,DateTime.now())));
   }
 }

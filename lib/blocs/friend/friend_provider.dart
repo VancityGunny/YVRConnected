@@ -38,8 +38,8 @@ class FriendProvider {
     for (var friendUserId in friendsUserId) {
       var eachFriend =
           await _firestore.collection('/users').document(friendUserId).get();
-      foundFriends.add(new FriendModel(
-          eachFriend.data['email'], eachFriend.data['displayName']));
+      foundFriends.add(new FriendModel(friendUserId, eachFriend.data['email'],
+          eachFriend.data['displayName']));
     }
     return foundFriends;
   }
@@ -51,19 +51,24 @@ class FriendProvider {
     var friendsRef = await _firestore
         .collection('/users')
         .where('email', isEqualTo: newFriend.email)
-        .limit(1).getDocuments();
+        .limit(1)
+        .getDocuments();
 
     if (friendsRef.documents.length == 0) {
       // if it's not already exists then add new user first
       UserProvider userProvider = UserProvider();
-      friendId = userProvider.addUser(UserModel(null,newFriend.email,newFriend.displayName,null,[]));
+      friendId = userProvider.addUser(
+          UserModel(null, newFriend.email, newFriend.displayName, null, []));
     } else {
       friendId = friendsRef.documents[0].documentID;
     }
 
     if (friendId != null) {
       // now add that new user id as your friend
-      _firestore.collection('/users').document(globals.currentUserId).updateData({
+      _firestore
+          .collection('/users')
+          .document(globals.currentUserId)
+          .updateData({
         'friends': FieldValue.arrayUnion([friendId])
       });
     }
