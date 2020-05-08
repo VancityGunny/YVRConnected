@@ -6,3 +6,4 @@ export 'friend_provider.dart';
 export 'friend_repository.dart';
 export 'friend_screen.dart';
 export 'friend_state.dart';
+export 'friend_stat_model.dart';
