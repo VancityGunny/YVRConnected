@@ -13,7 +13,7 @@ class HomeLatestWidget extends StatefulWidget {
 }
 
 class HomeLatestWidgetState extends State<StatefulWidget> {
-  List<ThoughtModel> latestThoughts;
+  List<ThoughtModel> latestThoughts = List<ThoughtModel>();
   @override
   void initState() {
     super.initState();
@@ -47,7 +47,7 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
               child: Column(
                 children: <Widget>[
                   Container(
-                      child: Image.asset('graphics/default_user_thumbnail.png'),
+                      child: Icon(Icons.email),
                       height: 80),
                   Text(latestThoughts[index].thoughtOptionCode,
                       style: TextStyle(color: Colors.deepPurple))

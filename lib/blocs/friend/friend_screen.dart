@@ -5,8 +5,6 @@ import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 
 class FriendScreen extends StatefulWidget {
-
-
   @override
   FriendScreenState createState() {
     return FriendScreenState();
@@ -147,6 +145,9 @@ class FriendScreenState extends State<FriendScreen> {
   void selectActionOption() {}
 
   sendThought(FriendModel friend, String thoughtOptionCode) {
-    _thoughtBloc.add(AddingThoughtEvent(new ThoughtModel(null,friend.friendUserId,thoughtOptionCode,DateTime.now())));
+    _thoughtBloc.add(AddingThoughtEvent(new ThoughtModel(
+        null, friend.friendUserId, thoughtOptionCode, DateTime.now())));
+
+    Navigator.of(context).pop();
   }
 }
