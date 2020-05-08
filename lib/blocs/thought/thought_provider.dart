@@ -43,6 +43,22 @@ class ThoughtProvider {
     return foundThoughtsReceived;
   }
 
+  Future<List<ThoughtModel>> fetchThoughtsSent() async {
+    var user = await _firebaseAuth.currentUser();
+
+    var thoughtsRef = await _firestore
+        .collection('/thoughts')
+        .where('fromUserId', isEqualTo: globals.currentUserId)
+        .getDocuments();
+
+    List<ThoughtModel> foundThoughtsSent = [];
+    for (var thought in thoughtsRef.documents) {
+      foundThoughtsSent.add(ThoughtModel.fromJson(thought.data));
+    }
+    
+    return foundThoughtsSent;
+  }
+
   Future<bool> addThought(ThoughtModel newThought) async {
     //TODO: add checking so you can't send thought to the same person within 24 hours of each thoughs
     var user = await _firebaseAuth.currentUser();
