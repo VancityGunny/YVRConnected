@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yvrconnected/blocs/friend/friend_bloc.dart';
+import 'package:yvrconnected/blocs/friend/friend_event.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 
 // Widget to show all latest thoughts received

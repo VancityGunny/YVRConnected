@@ -1,3 +1,4 @@
+import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 
 class ThoughtRepository {
@@ -11,5 +12,8 @@ class ThoughtRepository {
 
   Future<bool> AddThought(ThoughtModel newThought) {
     return this._thoughtProvider.addThought(newThought);
+  }
+  Future<List<FriendStatModel>> fetchTopFive() async {
+    return this._thoughtProvider.fetchTopFive();
   }
 }

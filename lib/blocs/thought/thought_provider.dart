@@ -52,8 +52,17 @@ class ThoughtProvider {
         0);
     var thoughtsSentByFriend =
         groupBy(thoughtsSentLastMonth, (t) => t.toUserId);
+    if (globals.allFriends == null) {
+      FriendProvider friendProvider = FriendProvider();
+      await friendProvider.fetchFriends();
+    }
     List<FriendStatModel> newStat = List<FriendStatModel>();
-
+    thoughtsSentByFriend.forEach((index, value) {
+      FriendModel myFriend =
+          globals.allFriends.where((f) => f.friendUserId == index).first;
+      newStat.add(new FriendStatModel(myFriend, value.length));
+    });
+    return newStat;
     //thoughtsSentByFriend.map((f)=>{friend = f.key, sent = f.})
   }
 

@@ -41,6 +41,8 @@ class FriendProvider {
       foundFriends.add(new FriendModel(friendUserId, eachFriend.data['email'],
           eachFriend.data['displayName']));
     }
+    // save friends to global
+    globals.allFriends = foundFriends;
     return foundFriends;
   }
 

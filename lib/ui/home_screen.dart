@@ -22,7 +22,7 @@ class HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-     _friendBloc = FriendBloc();
+     _friendBloc = FriendBloc();     
   }
   
 

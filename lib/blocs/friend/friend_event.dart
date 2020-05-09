@@ -3,6 +3,8 @@ import 'dart:developer' as developer;
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:meta/meta.dart';
 
+import 'package:yvrconnected/common/global_object.dart' as globals;
+
 @immutable
 abstract class FriendEvent {
   Stream<FriendState> applyAsync({FriendState currentState, FriendBloc bloc});
@@ -35,6 +37,7 @@ class LoadingFriendsEvent extends FriendEvent {
   Stream<FriendState> applyAsync(
       {FriendState currentState, FriendBloc bloc}) async* {
     List<FriendModel> friends = await this._friendRepository.fetchFriends();
+
     yield FriendsLoadedState(friends: friends);
   }
 }
@@ -50,8 +53,8 @@ class LoadFriendEvent extends FriendEvent {
   Stream<FriendState> applyAsync(
       {FriendState currentState, FriendBloc bloc}) async* {
     try {
-      List<FriendModel> friends = await _friendRepository.fetchFriends();
-      yield FriendsLoadedState(friends: friends);
+
+      //yield FriendsLoadedState(friends: friends);
     } catch (_, stackTrace) {
       developer.log('$_',
           name: 'LoadFriendEvent', error: _, stackTrace: stackTrace);
