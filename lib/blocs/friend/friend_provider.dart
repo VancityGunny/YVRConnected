@@ -1,13 +1,10 @@
 import 'dart:async';
-
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:yvrconnected/blocs/friend/friend_repository.dart';
 import 'package:yvrconnected/blocs/user/user_model.dart';
 import 'package:yvrconnected/blocs/user/user_provider.dart';
-
 import 'package:yvrconnected/common/global_object.dart' as globals;
-
 import 'friend_model.dart';
 
 Firestore _firestore = Firestore.instance;
@@ -31,15 +28,16 @@ class FriendProvider {
         .collection('/users')
         .document(globals.currentUserId)
         .get();
-    var friendsUserId = friendsRef.data['friends'];
+    var friends = friendsRef.data['friends'];
 
     List<FriendModel> foundFriends = [];
 
-    for (var friendUserId in friendsUserId) {
-      var eachFriend =
-          await _firestore.collection('/users').document(friendUserId).get();
-      foundFriends.add(new FriendModel(friendUserId, eachFriend.data['email'],
-          eachFriend.data['displayName']));
+    for (var friend in friends) {
+      foundFriends.add(new FriendModel(
+          friend["friendId"],
+          friend["friendEmail"],
+          friend["friendName"],
+          Uint8List.fromList(friend["thumbnail"].cast<int>())));
     }
     // save friends to global
     globals.allFriends = foundFriends;
@@ -71,7 +69,14 @@ class FriendProvider {
           .collection('/users')
           .document(globals.currentUserId)
           .updateData({
-        'friends': FieldValue.arrayUnion([friendId])
+        'friends': FieldValue.arrayUnion([
+          {
+            'friendId': friendId,
+            'friendName': newFriend.displayName,
+            'friendEmail': newFriend.email,
+            'thumbnail': newFriend.thumbnail
+          }
+        ])
       });
     }
 

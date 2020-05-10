@@ -13,6 +13,7 @@ class UserProvider {
         'phone': newUser.phone,
         'displayName': newUser.displayName,
         'friends': []
+        
       });
       return newUserObj.documentID;
   }

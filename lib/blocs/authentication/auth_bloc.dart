@@ -60,7 +60,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _mapLoginWithGooglePressedToState() async* {
     try {
-      await _authRepository.signInWithGoogle();
+      var user = await _authRepository.signInWithGoogle();
 
       yield LogInSuccessState();
     } catch (_) {

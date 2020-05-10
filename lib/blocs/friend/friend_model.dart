@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 
 /// generate by https://javiercbk.github.io/json_to_dart/
@@ -30,21 +32,23 @@ class FriendModel extends Equatable {
   final String email;
   final String displayName;
   final String friendUserId;
+  final Uint8List thumbnail;
 
-  FriendModel(this.friendUserId, this.email, this.displayName);
+  FriendModel(this.friendUserId, this.email, this.displayName, this.thumbnail);
 
   @override
-  List<Object> get props => [friendUserId, email, displayName];
+  List<Object> get props => [friendUserId, email, displayName, thumbnail];
 
   factory FriendModel.fromJson(Map<dynamic, dynamic> json) {
-    return FriendModel(json['friendUserId'] as String, json['friendEmail'] as String, json['friendName'] as String);
+    return FriendModel(json['friendUserId'] as String, json['friendEmail'] as String, json['friendName'] as String, json['thumbnail'] as Uint8List);
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-data['friendUserId'] = this.friendUserId;
+    data['friendUserId'] = this.friendUserId;
     data['friendEmail'] = this.email;
     data['friendName'] = this.displayName;
+    data['thumbnail'] = this.thumbnail;
     return data;
   }
   

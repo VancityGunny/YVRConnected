@@ -1,6 +1,10 @@
+import 'dart:typed_data';
+
+import 'package:contacts_service/contacts_service.dart' as CS;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 
 class FriendPage extends StatefulWidget {
@@ -10,7 +14,8 @@ class FriendPage extends StatefulWidget {
   _FriendPageState createState() => _FriendPageState();
 
   static _FriendPageState of(BuildContext context) {
-    final _FriendPageState navigator = context.findAncestorStateOfType<_FriendPageState>();
+    final _FriendPageState navigator =
+        context.findAncestorStateOfType<_FriendPageState>();
 
     assert(() {
       if (navigator == null) {
@@ -26,13 +31,14 @@ class FriendPage extends StatefulWidget {
 }
 
 class _FriendPageState extends State<FriendPage> {
-
   List<FriendModel> friends;
+  Uint8List friendThumbnail;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<FriendBloc>(context).add(LoadingFriendsEvent()); // default to load all friends
+    BlocProvider.of<FriendBloc>(context)
+        .add(LoadingFriendsEvent()); // default to load all friends
   }
 
   @override
@@ -51,15 +57,27 @@ class _FriendPageState extends State<FriendPage> {
   void _addFriend() async {
     // make sure that the friend is not already in the list
     final EmailContact contact = await FlutterContactPicker.pickEmailContact();
-    
-    FriendModel newFriend = new FriendModel(null, contact.email.email, contact.fullName);
-    FriendModel dupFriend = friends.firstWhere((f) => f.email == newFriend.email, orElse: () => null);
-    if(dupFriend==null){
+
+    FriendModel dupFriend = friends
+        .firstWhere((f) => f.email == contact.email.email, orElse: () => null);
+
+    if (dupFriend == null) {
+      Uint8List thumbnail;
+      // fetch more contact detail
+      if (await Permission.contacts.request().isGranted) {
+        Iterable<CS.Contact> foundContacts =
+            await CS.ContactsService.getContacts(query: contact.fullName);
+        if (foundContacts.length > 0) {
+          thumbnail = foundContacts.first.avatar;
+          this.friendThumbnail = thumbnail;
+        }
+        // Either the permission was already granted before or the user just granted it.
+      }
+      FriendModel newFriend = new FriendModel(
+          null, contact.email.email, contact.fullName, thumbnail);
       BlocProvider.of<FriendBloc>(context).add(AddingFriendEvent(newFriend));
-    }
-    else{
+    } else {
       //return duplicate contact error
     }
-    
   }
 }

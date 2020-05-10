@@ -74,8 +74,15 @@ class FriendScreenState extends State<FriendScreen> {
                       child: Column(
                         children: <Widget>[
                           Container(
-                              child: Image.asset(
-                                  'graphics/default_user_thumbnail.png'),
+                              child: (FriendPage.of(context)
+                                          .friends[index]
+                                          .thumbnail.isEmpty ==
+                                      true)
+                                  ? Image.asset(
+                                      'graphics/default_user_thumbnail.png')
+                                  : Image.memory(FriendPage.of(context)
+                                      .friends[index]
+                                      .thumbnail),
                               height: 80),
                           Text(
                               FriendPage.of(context).friends[index].displayName,
