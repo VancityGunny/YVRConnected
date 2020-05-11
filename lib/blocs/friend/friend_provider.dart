@@ -7,6 +7,8 @@ import 'package:yvrconnected/blocs/user/user_provider.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;
 import 'friend_model.dart';
 
+import 'dart:developer' as developer;
+
 Firestore _firestore = Firestore.instance;
 FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -37,7 +39,8 @@ class FriendProvider {
           friend["friendId"],
           friend["friendEmail"],
           friend["friendName"],
-          Uint8List.fromList(friend["thumbnail"].cast<int>())));
+          Uint8List.fromList(friend["thumbnail"].cast<int>()),
+          (friend["lastSent"]==null)?null:friend["lastSent"].toDate()));
     }
     // save friends to global
     globals.allFriends = foundFriends;
@@ -87,5 +90,45 @@ class FriendProvider {
     if (isError == true) {
       throw Exception('manual error');
     }
+  }
+
+  void updateFriendLastSent(String toUserId) async {
+    var user = await _firebaseAuth.currentUser();
+    var userRef =
+        _firestore.collection('/users').document(globals.currentUserId);
+    var userDoc = await userRef.get();
+    var currentFriends = userDoc.data['friends'];
+    List<Map<String, dynamic>> newFriends = new List<Map<String, dynamic>>();
+    currentFriends.forEach((f) {
+      var friendObj = FriendModel.fromJson(f);
+      if (friendObj.friendUserId == toUserId) {
+        friendObj.lastSent = DateTime.now();
+      }
+      newFriends.add(friendObj.toJson());
+    });
+    userRef.updateData({'friends': newFriends});
+    // _firestore.runTransaction((transaction) async {
+    //   await transaction.update(userRef, {'friends': newFriends});
+    // });
+    // var transaction = _firestore.runTransaction((t) {
+    //   return t.get(userRef).then((doc) {
+    //     List<FriendModel> newFriends = doc.data['friends'].cast<FriendModel>();
+    //     newFriends.forEach((FriendModel f){
+    //         if(f.friendUserId==toUserId){
+    //           f.lastSent = DateTime.now();
+    //         }
+    //     });
+    //     // List<FriendModel> newFriends = doc.data['friends'].cast<FriendModel>();
+    //     // newFriends
+    //     //     .where((element) => element.friendUserId == toUserId)
+    //     //     .first
+    //     //     .lastSent = DateTime.now();
+    //     t.update(userRef, {'friends': newFriends});
+    //   });
+    // }).then((result) {
+    //   developer.log('Transaction success!');
+    // }).catchError((err) {
+    //   developer.log('Transaction failure:' + err);
+    // });
   }
 }

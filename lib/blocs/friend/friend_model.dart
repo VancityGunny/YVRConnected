@@ -33,23 +33,31 @@ class FriendModel extends Equatable {
   final String displayName;
   final String friendUserId;
   final Uint8List thumbnail;
+  DateTime lastSent;
 
-  FriendModel(this.friendUserId, this.email, this.displayName, this.thumbnail);
+  FriendModel(this.friendUserId, this.email, this.displayName, this.thumbnail,
+      this.lastSent);
 
   @override
-  List<Object> get props => [friendUserId, email, displayName, thumbnail];
+  List<Object> get props =>
+      [friendUserId, email, displayName, thumbnail, lastSent];
 
   factory FriendModel.fromJson(Map<dynamic, dynamic> json) {
-    return FriendModel(json['friendUserId'] as String, json['friendEmail'] as String, json['friendName'] as String, json['thumbnail'] as Uint8List);
+    return FriendModel(
+        json['friendId'] as String,
+        json['friendEmail'] as String,
+        json['friendName'] as String,
+        Uint8List.fromList(json['thumbnail'].cast<int>()) as Uint8List,
+        (json['lastSent'] == null) ? null : json['lastSent'].toDate());
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    data['friendUserId'] = this.friendUserId;
+    data['friendId'] = this.friendUserId;
     data['friendEmail'] = this.email;
     data['friendName'] = this.displayName;
     data['thumbnail'] = this.thumbnail;
+    data['lastSent'] = this.lastSent;
     return data;
   }
-  
 }

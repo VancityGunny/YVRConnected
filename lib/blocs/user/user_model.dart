@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:yvrconnected/blocs/friend/friend_model.dart';
 
 class UserModel extends Equatable {
   final String uid;
   final String email;
   final String displayName;
   final String phone;
-  final List<String> friends;
+  final List<FriendModel> friends;
 
   UserModel(this.uid, this.email, this.displayName, this.phone, this.friends);
 
@@ -17,7 +18,7 @@ class UserModel extends Equatable {
                       , json['email'] as String
                       , json['displayName'] as String
                       , json['phone'] as String
-                      , json['friends'].cast<String>() as List<String>);
+                      , json['friends'].cast<FriendModel>() as List<FriendModel>);
   }
 
   Map<String, dynamic> toJson() {
