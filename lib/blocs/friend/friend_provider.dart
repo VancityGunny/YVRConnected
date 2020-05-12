@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/blocs/user/user_model.dart';
 import 'package:yvrconnected/blocs/user/user_provider.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;
@@ -40,7 +41,11 @@ class FriendProvider {
           friend["friendEmail"],
           friend["friendName"],
           Uint8List.fromList(friend["thumbnail"].cast<int>()),
-          (friend["lastSent"]==null)?null:friend["lastSent"].toDate()));
+          (friend["lastSent"] == null) ? null : friend["lastSent"].toDate(),
+          (friend["thoughts"] == null) ? null : friend['thoughts']
+              .map((entry) => ThoughtModel(
+                  null, null, entry['thoughtOptionCode'], entry['createdDate']))
+              .toList()));
     }
     // save friends to global
     globals.allFriends = foundFriends;

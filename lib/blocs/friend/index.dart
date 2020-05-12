@@ -7,3 +7,4 @@ export 'friend_repository.dart';
 export 'friend_screen.dart';
 export 'friend_state.dart';
 export 'friend_stat_model.dart';
+export 'friend_detail_page.dart';

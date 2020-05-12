@@ -65,18 +65,22 @@ class FriendScreenState extends State<FriendScreen> {
               ),
               itemBuilder: (context, index) {
                 return GestureDetector(
+                    onTap: () {
+                      goToFriendDetail(currentState.friends[index]);
+                    },
                     onLongPress: () {
                       openActionOptions(currentState.friends[index]);
                     }, // open action option, miss, remind, grateful
-                    onLongPressUp:
-                        selectActionOption, // long press release so select whatever was selected
+                    // onLongPressUp:
+                    //     selectActionOption, // long press release so select whatever was selected
                     child: Card(
                       child: Column(
                         children: <Widget>[
                           Container(
                               child: (FriendPage.of(context)
                                           .friends[index]
-                                          .thumbnail.isEmpty ==
+                                          .thumbnail
+                                          .isEmpty ==
                                       true)
                                   ? Image.asset(
                                       'graphics/default_user_thumbnail.png')
@@ -84,9 +88,15 @@ class FriendScreenState extends State<FriendScreen> {
                                       .friends[index]
                                       .thumbnail),
                               height: 80),
-                          Text(
-                              FriendPage.of(context).friends[index].displayName,
-                              style: TextStyle(color: Colors.deepPurple))
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                  FriendPage.of(context)
+                                      .friends[index]
+                                      .displayName,
+                                  style: TextStyle(color: Colors.deepPurple)),
+                            ],
+                          )
                         ],
                       ),
                     ));
@@ -149,12 +159,27 @@ class FriendScreenState extends State<FriendScreen> {
         });
   }
 
-  void selectActionOption() {}
-
   sendThought(FriendModel friend, String thoughtOptionCode) {
     _thoughtBloc.add(AddingThoughtEvent(new ThoughtModel(
         null, friend.friendUserId, thoughtOptionCode, DateTime.now())));
 
     Navigator.of(context).pop();
+  }
+
+  goToFriendDetail(FriendModel friend) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) {
+        return MultiBlocProvider(providers: [
+          BlocProvider<FriendBloc>(
+            create: (BuildContext context) =>
+                BlocProvider.of<FriendBloc>(context),
+          ),
+          BlocProvider<ThoughtBloc>(
+            create: (BuildContext context) => _thoughtBloc,
+          ),
+        ], child: FriendDetailPage(friend));
+      }),
+    );
   }
 }

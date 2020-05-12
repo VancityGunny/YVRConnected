@@ -44,6 +44,19 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
     return Column(
       children: <Widget>[
         Expanded(
+            child: Container(
+          child: ListView.builder(
+              itemCount: topFiveFriends.length,
+              itemBuilder: (BuildContext ctxt, int index) {
+                return ListTile(
+                  leading: Icon(Icons.favorite),
+                  title: Text(topFiveFriends[index].friend.displayName +
+                      ':' +
+                      topFiveFriends[index].thoughtSent.toString()),
+                );
+              }),
+        )),
+        Expanded(
           child: Container(
             child: GridView.builder(
               itemCount: latestThoughts.length,
@@ -71,19 +84,6 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
             ),
           ),
         ),
-        Expanded(
-            child: Container(
-          child: ListView.builder(
-              itemCount: topFiveFriends.length,
-              itemBuilder: (BuildContext ctxt, int index) {
-                return ListTile(
-                  leading: Icon(Icons.favorite),
-                  title: Text(topFiveFriends[index].friend.displayName +
-                      ':' +
-                      topFiveFriends[index].thoughtSent.toString()),
-                );
-              }),
-        ))
       ],
     );
   }
