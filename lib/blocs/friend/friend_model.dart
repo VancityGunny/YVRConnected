@@ -35,10 +35,9 @@ class FriendModel extends Equatable {
   final String friendUserId;
   final Uint8List thumbnail;
   DateTime lastSent;
-  List<ThoughtModel> thoughts;
 
   FriendModel(this.friendUserId, this.email, this.displayName, this.thumbnail,
-      this.lastSent, this.thoughts);
+      this.lastSent);
 
   @override
   List<Object> get props =>
@@ -50,11 +49,7 @@ class FriendModel extends Equatable {
         json['friendEmail'] as String,
         json['friendName'] as String,
         Uint8List.fromList(json['thumbnail'].cast<int>()) as Uint8List,
-        (json['lastSent'] == null) ? null : json['lastSent'].toDate(),
-        json['thoughts']
-            .map((entry) => ThoughtModel(
-                null, null, entry['thoughtOptionCode'], entry['createdDate']))
-            .toList());
+        (json['lastSent'] == null) ? null : json['lastSent'].toDate());
   }
 
   Map<String, dynamic> toJson() {
@@ -64,13 +59,6 @@ class FriendModel extends Equatable {
     data['friendName'] = this.displayName;
     data['thumbnail'] = this.thumbnail;
     data['lastSent'] = this.lastSent;
-    data['thoughts'] = this
-        .thoughts
-        .map((e) => {
-              'thoughtOptionCode': e.thoughtOptionCode,
-              'createdDate': e.createdDate
-            })
-        .toList();
     return data;
   }
 }

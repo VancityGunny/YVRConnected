@@ -37,15 +37,12 @@ class FriendProvider {
 
     for (var friend in friends) {
       foundFriends.add(new FriendModel(
-          friend["friendId"],
-          friend["friendEmail"],
-          friend["friendName"],
-          Uint8List.fromList(friend["thumbnail"].cast<int>()),
-          (friend["lastSent"] == null) ? null : friend["lastSent"].toDate(),
-          (friend["thoughts"] == null) ? null : friend['thoughts']
-              .map((entry) => ThoughtModel(
-                  null, null, entry['thoughtOptionCode'], entry['createdDate']))
-              .toList()));
+        friend["friendId"],
+        friend["friendEmail"],
+        friend["friendName"],
+        Uint8List.fromList(friend["thumbnail"].cast<int>()),
+        (friend["lastSent"] == null) ? null : friend["lastSent"].toDate(),
+      ));
     }
     // save friends to global
     globals.allFriends = foundFriends;
@@ -65,8 +62,8 @@ class FriendProvider {
     if (friendsRef.documents.length == 0) {
       // if it's not already exists then add new user first
       UserProvider userProvider = UserProvider();
-      friendId = await userProvider.addUser(
-          UserModel(null, newFriend.email, newFriend.displayName, null, []));
+      friendId = await userProvider.addUser(UserModel(
+          null, newFriend.email, newFriend.displayName, null, [], []));
     } else {
       friendId = friendsRef.documents[0].documentID;
     }
@@ -97,6 +94,7 @@ class FriendProvider {
     }
   }
 
+  // update friendLast sent and the thoughts stat
   void updateFriendLastSent(String toUserId) async {
     var user = await _firebaseAuth.currentUser();
     var userRef =
