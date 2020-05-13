@@ -77,16 +77,24 @@ class FriendScreenState extends State<FriendScreen> {
                       child: Column(
                         children: <Widget>[
                           Container(
-                              child: (FriendPage.of(context)
-                                          .friends[index]
-                                          .thumbnail
-                                          .isEmpty ==
-                                      true)
-                                  ? Image.asset(
-                                      'graphics/default_user_thumbnail.png')
-                                  : Image.memory(FriendPage.of(context)
-                                      .friends[index]
-                                      .thumbnail),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: new DecorationImage(
+                                    image: (FriendPage.of(context)
+                                                .friends[index]
+                                                .thumbnail
+                                                .isEmpty ==
+                                            true)
+                                        ? Image.asset(
+                                                'graphics/default_user_thumbnail.png')
+                                            .image
+                                        : Image.memory(FriendPage.of(context)
+                                                .friends[index]
+                                                .thumbnail)
+                                            .image,
+                                    fit: BoxFit.cover),
+                              ),
+                              width: 80,
                               height: 80),
                           Row(
                             children: <Widget>[

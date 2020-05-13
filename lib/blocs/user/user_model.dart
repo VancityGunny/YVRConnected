@@ -26,7 +26,8 @@ class UserModel extends Equatable {
         json['thoughts']
             .map((entry) => ThoughtModel(null, entry['toUserId'],
                 entry['thoughtOptionCode'], entry['createdDate']))
-            .toList());
+            .cast<ThoughtModel>()
+            .toList() as List<ThoughtModel>);
   }
 
   Map<String, dynamic> toJson() {
