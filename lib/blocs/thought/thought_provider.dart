@@ -70,14 +70,15 @@ class ThoughtProvider {
     var user = await _firebaseAuth.currentUser();
 
     var thoughtsRef = await _firestore
-        .collection('/thoughts')
-        .where('fromUserId', isEqualTo: globals.currentUserId)
-        .getDocuments();
+        .collection('/users')
+        .document(globals.currentUserId)
+        .get();
 
-    List<ThoughtModel> foundThoughtsSent = [];
-    for (var thought in thoughtsRef.documents) {
-      foundThoughtsSent.add(ThoughtModel.fromJson(thought.data));
-    }
+    var foundThoughtsSent = thoughtsRef.data['thoughts']
+        .map((t) => ThoughtModel(null, t['toUserId'], t['thoughtOptionCode'],
+            t['createdDate'].toDate()))
+        .cast<ThoughtModel>()
+        .toList();
 
     return foundThoughtsSent;
   }
@@ -92,14 +93,17 @@ class ThoughtProvider {
       'thoughtOptionCode': newThought.thoughtOptionCode,
       'createdDate': DateTime.now()
     });
-    // try {
-    //   await _firestore.collection('/posts').add(newPost.toMap());
-    //   return true;
-    // } catch (e) {
-    //   return e.toString();
-    // }
-    //TODO: to be implement
-    //return newDoc.documentID;
+    // update thoughts collection in sender obj too
+    _firestore.collection('/users').document(globals.currentUserId).updateData({
+      'thoughts': FieldValue.arrayUnion([
+        {
+          'toUserId': newThought.toUserId,
+          'thoughtOptionCode': newThought.thoughtOptionCode,
+          'createdDate': DateTime.now()
+        }
+      ])
+    });
+
     return true;
   }
 }

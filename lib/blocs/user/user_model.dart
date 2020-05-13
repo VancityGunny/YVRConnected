@@ -25,7 +25,7 @@ class UserModel extends Equatable {
         json['friends'].cast<FriendModel>() as List<FriendModel>,
         json['thoughts']
             .map((entry) => ThoughtModel(null, entry['toUserId'],
-                entry['thoughtOptionCode'], entry['createdDate']))
+                entry['thoughtOptionCode'], entry['createdDate'].toDate()))
             .cast<ThoughtModel>()
             .toList() as List<ThoughtModel>);
   }
