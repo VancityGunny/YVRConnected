@@ -33,7 +33,7 @@ class FriendModel extends Equatable {
   final String email;
   final String displayName;
   final String friendUserId;
-  final Uint8List thumbnail;
+  final String thumbnail;
   DateTime lastSent;
 
   FriendModel(this.friendUserId, this.email, this.displayName, this.thumbnail,
@@ -48,7 +48,7 @@ class FriendModel extends Equatable {
         json['friendId'] as String,
         json['friendEmail'] as String,
         json['friendName'] as String,
-        Uint8List.fromList(json['thumbnail'].cast<int>()) as Uint8List,
+        json['thumbnail'] as String,
         (json['lastSent'] == null) ? null : json['lastSent'].toDate());
   }
 

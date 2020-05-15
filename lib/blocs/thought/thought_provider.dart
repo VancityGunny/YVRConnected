@@ -72,7 +72,7 @@ class ThoughtProvider {
     var thoughtsRef = await _firestore
         .collection('/users')
         .document(globals.currentUserId)
-        .get();
+        .get(source: Source.cache);
 
     var foundThoughtsSent = thoughtsRef.data['thoughts']
         .map((t) => ThoughtModel(null, t['toUserId'], t['thoughtOptionCode'],

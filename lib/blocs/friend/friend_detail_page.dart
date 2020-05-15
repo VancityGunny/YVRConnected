@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
@@ -24,10 +26,11 @@ class FriendDetailPageState extends State<FriendDetailPage> {
       children: <Widget>[
         Expanded(
           child: Container(
+            
               child: (widget.currentFriend.thumbnail.isEmpty == true)
                   ? Image.asset('graphics/default_user_thumbnail.png')
-                  : Image.memory(widget.currentFriend.thumbnail),
-              height: 80),
+                  : Image.network(widget.currentFriend.thumbnail),
+              height: 200),
         ),
         Expanded(
           child: Text(widget.currentFriend.displayName),

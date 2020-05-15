@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:ui';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/blocs/user/user_model.dart';
 import 'package:yvrconnected/blocs/user/user_provider.dart';
@@ -30,7 +34,7 @@ class FriendProvider {
     var friendsRef = await _firestore
         .collection('/users')
         .document(globals.currentUserId)
-        .get();
+        .get(source: Source.cache);
     var friends = friendsRef.data['friends'];
 
     List<FriendModel> foundFriends = [];
@@ -40,7 +44,7 @@ class FriendProvider {
         friend["friendId"],
         friend["friendEmail"],
         friend["friendName"],
-        Uint8List.fromList(friend["thumbnail"].cast<int>()),
+        friend["thumbnail"],
         (friend["lastSent"] == null) ? null : friend["lastSent"].toDate(),
       ));
     }
@@ -49,7 +53,7 @@ class FriendProvider {
     return foundFriends;
   }
 
-  Future<bool> addFriend(FriendModel newFriend) async {
+  Future<bool> addFriend(FriendModel newFriend, Uint8List thumbnail) async {
     var user = await _firebaseAuth.currentUser();
     var friendId = null;
     // check if user record does not exist then create the record
@@ -68,6 +72,17 @@ class FriendProvider {
       friendId = friendsRef.documents[0].documentID;
     }
 
+    FirebaseStorage _storage =
+        FirebaseStorage(storageBucket: 'gs://yvrconnected.appspot.com');
+    //File newThumbnail = File.fromRawPath(thumbnail);
+    String thumbPath = (thumbnail==null)?null:'images/users/thumb.png';
+    var uploadTask = _storage
+        .ref()
+        .child(thumbPath)
+        .putData(thumbnail);
+        //.putFile(newThumbnail);
+    var thumbUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+
     if (friendId != null) {
       // now add that new user id as your friend
       _firestore
@@ -79,7 +94,7 @@ class FriendProvider {
             'friendId': friendId,
             'friendName': newFriend.displayName,
             'friendEmail': newFriend.email,
-            'thumbnail': newFriend.thumbnail
+            'thumbnail': thumbUrl.toString()
           }
         ])
       });

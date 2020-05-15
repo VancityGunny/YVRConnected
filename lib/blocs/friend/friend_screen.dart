@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -88,7 +90,7 @@ class FriendScreenState extends State<FriendScreen> {
                                         ? Image.asset(
                                                 'graphics/default_user_thumbnail.png')
                                             .image
-                                        : Image.memory(FriendPage.of(context)
+                                        : Image.network(FriendPage.of(context)
                                                 .friends[index]
                                                 .thumbnail)
                                             .image,

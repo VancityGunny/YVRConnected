@@ -39,6 +39,7 @@ dependencies:
   fluttercontactpicker: ^2.3.0  
   cloud_firestore: ^0.13.5
   collection: ^1.14.11
+  firebase_storage: ^3.1.5
 dev_dependencies:
   flutter_test:
     sdk: flutter

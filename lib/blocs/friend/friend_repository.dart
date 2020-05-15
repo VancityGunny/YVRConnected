@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:yvrconnected/blocs/friend/index.dart';
 
 class FriendRepository {
@@ -12,7 +14,7 @@ class FriendRepository {
     this._friendProvider.test(isError);
   }
 
-  Future<bool> AddFriend(FriendModel newFriend){
-    return this._friendProvider.addFriend(newFriend);
+  Future<bool> AddFriend(FriendModel newFriend, Uint8List thumbnail){
+    return this._friendProvider.addFriend(newFriend, thumbnail);
   }
 }
