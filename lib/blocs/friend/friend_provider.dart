@@ -75,12 +75,11 @@ class FriendProvider {
     FirebaseStorage _storage =
         FirebaseStorage(storageBucket: 'gs://yvrconnected.appspot.com');
     //File newThumbnail = File.fromRawPath(thumbnail);
-    String thumbPath = (thumbnail==null)?null:'images/users/thumb.png';
-    var uploadTask = _storage
-        .ref()
-        .child(thumbPath)
-        .putData(thumbnail);
-        //.putFile(newThumbnail);
+    String thumbPath = (thumbnail == null)
+        ? null
+        : 'images/users/' + friendId.toString() + '/thumbnail.png';
+    var uploadTask = _storage.ref().child(thumbPath).putData(thumbnail);
+    //.putFile(newThumbnail);
     var thumbUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
 
     if (friendId != null) {
