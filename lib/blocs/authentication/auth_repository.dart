@@ -38,7 +38,7 @@ class AuthRepository {
       // check if user record does not exist then create the record
       var userProvider = UserProvider();
       var userId = userProvider.addUser(new UserModel(
-          user.uid, user.email, user.displayName, user.phoneNumber, [], []));
+          user.uid, user.email, user.displayName, user.phoneNumber, []));
     }
 
     return user;

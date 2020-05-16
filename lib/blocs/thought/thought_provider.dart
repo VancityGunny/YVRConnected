@@ -34,14 +34,16 @@ class ThoughtProvider {
     var user = await _firebaseAuth.currentUser();
 
     var thoughtsRef = await _firestore
-        .collection('/thoughts')
-        .where('toUserId', isEqualTo: globals.currentUserId)
-        .getDocuments();
-
+        .collection('/receivedThoughts')
+        .document(globals.currentUserId)
+        .get();
     List<ThoughtModel> foundThoughtsReceived = [];
-    for (var thought in thoughtsRef.documents) {
-      foundThoughtsReceived.add(ThoughtModel.fromJson(thought.data));
+    if (thoughtsRef.data != null) {
+      for (var thought in thoughtsRef.data['thoughts']) {
+        foundThoughtsReceived.add(ThoughtModel.fromJson(thought));
+      }
     }
+
     return foundThoughtsReceived;
   }
 
@@ -70,15 +72,16 @@ class ThoughtProvider {
     var user = await _firebaseAuth.currentUser();
 
     var thoughtsRef = await _firestore
-        .collection('/users')
+        .collection('/sentThoughts')
         .document(globals.currentUserId)
-        .get(source: Source.cache);
+        .get();
 
-    var foundThoughtsSent = thoughtsRef.data['thoughts']
-        .map((t) => ThoughtModel(null, t['toUserId'], t['thoughtOptionCode'],
-            t['createdDate'].toDate()))
-        .cast<ThoughtModel>()
-        .toList();
+    List<ThoughtModel> foundThoughtsSent = [];
+    if (thoughtsRef.data != null) {
+      for (var thought in thoughtsRef.data['thoughts']) {
+        foundThoughtsSent.add(ThoughtModel.fromJson(thought));
+      }
+    }
 
     return foundThoughtsSent;
   }
@@ -86,20 +89,32 @@ class ThoughtProvider {
   Future<bool> addThought(ThoughtModel newThought) async {
     //TODO: add checking so you can't send thought to the same person within 24 hours of each thoughs
     var user = await _firebaseAuth.currentUser();
-    var newDoc = await _firestore.collection('/thoughts').document();
-    newDoc.setData({
-      'fromUserId': globals.currentUserId,
-      'toUserId': newThought.toUserId,
-      'thoughtOptionCode': newThought.thoughtOptionCode,
-      'createdDate': DateTime.now()
-    });
-    // update thoughts collection in sender obj too
-    _firestore.collection('/users').document(globals.currentUserId).updateData({
+
+    // add thought to sentThought collection
+    var newSentThoughtDoc = await _firestore
+        .collection('/sentThoughts')
+        .document(globals.currentUserId);
+    newSentThoughtDoc.updateData({
       'thoughts': FieldValue.arrayUnion([
         {
           'toUserId': newThought.toUserId,
           'thoughtOptionCode': newThought.thoughtOptionCode,
-          'createdDate': DateTime.now()
+          'createdDate': newThought.createdDate
+        }
+      ])
+    });
+
+    // add thought to receivedThought collection
+    var newReceivedThoughtDoc = await _firestore
+        .collection('/receivedThoughts')
+        .document(newThought.toUserId);
+    newReceivedThoughtDoc.updateData({
+      'thoughts': FieldValue.arrayUnion([
+        {
+          'fromUserId': globals.currentUserId,
+          'thoughtOptionCode': newThought.thoughtOptionCode,
+          'createdDate': newThought.createdDate,
+          'readFlag': false // new message always unread
         }
       ])
     });

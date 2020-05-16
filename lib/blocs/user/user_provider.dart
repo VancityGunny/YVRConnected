@@ -12,9 +12,16 @@ class UserProvider {
       'email': newUser.email,
       'phone': newUser.phone,
       'displayName': newUser.displayName,
-      'friends': [],
-      'thoughts': []
+      'friends': []
     });
+    // add sentThoughts and receivedThought colleciton for the user too
+    var newSentThoughtsObj =
+        _firestore.collection('/sentThoughts').document(newUserObj.documentID);
+    newSentThoughtsObj.setData({'thoughts': []});
+    var newReceivedThoughtObj = _firestore
+        .collection('/receivedThoughts')
+        .document(newUserObj.documentID);
+    newReceivedThoughtObj.setData({'thoughts': []});
     return newUserObj.documentID;
   }
 }

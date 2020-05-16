@@ -34,7 +34,7 @@ class FriendProvider {
     var friendsRef = await _firestore
         .collection('/users')
         .document(globals.currentUserId)
-        .get(source: Source.cache);
+        .get();
     var friends = friendsRef.data['friends'];
 
     List<FriendModel> foundFriends = [];
@@ -66,8 +66,8 @@ class FriendProvider {
     if (friendsRef.documents.length == 0) {
       // if it's not already exists then add new user first
       UserProvider userProvider = UserProvider();
-      friendId = await userProvider.addUser(UserModel(
-          null, newFriend.email, newFriend.displayName, null, [], []));
+      friendId = await userProvider.addUser(
+          UserModel(null, newFriend.email, newFriend.displayName, null, []));
     } else {
       friendId = friendsRef.documents[0].documentID;
     }
