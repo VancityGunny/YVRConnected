@@ -74,8 +74,9 @@ class _FriendPageState extends State<FriendPage> {
         // Either the permission was already granted before or the user just granted it.
       }
       FriendModel newFriend = new FriendModel(
-          null, contact.email.email, contact.fullName, null, null);
-      BlocProvider.of<FriendBloc>(context).add(AddingFriendEvent(newFriend, thumbnail));
+          null, contact.email.email, contact.fullName, null, null, null);
+      BlocProvider.of<FriendBloc>(context)
+          .add(AddingFriendEvent(newFriend, thumbnail));
     } else {
       //return duplicate contact error
     }
