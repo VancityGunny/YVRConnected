@@ -10,16 +10,17 @@ class ThoughtRepository {
     this._thoughtProvider.test(isError);
   }
 
-  Future<bool> AddThought(ThoughtModel newThought) async{
-    var success = await this._thoughtProvider.addThought(newThought);    
-    if(success)
-    {
-      // update lastSent for that friend
+  Future<bool> AddThought(ThoughtModel newThought) async {
+    var success = await this._thoughtProvider.addThought(newThought);
+    if (success) {
+      // update lastThoughtSentDate for that friend
       var friendProvider = FriendProvider();
-      friendProvider.updateFriendLastSent(newThought.toUserId);
+      friendProvider.updateFriendLastSent(
+          newThought.toUserId, newThought.thoughtOptionCode);
     }
     return success;
   }
+
   Future<List<FriendStatModel>> fetchTopFive() async {
     return this._thoughtProvider.fetchTopFive();
   }

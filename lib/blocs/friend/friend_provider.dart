@@ -45,7 +45,8 @@ class FriendProvider {
         friend["friendEmail"],
         friend["friendName"],
         friend["thumbnail"],
-        (friend["lastSent"] == null) ? null : friend["lastSent"].toDate(),
+        (friend["lastThoughtSentDate"] == null) ? null : friend["lastThoughtSentDate"].toDate(),
+        friend['lastThoughtSentOption']
       ));
     }
     // save friends to global
@@ -109,7 +110,7 @@ class FriendProvider {
   }
 
   // update friendLast sent and the thoughts stat
-  void updateFriendLastSent(String toUserId) async {
+  void updateFriendLastSent(String toUserId, String thoughtOptionCode) async {
     var user = await _firebaseAuth.currentUser();
     var userRef =
         _firestore.collection('/users').document(globals.currentUserId);
@@ -119,7 +120,8 @@ class FriendProvider {
     currentFriends.forEach((f) {
       var friendObj = FriendModel.fromJson(f);
       if (friendObj.friendUserId == toUserId) {
-        friendObj.lastSent = DateTime.now();
+        friendObj.lastThoughtSentDate = DateTime.now();
+        friendObj.lastThoughtSentOption = thoughtOptionCode;
       }
       newFriends.add(friendObj.toJson());
     });
@@ -132,14 +134,14 @@ class FriendProvider {
     //     List<FriendModel> newFriends = doc.data['friends'].cast<FriendModel>();
     //     newFriends.forEach((FriendModel f){
     //         if(f.friendUserId==toUserId){
-    //           f.lastSent = DateTime.now();
+    //           f.lastThoughtSentDate = DateTime.now();
     //         }
     //     });
     //     // List<FriendModel> newFriends = doc.data['friends'].cast<FriendModel>();
     //     // newFriends
     //     //     .where((element) => element.friendUserId == toUserId)
     //     //     .first
-    //     //     .lastSent = DateTime.now();
+    //     //     .lastThoughtSentDate = DateTime.now();
     //     t.update(userRef, {'friends': newFriends});
     //   });
     // }).then((result) {

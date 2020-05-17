@@ -34,14 +34,15 @@ class FriendModel extends Equatable {
   final String displayName;
   final String friendUserId;
   final String thumbnail;
-  DateTime lastSent;
+  DateTime lastThoughtSentDate;
+  String lastThoughtSentOption;
 
   FriendModel(this.friendUserId, this.email, this.displayName, this.thumbnail,
-      this.lastSent);
+      this.lastThoughtSentDate,this.lastThoughtSentOption);
 
   @override
   List<Object> get props =>
-      [friendUserId, email, displayName, thumbnail, lastSent];
+      [friendUserId, email, displayName, thumbnail, lastThoughtSentDate,lastThoughtSentOption];
 
   factory FriendModel.fromJson(Map<dynamic, dynamic> json) {
     return FriendModel(
@@ -49,7 +50,9 @@ class FriendModel extends Equatable {
         json['friendEmail'] as String,
         json['friendName'] as String,
         json['thumbnail'] as String,
-        (json['lastSent'] == null) ? null : json['lastSent'].toDate());
+        (json['lastThoughtSentDate'] == null) ? null : json['lastThoughtSentDate'].toDate(),
+        json['lastThoughtSentOption'] as String
+        );
   }
 
   Map<String, dynamic> toJson() {
@@ -58,7 +61,8 @@ class FriendModel extends Equatable {
     data['friendEmail'] = this.email;
     data['friendName'] = this.displayName;
     data['thumbnail'] = this.thumbnail;
-    data['lastSent'] = this.lastSent;
+    data['lastThoughtSentDate'] = this.lastThoughtSentDate;
+    data['lastThoughtSentOption'] = this.lastThoughtSentOption;
     return data;
   }
 }

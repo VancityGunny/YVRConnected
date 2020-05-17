@@ -69,8 +69,8 @@ class FriendScreenState extends State<FriendScreen> {
                 var isRecent = true;
                 FriendModel curFriend = currentState.friends[index];
                 BoxDecoration friendDecoration = BoxDecoration();
-                if (curFriend.lastSent == null ||
-                    curFriend.lastSent
+                if (curFriend.lastThoughtSentDate == null ||
+                    curFriend.lastThoughtSentDate
                             .add(new Duration(hours: 24))
                             .compareTo(DateTime.now()) <
                         0) {
