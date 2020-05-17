@@ -66,12 +66,31 @@ class FriendScreenState extends State<FriendScreen> {
                 crossAxisCount: 3,
               ),
               itemBuilder: (context, index) {
+                var isRecent = true;
+                FriendModel curFriend = currentState.friends[index];
+                BoxDecoration friendDecoration = BoxDecoration();
+                if (curFriend.lastSent == null ||
+                    curFriend.lastSent
+                            .add(new Duration(hours: 24))
+                            .compareTo(DateTime.now()) <
+                        0) {
+                  isRecent = false;
+                  friendDecoration = BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey,
+                    backgroundBlendMode: BlendMode.saturation,
+                  );
+                }
+
                 return GestureDetector(
                     onTap: () {
                       goToFriendDetail(currentState.friends[index]);
                     },
                     onLongPress: () {
-                      openActionOptions(currentState.friends[index]);
+                      // not allow resend thought within 24 hours
+                      if (isRecent == false) {
+                        openActionOptions(currentState.friends[index]);
+                      }
                     }, // open action option, miss, remind, grateful
                     // onLongPressUp:
                     //     selectActionOption, // long press release so select whatever was selected
@@ -79,6 +98,7 @@ class FriendScreenState extends State<FriendScreen> {
                       child: Column(
                         children: <Widget>[
                           Container(
+                              foregroundDecoration: friendDecoration,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: new DecorationImage(
