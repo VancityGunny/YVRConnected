@@ -34,12 +34,12 @@ class ThoughtProvider {
     var user = await _firebaseAuth.currentUser();
 
     var thoughtsRef = await _firestore
-        .collection('/receivedThoughts')
+        .collection('/thoughts')
         .document(globals.currentUserId)
         .get();
     List<ThoughtModel> foundThoughtsReceived = [];
     if (thoughtsRef.data != null) {
-      for (var thought in thoughtsRef.data['thoughts']) {
+      for (var thought in thoughtsRef.data['receivedThoughts']) {
         foundThoughtsReceived.add(ThoughtModel.fromJson(thought));
       }
     }
@@ -72,13 +72,13 @@ class ThoughtProvider {
     var user = await _firebaseAuth.currentUser();
 
     var thoughtsRef = await _firestore
-        .collection('/sentThoughts')
+        .collection('/thoughts')
         .document(globals.currentUserId)
         .get();
 
     List<ThoughtModel> foundThoughtsSent = [];
     if (thoughtsRef.data != null) {
-      for (var thought in thoughtsRef.data['thoughts']) {
+      for (var thought in thoughtsRef.data['sentThoughts']) {
         foundThoughtsSent.add(ThoughtModel.fromJson(thought));
       }
     }
@@ -92,10 +92,10 @@ class ThoughtProvider {
 
     // add thought to sentThought collection
     var newSentThoughtDoc = await _firestore
-        .collection('/sentThoughts')
+        .collection('/thoughts')
         .document(globals.currentUserId);
     newSentThoughtDoc.updateData({
-      'thoughts': FieldValue.arrayUnion([
+      'sentThoughts': FieldValue.arrayUnion([
         {
           'toUserId': newThought.toUserId,
           'thoughtOptionCode': newThought.thoughtOptionCode,
@@ -105,11 +105,10 @@ class ThoughtProvider {
     });
 
     // add thought to receivedThought collection
-    var newReceivedThoughtDoc = await _firestore
-        .collection('/receivedThoughts')
-        .document(newThought.toUserId);
+    var newReceivedThoughtDoc =
+        await _firestore.collection('/thoughts').document(newThought.toUserId);
     newReceivedThoughtDoc.updateData({
-      'thoughts': FieldValue.arrayUnion([
+      'receivedThoughts': FieldValue.arrayUnion([
         {
           'fromUserId': globals.currentUserId,
           'thoughtOptionCode': newThought.thoughtOptionCode,
