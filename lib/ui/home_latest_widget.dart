@@ -65,6 +65,9 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
               ),
               itemBuilder: (context, index) {
                 return GestureDetector(
+                    onTap: () {
+                      viewThought(latestThoughts[index]);
+                    },
                     onLongPress: () {
                       //TODO: open the message
                     }, // open action option, miss, remind, grateful
@@ -86,5 +89,22 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
         ),
       ],
     );
+  }
+
+  void viewThought(ThoughtModel latestThought) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(child: Text(latestThought.fromUserId)),
+                  )
+                ],
+              ));
+        });
   }
 }

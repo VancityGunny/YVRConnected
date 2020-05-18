@@ -17,8 +17,15 @@ class UserProvider {
     // add sentThoughts and receivedThought colleciton for the user too
     var newThoughtsObj =
         _firestore.collection('/thoughts').document(newUserObj.documentID);
-    newThoughtsObj.setData({'sentThoughts': [],
-    'receivedThoughts':[]});
+    newThoughtsObj.setData({'sentThoughts': [], 'receivedThoughts': []});
     return newUserObj.documentID;
+  }
+
+  void assumeUser(String foundUserId, UserModel userModel) {
+    _firestore.collection('/users').document(foundUserId).updateData({
+      'uid': userModel.uid,
+      'phone': userModel.phone,
+      'displayName': userModel.displayName
+    });
   }
 }

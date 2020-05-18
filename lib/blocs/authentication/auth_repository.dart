@@ -35,10 +35,23 @@ class AuthRepository {
         .getDocuments();
     var newUser = null;
     if (foundUsers.documents.length == 0) {
-      // check if user record does not exist then create the record
+      var findByEmail = await _firestore
+          .collection('/users')
+          .where('email', isEqualTo: user.email)
+          .getDocuments();
       var userProvider = UserProvider();
-      var userId = userProvider.addUser(new UserModel(
-          user.uid, user.email, user.displayName, user.phoneNumber, []));
+      if (findByEmail.documents.length == 0) {
+        // check if user record does not exist then create the record
+
+        var userId = userProvider.addUser(new UserModel(
+            user.uid, user.email, user.displayName, user.phoneNumber, []));
+      } else {
+        // assume account found by the email
+        userProvider.assumeUser(
+            findByEmail.documents.first.documentID,
+            new UserModel(
+                user.uid, user.email, user.displayName, user.phoneNumber, []));
+      }
     }
 
     return user;

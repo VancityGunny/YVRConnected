@@ -40,6 +40,7 @@ class ThoughtProvider {
     List<ThoughtModel> foundThoughtsReceived = [];
     if (thoughtsRef.data != null) {
       for (var thought in thoughtsRef.data['receivedThoughts']) {
+        // only return unread
         foundThoughtsReceived.add(ThoughtModel.fromJson(thought));
       }
     }
