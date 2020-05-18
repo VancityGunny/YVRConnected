@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
+
+import 'package:yvrconnected/common/global_object.dart' as globals;
 
 class FriendScreen extends StatefulWidget {
   @override
@@ -30,111 +33,85 @@ class FriendScreenState extends State<FriendScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FriendBloc, FriendState>(
-        bloc: BlocProvider.of<FriendBloc>(context),
-        builder: (
-          BuildContext context,
-          FriendState currentState,
-        ) {
-          if (currentState is UninitFriendState) {
+    return StreamBuilder(
+        stream: Firestore.instance
+            .collection('/users')
+            .document(globals.currentUserId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(),
             );
           }
-          if (currentState is ErrorFriendState) {
-            return Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(currentState.errorMessage ?? 'Error'),
-                Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
-                  child: RaisedButton(
-                    color: Colors.blue,
-                    child: Text('reload'),
-                    onPressed: () => this._load(),
-                  ),
-                ),
-              ],
-            ));
-          }
-          if (currentState is FriendsLoadedState) {
-            FriendPage.of(context).friends = currentState.friends;
-            return GridView.builder(
-              itemCount: currentState.friends.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-              ),
-              itemBuilder: (context, index) {
-                var isRecent = true;
-                FriendModel curFriend = currentState.friends[index];
-                BoxDecoration friendDecoration = BoxDecoration();
-                if (curFriend.lastThoughtSentDate == null ||
-                    curFriend.lastThoughtSentDate
-                            .add(new Duration(hours: 24))
-                            .compareTo(DateTime.now()) <
-                        0) {
-                  isRecent = false;
-                  friendDecoration = BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.grey,
-                    backgroundBlendMode: BlendMode.saturation,
-                  );
-                }
+          return GridView.builder(
+            itemCount: snapshot.data.data['friends'].length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+            ),
+            itemBuilder: (context, index) {
+              var isRecent = true;
+              FriendModel curFriend = FriendModel.fromJson(snapshot.data.data['friends'][index]);
+              BoxDecoration friendDecoration = BoxDecoration();
+              if (curFriend.lastThoughtSentDate == null ||
+                  curFriend.lastThoughtSentDate
+                          .add(new Duration(hours: 24))
+                          .compareTo(DateTime.now()) <
+                      0) {
+                isRecent = false;
+                friendDecoration = BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey,
+                  backgroundBlendMode: BlendMode.saturation,
+                );
+              }
 
-                return GestureDetector(
-                    onTap: () {
-                      goToFriendDetail(currentState.friends[index]);
-                    },
-                    onLongPress: () {
-                      // not allow resend thought within 24 hours
-                      if (isRecent == false) {
-                        openActionOptions(currentState.friends[index]);
-                      }
-                    }, // open action option, miss, remind, grateful
-                    // onLongPressUp:
-                    //     selectActionOption, // long press release so select whatever was selected
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                              foregroundDecoration: friendDecoration,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: new DecorationImage(
-                                    image: (FriendPage.of(context)
-                                                .friends[index]
-                                                .thumbnail
-                                                .isEmpty ==
-                                            true)
-                                        ? Image.asset(
-                                                'graphics/default_user_thumbnail.png')
-                                            .image
-                                        : Image.network(FriendPage.of(context)
-                                                .friends[index]
-                                                .thumbnail)
-                                            .image,
-                                    fit: BoxFit.cover),
-                              ),
-                              width: 80,
-                              height: 80),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                  FriendPage.of(context)
-                                      .friends[index]
-                                      .displayName,
-                                  style: TextStyle(color: Colors.deepPurple)),
-                            ],
-                          )
-                        ],
-                      ),
-                    ));
-              },
-            );
-          }
-          return Center(
-            child: CircularProgressIndicator(),
+              return GestureDetector(
+                  onTap: () {
+                    goToFriendDetail(curFriend);
+                  },
+                  onLongPress: () {
+                    // not allow resend thought within 24 hours
+                    if (isRecent == false) {
+                      openActionOptions(curFriend);
+                    }
+                  }, // open action option, miss, remind, grateful
+                  // onLongPressUp:
+                  //     selectActionOption, // long press release so select whatever was selected
+                  child: Card(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                            foregroundDecoration: friendDecoration,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: new DecorationImage(
+                                  image: (curFriend
+                                              .thumbnail
+                                              .isEmpty ==
+                                          true)
+                                      ? Image.asset(
+                                              'graphics/default_user_thumbnail.png')
+                                          .image
+                                      : Image.network(curFriend
+                                              .thumbnail)
+                                          .image,
+                                  fit: BoxFit.cover),
+                            ),
+                            width: 80,
+                            height: 80),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                                curFriend
+                                    .displayName,
+                                style: TextStyle(color: Colors.deepPurple)),
+                          ],
+                        )
+                      ],
+                    ),
+                  ));
+            },
           );
         });
   }
