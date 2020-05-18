@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:yvrconnected/blocs/friend/friend_event.dart';
 import 'package:yvrconnected/blocs/friend/friend_stat_model.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 
+import 'package:yvrconnected/common/global_object.dart' as globals;
 // Widget to show all latest thoughts received
 class HomeLatestWidget extends StatefulWidget {
   @override
@@ -16,20 +18,13 @@ class HomeLatestWidget extends StatefulWidget {
 }
 
 class HomeLatestWidgetState extends State<StatefulWidget> {
-  List<ThoughtModel> latestThoughts = List<ThoughtModel>();
   List<FriendStatModel> topFiveFriends = List<FriendStatModel>();
   @override
   void initState() {
     super.initState();
     //load latest thoughts
     ThoughtProvider thoughtProvider = ThoughtProvider();
-    thoughtProvider.fetchThoughtsReceived().then((result) {
-      // If we need to rebuild the widget with the resulting data,
-      // make sure to use `setState`
-      setState(() {
-        latestThoughts = result;
-      });
-    });
+
     thoughtProvider.fetchTopFive().then((result) {
       // If we need to rebuild the widget with the resulting data,
       // make sure to use `setState`
@@ -58,15 +53,22 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
         )),
         Expanded(
           child: Container(
-            child: GridView.builder(
-              itemCount: latestThoughts.length,
+            child: StreamBuilder(stream: Firestore.instance.collection('/thoughts')
+        .document(globals.currentUserId)
+        .snapshots(),
+        builder: (context,snapshot){
+          if(!snapshot.hasData){ return Center(
+              child: CircularProgressIndicator(),
+            );}
+            return GridView.builder(
+              itemCount: snapshot.data.data['receivedThoughts'].length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
               ),
               itemBuilder: (context, index) {
                 return GestureDetector(
                     onTap: () {
-                      viewThought(latestThoughts[index]);
+                      viewThought(ThoughtModel.fromJson(snapshot.data.data['receivedThoughts'][index]));
                     },
                     onLongPress: () {
                       //TODO: open the message
@@ -78,13 +80,15 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
                       child: Column(
                         children: <Widget>[
                           Container(child: Icon(Icons.email), height: 80),
-                          Text(latestThoughts[index].thoughtOptionCode,
+                          Text(snapshot.data.data['receivedThoughts'][index]['thoughtOptionCode'],
                               style: TextStyle(color: Colors.deepPurple))
                         ],
                       ),
                     ));
               },
-            ),
+            );
+        })
+            
           ),
         ),
       ],
