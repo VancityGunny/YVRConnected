@@ -33,8 +33,8 @@ class ThoughtProvider {
   Future<List<String>> getThoughtOptions() async {}
 
   Future<List<FriendStatModel>> fetchTopFive(BuildContext context) async {
-    var thoughtSent = await fetchThoughtsSent();
-    var thoughtsSentLastMonth = await thoughtSent.where((t) =>
+    var thoughtSent = CommonBloc.of(context).allSentThoughts.value;
+    var thoughtsSentLastMonth = thoughtSent.where((t) =>
         t.createdDate.add(new Duration(days: 30)).compareTo(DateTime.now()) >=
         0);
     var thoughtsSentByFriend =
@@ -53,32 +53,12 @@ class ThoughtProvider {
     //thoughtsSentByFriend.map((f)=>{friend = f.key, sent = f.})
   }
 
-  Future<List<ThoughtModel>> fetchThoughtsSent() async {
-    var user = await _firebaseAuth.currentUser();
-
-    var thoughtsRef = await _firestore
-        .collection('/thoughts')
-        .document(globals.currentUserId)
-        .get();
-
-    List<ThoughtModel> foundThoughtsSent = [];
-    if (thoughtsRef.data != null) {
-      for (var thought in thoughtsRef.data['sentThoughts']) {
-        foundThoughtsSent.add(ThoughtModel.fromJson(thought));
-      }
-    }
-
-    return foundThoughtsSent;
-  }
-
   Future<bool> addThought(ThoughtModel newThought) async {
     //TODO: add checking so you can't send thought to the same person within 24 hours of each thoughs
-    var user = await _firebaseAuth.currentUser();
 
     // add thought to sentThought collection
-    var newSentThoughtDoc = await _firestore
-        .collection('/thoughts')
-        .document(globals.currentUserId);
+    var newSentThoughtDoc =
+        _firestore.collection('/thoughts').document(globals.currentUserId);
     newSentThoughtDoc.updateData({
       'sentThoughts': FieldValue.arrayUnion([
         {
@@ -91,7 +71,7 @@ class ThoughtProvider {
 
     // add thought to receivedThought collection
     var newReceivedThoughtDoc =
-        await _firestore.collection('/thoughts').document(newThought.toUserId);
+        _firestore.collection('/thoughts').document(newThought.toUserId);
     newReceivedThoughtDoc.updateData({
       'receivedThoughts': FieldValue.arrayUnion([
         {
