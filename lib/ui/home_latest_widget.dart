@@ -42,17 +42,26 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
       children: <Widget>[
         Expanded(
             child: Container(
-          child: ListView.builder(
-              itemCount: topFiveFriends.length,
-              itemBuilder: (BuildContext ctxt, int index) {
-                return ListTile(
-                  leading: Icon(Icons.favorite),
-                  title: Text(topFiveFriends[index].friend.displayName +
-                      ':' +
-                      topFiveFriends[index].thoughtSent.toString()),
-                );
-              }),
-        )),
+                child: StreamBuilder(
+          stream: CommonBloc.of(context).topFiveFriends.stream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext ctxt, int index) {
+                  return ListTile(
+                    leading: Icon(Icons.favorite),
+                    title: Text(snapshot.data[index].friend.displayName +
+                        ':' +
+                        snapshot.data[index].thoughtSent.toString()),
+                  );
+                });
+          },
+        ))),
         Expanded(
           child: Container(
               child: StreamBuilder(
@@ -85,8 +94,7 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
                                 children: <Widget>[
                                   Container(
                                       child: Icon(Icons.email), height: 80),
-                                  Text(
-                                      snapshot.data[index].thoughtOptionCode,
+                                  Text(snapshot.data[index].thoughtOptionCode,
                                       style:
                                           TextStyle(color: Colors.deepPurple))
                                 ],

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
@@ -22,6 +23,8 @@ class CommonBloc extends InheritedWidget {
       BehaviorSubject<List<ThoughtModel>>();
   BehaviorSubject<List<ThoughtModel>> allSentThoughts =
       BehaviorSubject<List<ThoughtModel>>();
+  BehaviorSubject<List<FriendStatModel>> topFiveFriends =
+      BehaviorSubject<List<FriendStatModel>>();
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => true;
@@ -72,7 +75,27 @@ class CommonBloc extends InheritedWidget {
 
         allReceivedThoughts.add(newReceivedThoughtsList);
         allSentThoughts.add(newSentThoughtsList);
+        topFiveFriends.add(fetchTopFive());
       }
     });
+  }
+
+  List<FriendStatModel> fetchTopFive() {
+    var thoughtsSentLastMonth = allSentThoughts.value.where((t) =>
+        t.createdDate.add(new Duration(days: 30)).compareTo(DateTime.now()) >=
+        0);
+    var thoughtsSentByFriend =
+        groupBy(thoughtsSentLastMonth, (t) => t.toUserId);
+
+    List<FriendStatModel> newStat = List<FriendStatModel>();
+    thoughtsSentByFriend.forEach((index, value) {
+      FriendModel myFriend =
+          allFriends.value.where((f) => f.friendUserId == index).first;
+      newStat.add(new FriendStatModel(myFriend, value.length));
+    });
+    newStat.sort((a, b) {
+      return b.thoughtSent.compareTo(a.thoughtSent);  //order from most thought sent to
+    });    
+    return newStat.take(5).toList();
   }
 }

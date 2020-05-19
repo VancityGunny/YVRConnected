@@ -1,11 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../main.dart';
-
-
-
 
 class CommonFunctions {
   static void pushPage(BuildContext context, Widget page) {
@@ -24,5 +18,4 @@ class CommonFunctions {
     // CommonFunctions.pushPage(
     //     context, MyHomePage(title: 'Flutter Demo Home Page'));
   }
- 
 }
