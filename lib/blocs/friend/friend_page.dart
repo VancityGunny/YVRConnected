@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
+import 'package:yvrconnected/common/common_bloc.dart';
 
 class FriendPage extends StatefulWidget {
   static const String routeName = '/friend';
@@ -58,7 +59,9 @@ class _FriendPageState extends State<FriendPage> {
     // make sure that the friend is not already in the list
     final EmailContact contact = await FlutterContactPicker.pickEmailContact();
 
-    FriendModel dupFriend = friends
+    FriendModel dupFriend = CommonBloc.of(context)
+        .allFriends
+        .value
         .firstWhere((f) => f.email == contact.email.email, orElse: () => null);
 
     if (dupFriend == null) {

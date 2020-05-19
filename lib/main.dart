@@ -13,6 +13,7 @@ import 'package:yvrconnected/ui/splash_screen.dart';
 
 import 'blocs/authentication/auth_event.dart';
 import 'blocs/authentication/auth_state.dart';
+import 'common/common_bloc.dart';
 import 'common/commonfunctions.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -46,7 +47,8 @@ class MyAppState extends State<MyApp> {
     return BlocProvider(
         create: (BuildContext context) =>
             _authenticationBloc, //bloc: _authenticationBloc,
-        child: MaterialApp(
+        child: CommonBloc(
+            child: MaterialApp(
           home: BlocBuilder(
             bloc: _authenticationBloc,
             builder: (BuildContext context, AuthState state) {
@@ -62,7 +64,7 @@ class MyAppState extends State<MyApp> {
               return Container();
             },
           ),
-        ));
+        )));
   }
 
   @override

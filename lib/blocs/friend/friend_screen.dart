@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
+import 'package:yvrconnected/common/common_bloc.dart';
 
 import 'package:yvrconnected/common/global_object.dart' as globals;
 
@@ -18,7 +20,7 @@ class FriendScreen extends StatefulWidget {
 
 class FriendScreenState extends State<FriendScreen> {
   ThoughtBloc _thoughtBloc;
-
+  StreamController controller;
   @override
   void initState() {
     super.initState();
@@ -34,10 +36,7 @@ class FriendScreenState extends State<FriendScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: Firestore.instance
-            .collection('/users')
-            .document(globals.currentUserId)
-            .snapshots(),
+        stream: CommonBloc.of(context).allFriends.stream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -45,13 +44,13 @@ class FriendScreenState extends State<FriendScreen> {
             );
           }
           return GridView.builder(
-            itemCount: snapshot.data.data['friends'].length,
+            itemCount: snapshot.data.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
             ),
             itemBuilder: (context, index) {
               var isRecent = true;
-              FriendModel curFriend = FriendModel.fromJson(snapshot.data.data['friends'][index]);
+              FriendModel curFriend = snapshot.data[index];
               BoxDecoration friendDecoration = BoxDecoration();
               if (curFriend.lastThoughtSentDate == null ||
                   curFriend.lastThoughtSentDate
@@ -86,15 +85,11 @@ class FriendScreenState extends State<FriendScreen> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: new DecorationImage(
-                                  image: (curFriend
-                                              .thumbnail
-                                              .isEmpty ==
-                                          true)
+                                  image: (curFriend.thumbnail.isEmpty == true)
                                       ? Image.asset(
                                               'graphics/default_user_thumbnail.png')
                                           .image
-                                      : Image.network(curFriend
-                                              .thumbnail)
+                                      : Image.network(curFriend.thumbnail)
                                           .image,
                                   fit: BoxFit.cover),
                             ),
@@ -102,9 +97,7 @@ class FriendScreenState extends State<FriendScreen> {
                             height: 80),
                         Row(
                           children: <Widget>[
-                            Text(
-                                curFriend
-                                    .displayName,
+                            Text(curFriend.displayName,
                                 style: TextStyle(color: Colors.deepPurple)),
                           ],
                         )
