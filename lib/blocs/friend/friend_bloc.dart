@@ -22,11 +22,4 @@ class FriendBloc extends Bloc<FriendEvent, FriendState> {
       yield state;
     }
   }
-
-  Stream<DocumentSnapshot> getFriendsStream() {
-    return Firestore.instance
-        .collection('/users')
-        .document(globals.currentUserId)
-        .snapshots();
-  }
 }

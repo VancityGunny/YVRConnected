@@ -6,9 +6,11 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/blocs/user/user_model.dart';
 import 'package:yvrconnected/blocs/user/user_provider.dart';
+import 'package:yvrconnected/common/common_bloc.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;
 import 'friend_model.dart';
 
@@ -84,20 +86,19 @@ class FriendProvider {
   }
 
   // update friendLast sent and the thoughts stat
-  void updateFriendLastSent(String toUserId, String thoughtOptionCode) async {
+  void updateFriendLastSent(String toUserId, String thoughtOptionCode,BuildContext context) async {
     var user = await _firebaseAuth.currentUser();
+    
     var userRef =
         _firestore.collection('/users').document(globals.currentUserId);
-    var userDoc = await userRef.get();
-    var currentFriends = userDoc.data['friends'];
+    var currentFriends = CommonBloc.of(context).allFriends.value;
     List<Map<String, dynamic>> newFriends = new List<Map<String, dynamic>>();
     currentFriends.forEach((f) {
-      var friendObj = FriendModel.fromJson(f);
-      if (friendObj.friendUserId == toUserId) {
-        friendObj.lastThoughtSentDate = DateTime.now();
-        friendObj.lastThoughtSentOption = thoughtOptionCode;
+      if (f.friendUserId == toUserId) {
+        f.lastThoughtSentDate = DateTime.now();
+        f.lastThoughtSentOption = thoughtOptionCode;
       }
-      newFriends.add(friendObj.toJson());
+      newFriends.add(f.toJson());
     });
     userRef.updateData({'friends': newFriends});
     // _firestore.runTransaction((transaction) async {
