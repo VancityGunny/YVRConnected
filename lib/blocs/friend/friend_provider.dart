@@ -28,32 +28,6 @@ class FriendProvider {
     await Future.delayed(Duration(seconds: 2));
   }
 
-  Future<List<FriendModel>> fetchFriends() async {
-    var user = await _firebaseAuth.currentUser();
-
-    var friendsRef = await _firestore
-        .collection('/users')
-        .document(globals.currentUserId)
-        .get();
-    var friends = friendsRef.data['friends'];
-
-    List<FriendModel> foundFriends = [];
-
-    for (var friend in friends) {
-      foundFriends.add(new FriendModel(
-        friend["friendId"],
-        friend["friendEmail"],
-        friend["friendName"],
-        friend["thumbnail"],
-        (friend["lastThoughtSentDate"] == null) ? null : friend["lastThoughtSentDate"].toDate(),
-        friend['lastThoughtSentOption']
-      ));
-    }
-    // save friends to global
-    globals.allFriends = foundFriends;
-    return foundFriends;
-  }
-
   Future<bool> addFriend(FriendModel newFriend, Uint8List thumbnail) async {
     var user = await _firebaseAuth.currentUser();
     var friendId = null;

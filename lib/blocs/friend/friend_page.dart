@@ -38,8 +38,6 @@ class _FriendPageState extends State<FriendPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<FriendBloc>(context)
-        .add(LoadingFriendsEvent()); // default to load all friends
   }
 
   @override

@@ -25,7 +25,7 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
     //load latest thoughts
     ThoughtProvider thoughtProvider = ThoughtProvider();
 
-    thoughtProvider.fetchTopFive().then((result) {
+    thoughtProvider.fetchTopFive(context).then((result) {
       // If we need to rebuild the widget with the resulting data,
       // make sure to use `setState`
       setState(() {

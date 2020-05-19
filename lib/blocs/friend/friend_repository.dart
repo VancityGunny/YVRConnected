@@ -7,9 +7,6 @@ class FriendRepository {
 
   FriendRepository();
 
-
-  Future<List<FriendModel>> fetchFriends() => _friendProvider.fetchFriends();
-
   void test(bool isError) {
     this._friendProvider.test(isError);
   }

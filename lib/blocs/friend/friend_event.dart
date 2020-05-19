@@ -25,21 +25,7 @@ class AddingFriendEvent extends FriendEvent {
     var success = await _friendRepository.AddFriend(this.newFriend, this.thumbnail);
     if (success) {
       yield FriendAddedState(friend: this.newFriend);
-      bloc.add(LoadingFriendsEvent()); // refresh Friends List
     }
-  }
-}
-
-class LoadingFriendsEvent extends FriendEvent {
-  @override
-  String toString() => 'LoadingFriendsEvent';
-
-  @override
-  Stream<FriendState> applyAsync(
-      {FriendState currentState, FriendBloc bloc}) async* {
-    List<FriendModel> friends = await this._friendRepository.fetchFriends();
-
-    yield FriendsLoadedState(friends: friends);
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 
@@ -21,7 +22,7 @@ class ThoughtRepository {
     return success;
   }
 
-  Future<List<FriendStatModel>> fetchTopFive() async {
-    return this._thoughtProvider.fetchTopFive();
+  Future<List<FriendStatModel>> fetchTopFive(BuildContext context) async {
+    return this._thoughtProvider.fetchTopFive(context);
   }
 }

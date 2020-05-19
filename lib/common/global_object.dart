@@ -5,4 +5,3 @@ import 'package:yvrconnected/blocs/user/user_model.dart';
 
 UserModel loggedInUser = null;
 String currentUserId = null;
-List<FriendModel> allFriends = null;
