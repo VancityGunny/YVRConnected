@@ -6,8 +6,10 @@ import 'package:yvrconnected/blocs/friend/friend_bloc.dart';
 import 'package:yvrconnected/blocs/friend/friend_event.dart';
 import 'package:yvrconnected/blocs/friend/friend_stat_model.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
+import 'package:yvrconnected/common/common_bloc.dart';
 
 import 'package:yvrconnected/common/global_object.dart' as globals;
+
 // Widget to show all latest thoughts received
 class HomeLatestWidget extends StatefulWidget {
   @override
@@ -53,43 +55,46 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
         )),
         Expanded(
           child: Container(
-            child: StreamBuilder(stream: Firestore.instance.collection('/thoughts')
-        .document(globals.currentUserId)
-        .snapshots(),
-        builder: (context,snapshot){
-          if(!snapshot.hasData){ return Center(
-              child: CircularProgressIndicator(),
-            );}
-            return GridView.builder(
-              itemCount: snapshot.data.data['receivedThoughts'].length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-              ),
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                    onTap: () {
-                      viewThought(ThoughtModel.fromJson(snapshot.data.data['receivedThoughts'][index]));
-                    },
-                    onLongPress: () {
-                      //TODO: open the message
-                    }, // open action option, miss, remind, grateful
-                    onLongPressUp: () {
-                      //TODO: selectActionOption, // long press release so select whatever was selected
-                    },
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          Container(child: Icon(Icons.email), height: 80),
-                          Text(snapshot.data.data['receivedThoughts'][index]['thoughtOptionCode'],
-                              style: TextStyle(color: Colors.deepPurple))
-                        ],
+              child: StreamBuilder(
+                  stream: CommonBloc.of(context).allReceivedThoughts.stream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return GridView.builder(
+                      itemCount: snapshot.data.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
                       ),
-                    ));
-              },
-            );
-        })
-            
-          ),
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                            onTap: () {
+                              viewThought(
+                                  ThoughtModel.fromJson(snapshot.data[index]));
+                            },
+                            onLongPress: () {
+                              //TODO: open the message
+                            }, // open action option, miss, remind, grateful
+                            onLongPressUp: () {
+                              //TODO: selectActionOption, // long press release so select whatever was selected
+                            },
+                            child: Card(
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                      child: Icon(Icons.email), height: 80),
+                                  Text(
+                                      snapshot.data[index].thoughtOptionCode,
+                                      style:
+                                          TextStyle(color: Colors.deepPurple))
+                                ],
+                              ),
+                            ));
+                      },
+                    );
+                  })),
         ),
       ],
     );

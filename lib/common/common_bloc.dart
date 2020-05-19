@@ -4,19 +4,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
+import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/blocs/user/user_model.dart';
 
 import 'package:yvrconnected/common/global_object.dart' as globals;
 
 class CommonBloc extends InheritedWidget {
   StreamController friendsController;
+  StreamController thoughtsController;
   FriendProvider friendProvider = new FriendProvider();
   FriendBloc friendBloc = FriendBloc();
   UserModel loggedInUser = null;
   String currentUserId = null;
   BehaviorSubject<List<FriendModel>> allFriends =
       BehaviorSubject<List<FriendModel>>();
-  //List<FriendModel> allFriends = null;
+  BehaviorSubject<List<ThoughtModel>> allReceivedThoughts =
+      BehaviorSubject<List<ThoughtModel>>();
+  BehaviorSubject<List<ThoughtModel>> allSentThoughts =
+      BehaviorSubject<List<ThoughtModel>>();
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => true;
@@ -45,6 +50,28 @@ class CommonBloc extends InheritedWidget {
         //     event.data['friends'].map((f) => FriendModel.fromJson(f));
 
         allFriends.add(newFriendsList);
+      }
+    });
+
+    thoughtsController = StreamController.broadcast();
+    thoughtsController.addStream(Firestore.instance
+        .collection('/thoughts')
+        .document(globals.currentUserId)
+        .snapshots());
+    thoughtsController.stream.listen((event) {
+      DocumentSnapshot docs = event;
+      if (docs.data != null) {
+        var newReceivedThoughtsList = new List<ThoughtModel>();
+        var newSentThoughtsList = new List<ThoughtModel>();
+        docs.data['receivedThoughts'].forEach((t) {
+          newReceivedThoughtsList.add(ThoughtModel.fromJson(t));
+        });
+        docs.data['sentThoughts'].forEach((t) {
+          newSentThoughtsList.add(ThoughtModel.fromJson(t));
+        });
+
+        allReceivedThoughts.add(newReceivedThoughtsList);
+        allSentThoughts.add(newSentThoughtsList);
       }
     });
   }

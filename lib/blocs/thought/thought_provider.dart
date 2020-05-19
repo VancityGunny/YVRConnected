@@ -32,24 +32,6 @@ class ThoughtProvider {
 
   Future<List<String>> getThoughtOptions() async {}
 
-  Future<List<ThoughtModel>> fetchThoughtsReceived() async {
-    var user = await _firebaseAuth.currentUser();
-
-    var thoughtsRef = await _firestore
-        .collection('/thoughts')
-        .document(globals.currentUserId)
-        .get();
-    List<ThoughtModel> foundThoughtsReceived = [];
-    if (thoughtsRef.data != null) {
-      for (var thought in thoughtsRef.data['receivedThoughts']) {
-        // only return unread
-        foundThoughtsReceived.add(ThoughtModel.fromJson(thought));
-      }
-    }
-
-    return foundThoughtsReceived;
-  }
-
   Future<List<FriendStatModel>> fetchTopFive(BuildContext context) async {
     var thoughtSent = await fetchThoughtsSent();
     var thoughtsSentLastMonth = await thoughtSent.where((t) =>
@@ -57,11 +39,14 @@ class ThoughtProvider {
         0);
     var thoughtsSentByFriend =
         groupBy(thoughtsSentLastMonth, (t) => t.toUserId);
-    
+
     List<FriendStatModel> newStat = List<FriendStatModel>();
     thoughtsSentByFriend.forEach((index, value) {
-      FriendModel myFriend =
-          CommonBloc.of(context).allFriends.value.where((f) => f.friendUserId == index).first;
+      FriendModel myFriend = CommonBloc.of(context)
+          .allFriends
+          .value
+          .where((f) => f.friendUserId == index)
+          .first;
       newStat.add(new FriendStatModel(myFriend, value.length));
     });
     return newStat;
