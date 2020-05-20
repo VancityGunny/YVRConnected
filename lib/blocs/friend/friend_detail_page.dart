@@ -26,6 +26,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
         body: Column(
           children: <Widget>[
             Expanded(
+              flex: 2,
               child: Container(
                   child: (widget.currentFriend.thumbnail.isEmpty == true)
                       ? Image.asset('graphics/default_user_thumbnail.png')
@@ -33,23 +34,30 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                   height: 200),
             ),
             Expanded(
+              flex: 1,
               child: Text(widget.currentFriend.displayName),
             ),
             Expanded(
-                child: ListView.builder(
+                flex: 2,
+                child: ListView.builder(                  
+                    scrollDirection: Axis.horizontal,
                     itemCount: thoughtOptions.length,
                     itemBuilder: (BuildContext ctxt, int index) {
-                      return InkWell(
-                          onTap: () {
-                            sendThought(widget.currentFriend,
-                                thoughtOptions[index].code);
-                          },
-                          child: ListTile(
-                            leading: thoughtOptions[index].icon,
-                            title: Text(thoughtOptions[index].caption),
-                          ));
+                      return Container(
+                          width: 80.0,
+                          child: InkWell(
+                              onTap: () {
+                                sendThought(widget.currentFriend,
+                                    thoughtOptions[index].code);
+                              },
+                              child: ListTile(
+                                title:
+                                    Center(child: thoughtOptions[index].icon),
+                                subtitle: Text(thoughtOptions[index].caption),
+                              )));
                     })),
             Expanded(
+              flex: 3,
               child: RaisedButton(
                 onPressed: deleteFriend,
                 child: Text('DELETE FRIEND'),
