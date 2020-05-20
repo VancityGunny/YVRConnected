@@ -1,29 +1,24 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
-import 'package:yvrconnected/blocs/user/user_model.dart';
-
 import 'package:yvrconnected/common/global_object.dart' as globals;
 
 class CommonBloc extends InheritedWidget {
-  StreamController friendsController;
-  StreamController thoughtsController;
-  FriendProvider friendProvider = new FriendProvider();
-  FriendBloc friendBloc = FriendBloc();
-  UserModel loggedInUser = null;
-  String currentUserId = null;
-  BehaviorSubject<List<FriendModel>> allFriends =
+  final StreamController friendsController = StreamController.broadcast();
+  final StreamController thoughtsController = StreamController.broadcast();
+  final FriendProvider friendProvider = new FriendProvider();
+
+  final BehaviorSubject<List<FriendModel>> allFriends =
       BehaviorSubject<List<FriendModel>>();
-  BehaviorSubject<List<ThoughtModel>> allReceivedThoughts =
+  final BehaviorSubject<List<ThoughtModel>> allReceivedThoughts =
       BehaviorSubject<List<ThoughtModel>>();
-  BehaviorSubject<List<ThoughtModel>> allSentThoughts =
+  final BehaviorSubject<List<ThoughtModel>> allSentThoughts =
       BehaviorSubject<List<ThoughtModel>>();
-  BehaviorSubject<List<FriendStatModel>> topFiveFriends =
+  final BehaviorSubject<List<FriendStatModel>> topFiveFriends =
       BehaviorSubject<List<FriendStatModel>>();
 
   @override
@@ -36,7 +31,6 @@ class CommonBloc extends InheritedWidget {
   }
 
   initStream() {
-    friendsController = StreamController.broadcast();
     friendsController.addStream(Firestore.instance
         .collection('/users')
         .document(globals.currentUserId)
@@ -45,18 +39,13 @@ class CommonBloc extends InheritedWidget {
       DocumentSnapshot docs = event;
       if (docs.data != null) {
         var newFriendsList = new List<FriendModel>();
-
         event.data['friends'].forEach((f) {
           newFriendsList.add(FriendModel.fromJson(f));
         });
-        // var newSet =
-        //     event.data['friends'].map((f) => FriendModel.fromJson(f));
-
         allFriends.add(newFriendsList);
       }
     });
 
-    thoughtsController = StreamController.broadcast();
     thoughtsController.addStream(Firestore.instance
         .collection('/thoughts')
         .document(globals.currentUserId)
@@ -94,8 +83,9 @@ class CommonBloc extends InheritedWidget {
       newStat.add(new FriendStatModel(myFriend, value.length));
     });
     newStat.sort((a, b) {
-      return b.thoughtSent.compareTo(a.thoughtSent);  //order from most thought sent to
-    });    
+      return b.thoughtSent
+          .compareTo(a.thoughtSent); //order from most thought sent to
+    });
     return newStat.take(5).toList();
   }
 }
