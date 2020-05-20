@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yvrconnected/blocs/user/user_model.dart';
 import 'package:yvrconnected/blocs/user/user_provider.dart';
-import 'package:yvrconnected/common/common_bloc.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;
 
 class AuthRepository {
@@ -34,7 +32,6 @@ class AuthRepository {
         .collection('/users')
         .where('uid', isEqualTo: user.uid)
         .getDocuments();
-    var newUser = null;
     if (foundUsers.documents.length == 0) {
       var findByEmail = await _firestore
           .collection('/users')
@@ -44,17 +41,18 @@ class AuthRepository {
       if (findByEmail.documents.length == 0) {
         // check if user record does not exist then create the record
 
-        var userId = userProvider.addUser(new UserModel(
+        var userId = await userProvider.addUser(new UserModel(
             user.uid, user.email, user.displayName, user.phoneNumber, []));
+        globals.currentUserId = userId;
       } else {
         // assume account found by the email
         userProvider.assumeUser(
             findByEmail.documents.first.documentID,
             new UserModel(
                 user.uid, user.email, user.displayName, user.phoneNumber, []));
+        globals.currentUserId = findByEmail.documents.first.documentID;
       }
     }
-
     return user;
   }
 
@@ -67,7 +65,6 @@ class AuthRepository {
 
   Future<bool> isSignedIn() async {
     final currentUser = await _firebaseAuth.currentUser();
-
     return currentUser != null;
   }
 

@@ -4,8 +4,6 @@ import 'dart:typed_data';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:meta/meta.dart';
 
-import 'package:yvrconnected/common/global_object.dart' as globals;
-
 @immutable
 abstract class FriendEvent {
   Stream<FriendState> applyAsync({FriendState currentState, FriendBloc bloc});
