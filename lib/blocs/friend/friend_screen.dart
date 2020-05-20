@@ -89,11 +89,12 @@ class FriendScreenState extends State<FriendScreen> {
                             ),
                             width: 80,
                             height: 80),
-                        Row(
-                          children: <Widget>[
-                            Text(curFriend.displayName,
+                        Container(
+                          child: Flexible(
+                            child: Align(child: Text(curFriend.displayName,
                                 style: TextStyle(color: Colors.deepPurple)),
-                          ],
+                                alignment: Alignment.topLeft) ,
+                          ),
                         )
                       ],
                     ),

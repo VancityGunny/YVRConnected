@@ -76,11 +76,15 @@ class CommonBloc extends InheritedWidget {
     var thoughtsSentByFriend =
         groupBy(thoughtsSentLastMonth, (t) => t.toUserId);
 
+    var currentFriends = allFriends.value;
     List<FriendStatModel> newStat = List<FriendStatModel>();
     thoughtsSentByFriend.forEach((index, value) {
-      FriendModel myFriend =
-          allFriends.value.where((f) => f.friendUserId == index).first;
-      newStat.add(new FriendStatModel(myFriend, value.length));
+      // only care about my currentFriends
+      if (currentFriends.any((f) => f.friendUserId == index)) {
+        FriendModel myFriend =
+            allFriends.value.where((f) => f.friendUserId == index).first;
+        newStat.add(new FriendStatModel(myFriend, value.length));
+      }
     });
     newStat.sort((a, b) {
       return b.thoughtSent
