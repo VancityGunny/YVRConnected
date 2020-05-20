@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:yvrconnected/blocs/authentication/auth_bloc.dart';
@@ -10,14 +8,9 @@ import 'package:yvrconnected/simple_bloc_delegate.dart';
 import 'package:yvrconnected/ui/home_screen.dart';
 import 'package:yvrconnected/ui/login_screen.dart';
 import 'package:yvrconnected/ui/splash_screen.dart';
-
 import 'blocs/authentication/auth_event.dart';
 import 'blocs/authentication/auth_state.dart';
 import 'common/common_bloc.dart';
-import 'common/commonfunctions.dart';
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
-final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
@@ -56,7 +49,7 @@ class MyAppState extends State<MyApp> {
                 return SplashScreen();
               }
               if (state is UnauthenticatedState) {
-                return LoginScreen(authRepository: _authRepository);
+                return LoginScreen();
               }
               if (state is AuthenticatedState) {
                 return HomeScreen(state.displayName);

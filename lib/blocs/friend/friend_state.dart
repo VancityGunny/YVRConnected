@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'friend_model.dart';
 
 abstract class FriendState extends Equatable {

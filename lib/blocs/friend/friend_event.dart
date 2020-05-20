@@ -20,7 +20,7 @@ class AddingFriendEvent extends FriendEvent {
   @override
   Stream<FriendState> applyAsync(
       {FriendState currentState, FriendBloc bloc}) async* {
-    var success = await _friendRepository.AddFriend(this.newFriend, this.thumbnail);
+    var success = await _friendRepository.addFriend(this.newFriend, this.thumbnail);
     if (success) {
       yield FriendAddedState(friend: this.newFriend);
     }

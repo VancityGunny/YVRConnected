@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-
 import 'package:bloc/bloc.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 
@@ -13,7 +12,7 @@ class ThoughtBloc extends Bloc<ThoughtEvent, ThoughtState> {
     ThoughtEvent event,
   ) async* {
     try {
-      yield* await event.applyAsync(currentState: state, bloc: this);
+      yield* event.applyAsync(currentState: state, bloc: this);
     } catch (_, stackTrace) {
       developer.log('$_', name: 'ThoughtBloc', error: _, stackTrace: stackTrace);
       yield state;

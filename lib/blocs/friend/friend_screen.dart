@@ -1,15 +1,9 @@
 import 'dart:async';
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
-
-import 'package:yvrconnected/common/global_object.dart' as globals;
 
 class FriendScreen extends StatefulWidget {
   @override

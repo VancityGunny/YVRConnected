@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:yvrconnected/blocs/authentication/auth_repository.dart';
 import 'package:yvrconnected/blocs/authentication/index.dart';
 
 class LoginForm extends StatefulWidget {
-  final AuthRepository _authRepository;
-
-  LoginForm({Key key, @required AuthRepository userRepository})
-      : assert(userRepository != null),
-        _authRepository = userRepository,
-        super(key: key);
 
   State<LoginForm> createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
-
-  AuthRepository get _authRepository => widget._authRepository;
 
   @override
   void initState() {

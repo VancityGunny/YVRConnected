@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
@@ -12,7 +11,7 @@ class ThoughtRepository {
     this._thoughtProvider.test(isError);
   }
 
-  Future<bool> AddThought(ThoughtModel newThought, BuildContext context) async {
+  Future<bool> addThought(ThoughtModel newThought, BuildContext context) async {
     var success = await this._thoughtProvider.addThought(newThought);
     if (success) {
       // update lastThoughtSentDate for that friend

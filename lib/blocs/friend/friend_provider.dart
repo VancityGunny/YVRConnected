@@ -1,20 +1,14 @@
 import 'dart:async';
-import 'dart:ffi';
-import 'dart:io';
-import 'dart:ui';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/blocs/user/user_model.dart';
 import 'package:yvrconnected/blocs/user/user_provider.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;
 import 'friend_model.dart';
-
-import 'dart:developer' as developer;
 
 Firestore _firestore = Firestore.instance;
 FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -31,8 +25,7 @@ class FriendProvider {
   }
 
   Future<bool> addFriend(FriendModel newFriend, Uint8List thumbnail) async {
-    var user = await _firebaseAuth.currentUser();
-    var friendId = null;
+    var friendId;
     // check if user record does not exist then create the record
     var friendsRef = await _firestore
         .collection('/users')

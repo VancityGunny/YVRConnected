@@ -11,7 +11,7 @@ class FriendRepository {
     this._friendProvider.test(isError);
   }
 
-  Future<bool> AddFriend(FriendModel newFriend, Uint8List thumbnail){
+  Future<bool> addFriend(FriendModel newFriend, Uint8List thumbnail){
     return this._friendProvider.addFriend(newFriend, thumbnail);
   }
 }

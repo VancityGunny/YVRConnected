@@ -1,28 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yvrconnected/blocs/authentication/auth_bloc.dart';
-import 'package:yvrconnected/blocs/authentication/auth_repository.dart';
-
 import 'login_form.dart';
 
 class LoginScreen extends StatefulWidget {
-  final AuthRepository _authRepository;
-
   static String route = 'login';
 
-  LoginScreen({Key key, @required AuthRepository authRepository})
-      : assert(authRepository != null),
-        _authRepository = authRepository,
-        super(key: key);
 
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
-
-  AuthRepository get _authRepository => widget._authRepository;
 
   @override
   void initState() {
@@ -33,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Login')),
-      body: LoginForm(userRepository: _authRepository),
+      body: LoginForm(),
     );
   }
 

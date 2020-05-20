@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:yvrconnected/blocs/friend/friend_model.dart';
-import 'package:yvrconnected/blocs/thought/index.dart';
 
 class UserModel extends Equatable {
   final String uid;

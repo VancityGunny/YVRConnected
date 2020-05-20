@@ -1,22 +1,16 @@
 import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yvrconnected/blocs/authentication/index.dart';
-import 'package:yvrconnected/blocs/friend/friend_screen.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
 import 'package:yvrconnected/ui/home_latest_widget.dart';
 
-import 'package:yvrconnected/common/global_object.dart' as globals;
-
 class HomeScreen extends StatefulWidget {
   final String name;
 
-  HomeScreen(@required this.name);
+  HomeScreen(this.name);
   @override
   HomeScreenState createState() {
     return HomeScreenState();
@@ -32,7 +26,7 @@ class HomeScreenState extends State<HomeScreen> {
     super.initState();
     _friendBloc = FriendBloc();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     // set user stream

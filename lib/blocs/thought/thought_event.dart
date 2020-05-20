@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-
 import 'package:flutter/cupertino.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:meta/meta.dart';
@@ -25,7 +24,7 @@ class AddingThoughtEvent extends ThoughtEvent {
   Stream<ThoughtState> applyAsync(
       {ThoughtState currentState, ThoughtBloc bloc}) async* {
     var success =
-        await _thoughtRepository.AddThought(this.newThought, this.context);
+        await _thoughtRepository.addThought(this.newThought, this.context);
     if (success) {
       yield ThoughtAddedState(thought: this.newThought);
       //bloc.add(LoadingFriendsEvent()); // refresh friends List to reflect new thought update
