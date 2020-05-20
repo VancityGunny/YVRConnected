@@ -33,31 +33,28 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                       : Image.network(widget.currentFriend.thumbnail),
                   height: 200),
             ),
-            Expanded(
-              flex: 1,
-              child: Text(widget.currentFriend.displayName),
-            ),
+            Text(widget.currentFriend.displayName),
             Expanded(
                 flex: 2,
-                child: ListView.builder(                  
-                    scrollDirection: Axis.horizontal,
-                    itemCount: thoughtOptions.length,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      return Container(
-                          width: 80.0,
-                          child: InkWell(
-                              onTap: () {
-                                sendThought(widget.currentFriend,
-                                    thoughtOptions[index].code);
-                              },
-                              child: ListTile(
-                                title:
-                                    Center(child: thoughtOptions[index].icon),
-                                subtitle: Text(thoughtOptions[index].caption),
-                              )));
-                    })),
-            Expanded(
-              flex: 3,
+                child: Container(
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: thoughtOptions.length,
+                        itemBuilder: (BuildContext ctxt, int index) {
+                          return Container(
+                              width: 90.0,
+                              child: InkWell(
+                                  onTap: () {
+                                    sendThought(widget.currentFriend,
+                                        thoughtOptions[index].code);
+                                  },
+                                  child: ListTile(                                    
+                                    title: thoughtOptions[index].icon,
+                                    subtitle:
+                                        Text(thoughtOptions[index].caption),
+                                  )));
+                        }))),
+            Container(
               child: RaisedButton(
                 onPressed: deleteFriend,
                 child: Text('DELETE FRIEND'),

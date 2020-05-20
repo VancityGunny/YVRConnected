@@ -44,15 +44,30 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
                 child: CircularProgressIndicator(),
               );
             }
-            return ListView.builder(
+            return ListView.builder(              
+                scrollDirection: Axis.horizontal,
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext ctxt, int index) {
-                  return ListTile(
-                    leading: Icon(Icons.favorite),
-                    title: Text(snapshot.data[index].friend.displayName +
-                        ':' +
-                        snapshot.data[index].thoughtSent.toString()),
-                  );
+                  return Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: new DecorationImage(                          
+                            image: (snapshot
+                                        .data[index].friend.thumbnail.isEmpty ==
+                                    true)
+                                ? Image.asset(
+                                        'graphics/default_user_thumbnail.png')
+                                    .image
+                                : Image.network(
+                                        snapshot.data[index].friend.thumbnail)
+                                    .image,
+                            fit: BoxFit.fitWidth),
+                      ),
+                      child: Text(snapshot.data[index].friend.displayName +
+                          ':' +
+                          snapshot.data[index].thoughtSent.toString()),
+                      width: 70,
+                      height: 70);
                 });
           },
         ))),
