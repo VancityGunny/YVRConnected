@@ -80,8 +80,7 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                             onTap: () {
-                              viewThought(
-                                  ThoughtModel.fromJson(snapshot.data[index]));
+                              viewThought(snapshot.data[index]);
                             },
                             onLongPress: () {
                               //TODO: open the message
@@ -109,6 +108,9 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
   }
 
   void viewThought(ThoughtModel latestThought) {
+    var currentFriend = CommonBloc.of(context).allFriends.value.firstWhere(
+        (element) => element.friendUserId == latestThought.fromUserId);
+
     showDialog(
         context: context,
         builder: (context) {
@@ -117,6 +119,13 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
                   borderRadius: BorderRadius.circular(20.0)),
               child: Column(
                 children: <Widget>[
+                  Expanded(
+                      child: Container(
+                    child: (currentFriend != null &&
+                            currentFriend.thumbnail.isEmpty == true)
+                        ? Image.asset('graphics/default_user_thumbnail.png')
+                        : Image.network(currentFriend.thumbnail),
+                  )),
                   Expanded(
                     child: Container(child: Text(latestThought.fromUserId)),
                   )
