@@ -118,4 +118,13 @@ class FriendProvider {
     //   developer.log('Transaction failure:' + err);
     // });
   }
+
+  void removeFriend(String friendUserId,BuildContext context) {
+    var currentFriends = CommonBloc.of(context).allFriends.value;
+    var newFriends = currentFriends.where((element) => element.friendUserId != friendUserId).map((e) => e.toJson()).toList();
+     _firestore
+          .collection('/users')
+          .document(globals.currentUserId)
+          .updateData({'friends': newFriends});
+  }
 }
