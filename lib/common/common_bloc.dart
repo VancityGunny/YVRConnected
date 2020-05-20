@@ -2,15 +2,18 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
+import 'package:yvrconnected/blocs/thought/thought_option_model.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;
 
 class CommonBloc extends InheritedWidget {
   final StreamController friendsController = StreamController.broadcast();
   final StreamController thoughtsController = StreamController.broadcast();
   final FriendProvider friendProvider = new FriendProvider();
+  final ThoughtRepository thoughtRepository = new ThoughtRepository();
 
   final BehaviorSubject<List<FriendModel>> allFriends =
       BehaviorSubject<List<FriendModel>>();
@@ -20,6 +23,12 @@ class CommonBloc extends InheritedWidget {
       BehaviorSubject<List<ThoughtModel>>();
   final BehaviorSubject<List<FriendStatModel>> topFiveFriends =
       BehaviorSubject<List<FriendStatModel>>();
+
+  final thoughtOptions = [ ThoughtOptionModel('MISS','Miss you', FaIcon(FontAwesomeIcons.sadTear)),
+  ThoughtOptionModel('WISH','Wish U were here', FaIcon(FontAwesomeIcons.streetView)),
+  ThoughtOptionModel('GOLD','Good old time', FaIcon(FontAwesomeIcons.wineGlassAlt)),
+  ThoughtOptionModel('GRAT','Grateful for you', FaIcon(FontAwesomeIcons.prayingHands))
+                          ];
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => true;

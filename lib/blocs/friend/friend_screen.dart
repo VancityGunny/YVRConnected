@@ -91,9 +91,10 @@ class FriendScreenState extends State<FriendScreen> {
                             height: 80),
                         Container(
                           child: Flexible(
-                            child: Align(child: Text(curFriend.displayName,
-                                style: TextStyle(color: Colors.deepPurple)),
-                                alignment: Alignment.topLeft) ,
+                            child: Align(
+                                child: Text(curFriend.displayName,
+                                    style: TextStyle(color: Colors.deepPurple)),
+                                alignment: Alignment.topLeft),
                           ),
                         )
                       ],
@@ -112,45 +113,22 @@ class FriendScreenState extends State<FriendScreen> {
     showDialog(
         context: context,
         builder: (context) {
+          var thoughtOptions = CommonBloc.of(context).thoughtOptions;
           return Dialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
-              child: ListView(
-                children: <Widget>[
-                  InkWell(
-                      onTap: () {
-                        sendThought(friend, 'MIS');
-                      },
-                      child: ListTile(
-                        leading: Icon(Icons.favorite),
-                        title: Text('Miss You'),
-                      )),
-                  InkWell(
-                      onTap: () {
-                        sendThought(friend, 'THN');
-                      },
-                      child: ListTile(
-                        leading: Icon(Icons.favorite),
-                        title: Text('Thinking of You'),
-                      )),
-                  InkWell(
-                      onTap: () {
-                        sendThought(friend, 'RMN');
-                      },
-                      child: ListTile(
-                        leading: Icon(Icons.favorite),
-                        title: Text('Reminded of You'),
-                      )),
-                  InkWell(
-                      onTap: () {
-                        sendThought(friend, 'NST');
-                      },
-                      child: ListTile(
-                        leading: Icon(Icons.favorite),
-                        title: Text('Nostalgia over old time'),
-                      )),
-                ],
-              ));
+              child: ListView.builder(
+                  itemCount: thoughtOptions.length,
+                  itemBuilder: (BuildContext ctxt, int index) {
+                    return InkWell(
+                        onTap: () {
+                          sendThought(friend, thoughtOptions[index].code);
+                        },
+                        child: ListTile(
+                          leading: thoughtOptions[index].icon,
+                          title: Text(thoughtOptions[index].caption),
+                        ));
+                  }));
         });
   }
 
