@@ -42,13 +42,13 @@ class FriendProvider {
       friendId = friendsRef.documents[0].documentID;
     }
 
-    FirebaseStorage _storage =
-        FirebaseStorage(storageBucket: 'gs://yvrconnected.appspot.com');
+    
     //File newThumbnail = File.fromRawPath(thumbnail);
     String thumbPath = (thumbnail == null)
         ? null
         : 'images/users/' + friendId.toString() + '/thumbnail.png';
-    var uploadTask = _storage.ref().child(thumbPath).putData(thumbnail);
+    var uploadTask = globals.storage.ref().child(thumbPath).putData(thumbnail);
+    
     //.putFile(newThumbnail);
     var thumbUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
 

@@ -44,14 +44,14 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
                 child: CircularProgressIndicator(),
               );
             }
-            return ListView.builder(              
+            return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext ctxt, int index) {
                   return Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        image: new DecorationImage(                          
+                        image: new DecorationImage(
                             image: (snapshot
                                         .data[index].friend.thumbnail.isEmpty ==
                                     true)
@@ -119,6 +119,8 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
   void viewThought(ThoughtModel latestThought) {
     var currentFriend = CommonBloc.of(context).allFriends.value.firstWhere(
         (element) => element.friendUserId == latestThought.fromUserId);
+    var selectedThoughtType = CommonBloc.of(context).thoughtOptions.firstWhere(
+        (element) => latestThought.thoughtOptionCode == element.code);
 
     showDialog(
         context: context,
@@ -129,6 +131,14 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
               child: Column(
                 children: <Widget>[
                   Expanded(
+                      child: new LayoutBuilder(builder: (context, constraint) {
+                    return new Icon(selectedThoughtType.icon.icon,
+                        size: constraint.biggest.height);
+                  })),
+                   Expanded(
+                    child: Text(selectedThoughtType.caption,textScaleFactor: 2.0),
+                  ),
+                  Expanded(
                       child: Container(
                     child: (currentFriend != null &&
                             currentFriend.thumbnail.isEmpty == true)
@@ -137,6 +147,9 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
                   )),
                   Expanded(
                     child: Container(child: Text(latestThought.fromUserId)),
+                  ),
+                  Expanded(
+                    child: Text(latestThought.createdDate.toString()),
                   )
                 ],
               ));

@@ -19,6 +19,16 @@ class FriendDetailPageState extends State<FriendDetailPage> {
   @override
   Widget build(BuildContext context) {
     var thoughtOptions = CommonBloc.of(context).thoughtOptions;
+
+    var isRecent = true;
+    BoxDecoration friendDecoration = BoxDecoration();
+    if (widget.currentFriend.lastThoughtSentDate == null ||
+        widget.currentFriend.lastThoughtSentDate
+                .add(new Duration(hours: 24))
+                .compareTo(DateTime.now()) <
+            0) {
+      isRecent = false;
+    }
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.currentFriend.displayName),
@@ -45,10 +55,12 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                               width: 90.0,
                               child: InkWell(
                                   onTap: () {
-                                    sendThought(widget.currentFriend,
-                                        thoughtOptions[index].code);
+                                    if (! isRecent) {
+                                      sendThought(widget.currentFriend,
+                                          thoughtOptions[index].code);
+                                    }
                                   },
-                                  child: ListTile(                                    
+                                  child: ListTile(
                                     title: thoughtOptions[index].icon,
                                     subtitle:
                                         Text(thoughtOptions[index].caption),
