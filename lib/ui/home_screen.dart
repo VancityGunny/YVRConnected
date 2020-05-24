@@ -26,7 +26,7 @@ class HomeScreenState extends State<HomeScreen> {
     super.initState();
     _friendBloc = FriendBloc();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     // set user stream
@@ -54,9 +54,32 @@ class HomeScreenState extends State<HomeScreen> {
                 IconButton(
                   icon: Icon(Icons.exit_to_app),
                   onPressed: () {
-                    BlocProvider.of<AuthBloc>(context).add(
-                      LoggedOutEvent(),
-                    );
+                    // confirm before sign out
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                            title: Text('Sign out?'),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  BlocProvider.of<AuthBloc>(context).add(
+                                    LoggedOutEvent(),
+                                  );
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Yes'),
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('No'),
+                              ),
+                            ],
+                          );
+                        },
+                        barrierDismissible: false);
                   },
                 )
               ],

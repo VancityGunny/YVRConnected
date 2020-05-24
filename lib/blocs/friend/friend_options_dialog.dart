@@ -54,6 +54,11 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
   }
 
   sendThought(FriendModel friend, String thoughtOptionCode) {
+    if(includeImageFlag)
+    {
+        // upload and resize image first
+
+    }
     CommonBloc.of(context).thoughtRepository.addThought(
         new ThoughtModel(
             null, friend.friendUserId, thoughtOptionCode, DateTime.now()),
