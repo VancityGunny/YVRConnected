@@ -110,36 +110,13 @@ class FriendScreenState extends State<FriendScreen> {
   }
 
   void openActionOptions(FriendModel friend) {
-    var thoughtOptions = CommonBloc.of(context).thoughtOptions;
-    List<Widget> thoughtWidgets = new List<Widget>();
-    thoughtOptions.forEach((thoughtOption) {
-      var newThoughtWidget = new SimpleDialogOption(
-          onPressed: () {
-            sendThought(friend, thoughtOption.code);
-          },
-          child: ListTile(
-            leading: thoughtOption.icon,
-            title: Text(thoughtOption.caption),
-          ));
-      thoughtWidgets.add(newThoughtWidget);
-    });
     showDialog(
         context: context,
         builder: (context) {
           return SimpleDialog(
-              title: Text("Send Thought"), children: thoughtWidgets);
+              title: Text("Send Thought"),
+              children: <Widget>[new FriendOptionsDialog(friend)]);
         });
-  }
-
-  sendThought(FriendModel friend, String thoughtOptionCode) {
-    _thoughtBloc.add(
-      AddingThoughtEvent(
-          new ThoughtModel(
-              null, friend.friendUserId, thoughtOptionCode, DateTime.now()),
-          context),
-    );
-
-    Navigator.of(context).pop();
   }
 
   goToFriendDetail(FriendModel friend) {

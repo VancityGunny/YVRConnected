@@ -1,5 +1,4 @@
 import 'package:flare_flutter/flare_actor.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yvrconnected/blocs/friend/friend_stat_model.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
@@ -14,7 +13,7 @@ class HomeLatestWidget extends StatefulWidget {
   }
 }
 
-class HomeLatestWidgetState extends State<StatefulWidget> {
+class HomeLatestWidgetState extends State<HomeLatestWidget> {
   List<FriendStatModel> topFiveFriends = List<FriendStatModel>();
 
   final RelativeRectTween relativeRectTween = RelativeRectTween(
@@ -60,65 +59,66 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
         Expanded(
             child: Container(
                 child: StreamBuilder(
-                  stream: CommonBloc.of(context).topFiveFriends.stream,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (BuildContext ctxt, int index) {
-                          return Container(
-                            width: 70.0,
-                            child: Stack(children: <Widget>[
-                              FlareActor(
-                                "graphics/Shinchan.flr",
-                                animation: 'idle',
-                                fit: BoxFit.contain,
-                              ),
-                              Positioned(
-                                  top: 60,
-                                  left: 12,
-                                  child: ClipOval(
-                                      child: Align(
-                                          alignment: Alignment.center,
-                                          widthFactor: 0.85,
-                                          heightFactor: 1.0,
-                                          child: (snapshot.data[index].friend
-                                                      .thumbnail.isEmpty ==
-                                                  true)
-                                              ? Image.asset(
-                                                  'graphics/default_user_thumbnail.png',
-                                                  width: 50.0,
-                                                  height: 50.0,
-                                                )
-                                              : Image.network(
-                                                  snapshot.data[index].friend
-                                                      .thumbnail,
-                                                  width: 50.0,
-                                                  height: 50.0,
-                                                )))),
-                              Positioned(
-                                top: 52.0,
-                                left: 5.0,
-                                child:(index%2==0)?Image.asset(
-                                  'graphics/boyhair.png',
-                                  width: 60.0,
-                                  height: 60.0,
-                                ):Image.asset(
-                                  'graphics/girlhair.png',
-                                  width: 60.0,
-                                  height: 60.0,
-                                ),
+          stream: CommonBloc.of(context).topFiveFriends.stream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext ctxt, int index) {
+                  return Container(
+                    width: 70.0,
+                    child: Stack(children: <Widget>[
+                      FlareActor(
+                        "graphics/Shinchan.flr",
+                        animation: 'idle',
+                        fit: BoxFit.contain,
+                      ),
+                      Positioned(
+                          top: 60,
+                          left: 12,
+                          child: ClipOval(
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  widthFactor: 0.85,
+                                  heightFactor: 1.0,
+                                  child: (snapshot.data[index].friend.thumbnail
+                                              .isEmpty ==
+                                          true)
+                                      ? Image.asset(
+                                          'graphics/default_user_thumbnail.png',
+                                          width: 50.0,
+                                          height: 50.0,
+                                        )
+                                      : Image.network(
+                                          snapshot.data[index].friend.thumbnail,
+                                          width: 50.0,
+                                          height: 50.0,
+                                        )))),
+                      Positioned(
+                        top: 52.0,
+                        left: 5.0,
+                        child: (index % 2 == 0)
+                            ? Image.asset(
+                                'graphics/boyhair.png',
+                                width: 60.0,
+                                height: 60.0,
                               )
-                            ]),
-                          );
-                        });
-                  },
-                ))),
+                            : Image.asset(
+                                'graphics/girlhair.png',
+                                width: 60.0,
+                                height: 60.0,
+                              ),
+                      )
+                    ]),
+                  );
+                });
+          },
+        ))),
         Expanded(
           child: Container(
               child: StreamBuilder(
@@ -164,7 +164,12 @@ class HomeLatestWidgetState extends State<StatefulWidget> {
     );
   }
 
-  void viewThought(ThoughtModel latestThought) {
+  Future linkInstagramFeed(String postId) {
+    //print something
+    var linkUrl = postId;
+  }
+
+  void viewThought(ThoughtModel latestThought) async {
     var currentFriend = CommonBloc.of(context).allFriends.value.firstWhere(
         (element) => element.friendUserId == latestThought.fromUserId);
     var selectedThoughtType = CommonBloc.of(context).thoughtOptions.firstWhere(
