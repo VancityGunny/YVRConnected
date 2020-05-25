@@ -199,6 +199,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                         ? Image.asset('graphics/default_user_thumbnail.png')
                         : Image.network(currentFriend.thumbnail),
                   )),
+                  (latestThought.imageUrl!=null)??Expanded(child: Image.network(latestThought.imageUrl)),
                   Expanded(
                     child: Container(child: Text(latestThought.fromUserId)),
                   ),

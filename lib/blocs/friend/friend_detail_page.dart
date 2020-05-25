@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
@@ -54,9 +56,9 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                               width: 90.0,
                               child: InkWell(
                                   onTap: () {
-                                    if (! isRecent) {
+                                    if (!isRecent) {
                                       sendThought(widget.currentFriend,
-                                          thoughtOptions[index].code, false);
+                                          thoughtOptions[index].code, null);
                                     }
                                   },
                                   child: ListTile(
@@ -75,10 +77,11 @@ class FriendDetailPageState extends State<FriendDetailPage> {
         ));
   }
 
-  sendThought(FriendModel friend, String thoughtOptionCode, bool imageIncluded) {
+  sendThought(FriendModel friend, String thoughtOptionCode, File image) {
     CommonBloc.of(context).thoughtRepository.addThought(
         new ThoughtModel(
-            null, friend.friendUserId, thoughtOptionCode, DateTime.now(), imageIncluded),
+            null, friend.friendUserId, thoughtOptionCode, DateTime.now(), null),
+        image,
         context);
     Navigator.of(context).pop();
   }

@@ -23,9 +23,9 @@ class AddingThoughtEvent extends ThoughtEvent {
   @override
   Stream<ThoughtState> applyAsync(
       {ThoughtState currentState, ThoughtBloc bloc}) async* {
-    var newThoughtId =
-        await _thoughtRepository.addThought(this.newThought, this.context);
-    if (newThoughtId!=null) {
+    var newThoughtId = await _thoughtRepository.addThought(
+        this.newThought,null, this.context);
+    if (newThoughtId != null) {
       this.newThought.thoughtId = newThoughtId;
       yield ThoughtAddedState(thought: this.newThought);
       //bloc.add(LoadingFriendsEvent()); // refresh friends List to reflect new thought update
