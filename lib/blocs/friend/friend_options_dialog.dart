@@ -63,7 +63,7 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
         .thoughtRepository
         .addThought(
             new ThoughtModel(
-                null, friend.friendUserId, thoughtOptionCode, DateTime.now()),
+                null, friend.friendUserId, thoughtOptionCode, DateTime.now(), includeImageFlag),
             context);
 
     if (includeImageFlag) {

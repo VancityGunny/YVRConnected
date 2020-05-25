@@ -56,7 +56,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                                   onTap: () {
                                     if (! isRecent) {
                                       sendThought(widget.currentFriend,
-                                          thoughtOptions[index].code);
+                                          thoughtOptions[index].code, false);
                                     }
                                   },
                                   child: ListTile(
@@ -75,10 +75,10 @@ class FriendDetailPageState extends State<FriendDetailPage> {
         ));
   }
 
-  sendThought(FriendModel friend, String thoughtOptionCode) {
+  sendThought(FriendModel friend, String thoughtOptionCode, bool imageIncluded) {
     CommonBloc.of(context).thoughtRepository.addThought(
         new ThoughtModel(
-            null, friend.friendUserId, thoughtOptionCode, DateTime.now()),
+            null, friend.friendUserId, thoughtOptionCode, DateTime.now(), imageIncluded),
         context);
     Navigator.of(context).pop();
   }
