@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/thought_model.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
@@ -47,15 +48,17 @@ class ThoughtProvider {
     //thoughtsSentByFriend.map((f)=>{friend = f.key, sent = f.})
   }
 
-  Future<bool> addThought(ThoughtModel newThought) async {
+  Future<String> addThought(ThoughtModel newThought) async {
     //TODO: add checking so you can't send thought to the same person within 24 hours of each thoughs
-
+    var uuid = new Uuid();
+    var newThoughtId = uuid.v1();
     // add thought to sentThought collection
     var newSentThoughtDoc =
         _firestore.collection('/thoughts').document(globals.currentUserId);
     newSentThoughtDoc.updateData({
       'sentThoughts': FieldValue.arrayUnion([
         {
+          'thoughtId': newThoughtId,
           'toUserId': newThought.toUserId,
           'thoughtOptionCode': newThought.thoughtOptionCode,
           'createdDate': newThought.createdDate
@@ -69,6 +72,7 @@ class ThoughtProvider {
     newReceivedThoughtDoc.updateData({
       'receivedThoughts': FieldValue.arrayUnion([
         {
+          'thoughtId': newThoughtId,
           'fromUserId': globals.currentUserId,
           'thoughtOptionCode': newThought.thoughtOptionCode,
           'createdDate': newThought.createdDate,
@@ -77,6 +81,6 @@ class ThoughtProvider {
       ])
     });
 
-    return true;
+    return newThoughtId;
   }
 }

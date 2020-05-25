@@ -11,15 +11,15 @@ class ThoughtRepository {
     this._thoughtProvider.test(isError);
   }
 
-  Future<bool> addThought(ThoughtModel newThought, BuildContext context) async {
-    var success = await this._thoughtProvider.addThought(newThought);
-    if (success) {
+  Future<String> addThought(ThoughtModel newThought, BuildContext context) async {
+    var newThoughtId = await this._thoughtProvider.addThought(newThought);
+    if (newThoughtId!=null) {
       // update lastThoughtSentDate for that friend
       var friendProvider = FriendProvider();
       friendProvider.updateFriendLastSent(
           newThought.toUserId, newThought.thoughtOptionCode, context);
     }
-    return success;
+    return newThoughtId;
   }
 
   Future<List<FriendStatModel>> fetchTopFive(BuildContext context) async {
