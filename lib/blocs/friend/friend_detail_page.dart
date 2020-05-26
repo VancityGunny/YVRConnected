@@ -37,16 +37,15 @@ class FriendDetailPageState extends State<FriendDetailPage> {
         body: Column(
           children: <Widget>[
             Expanded(
-              flex: 2,
               child: Container(
+                alignment: Alignment.topCenter,
                   child: (widget.currentFriend.thumbnail.isEmpty == true)
                       ? Image.asset('graphics/default_user_thumbnail.png')
-                      : Image.network(widget.currentFriend.thumbnail),
-                  height: 200),
+                      : Image.network(widget.currentFriend.thumbnail, width:200)),
             ),
             Text(widget.currentFriend.displayName),
+            (isRecent==true)?Text(widget.currentFriend.lastThoughtSentOption):
             Expanded(
-                flex: 2,
                 child: Container(
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
