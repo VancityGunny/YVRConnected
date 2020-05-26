@@ -37,39 +37,52 @@ class FriendDetailPageState extends State<FriendDetailPage> {
         body: Column(
           children: <Widget>[
             Expanded(
-              child: Container(
-                alignment: Alignment.topCenter,
-                  child: (widget.currentFriend.thumbnail.isEmpty == true)
-                      ? Image.asset('graphics/default_user_thumbnail.png')
-                      : Image.network(widget.currentFriend.thumbnail, width:200)),
-            ),
-            Text(widget.currentFriend.displayName),
-            (isRecent==true)?Text(widget.currentFriend.lastThoughtSentOption):
+                child: Column(
+              children: <Widget>[
+                Container(
+                    color: Colors.red,
+                    alignment: Alignment.topCenter,
+                    child: (widget.currentFriend.thumbnail.isEmpty == true)
+                        ? Image.asset('graphics/default_user_thumbnail.png')
+                        : Image.network(widget.currentFriend.thumbnail,
+                            width: 200)),
+                Text(widget.currentFriend.displayName)
+              ],
+            )),
             Expanded(
-                child: Container(
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: thoughtOptions.length,
-                        itemBuilder: (BuildContext ctxt, int index) {
-                          return Container(
-                              width: 90.0,
-                              child: InkWell(
-                                  onTap: () {
-                                    if (!isRecent) {
-                                      sendThought(widget.currentFriend,
-                                          thoughtOptions[index].code, null);
-                                    }
-                                  },
-                                  child: ListTile(
-                                    title: thoughtOptions[index].icon,
-                                    subtitle:
-                                        Text(thoughtOptions[index].caption),
-                                  )));
-                        }))),
-            Container(
-              child: RaisedButton(
-                onPressed: deleteFriend,
-                child: Text('DELETE FRIEND'),
+              child: Column(
+                children: <Widget>[
+                  (isRecent == true)
+                      ? Text(widget.currentFriend.lastThoughtSentOption)
+                      : Expanded(
+                          child: Container(
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: thoughtOptions.length,
+                                  itemBuilder: (BuildContext ctxt, int index) {
+                                    return Container(
+                                        width: 90.0,
+                                        child: InkWell(
+                                            onTap: () {
+                                              if (!isRecent) {
+                                                sendThought(
+                                                    widget.currentFriend,
+                                                    thoughtOptions[index].code,
+                                                    null);
+                                              }
+                                            },
+                                            child: ListTile(
+                                              title: thoughtOptions[index].icon,
+                                              subtitle: Text(
+                                                  thoughtOptions[index]
+                                                      .caption),
+                                            )));
+                                  }))),
+                  RaisedButton(
+                    onPressed: deleteFriend,
+                    child: Text('DELETE FRIEND'),
+                  )
+                ],
               ),
             )
           ],
