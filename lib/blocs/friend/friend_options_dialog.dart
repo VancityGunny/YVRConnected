@@ -72,14 +72,16 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
       // upload and resize image first
       imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
     }
-    await CommonBloc.of(context)
-        .thoughtRepository
-        .addThought(
-            new ThoughtModel(null, friend.friendUserId, thoughtOptionCode,
-                DateTime.now(), null),
-            imageFile,
-            context)
-        .then((value) => isProcessing = false);
+    if (includeImageFlag == false || imageFile != null) {
+      await CommonBloc.of(context)
+          .thoughtRepository
+          .addThought(
+              new ThoughtModel(null, friend.friendUserId, thoughtOptionCode,
+                  DateTime.now(), null),
+              imageFile,
+              context)
+          .then((value) => isProcessing = false);
+    }
 
     Navigator.of(context).pop();
   }

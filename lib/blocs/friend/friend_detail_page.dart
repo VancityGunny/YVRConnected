@@ -54,34 +54,17 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                 children: <Widget>[
                   (isRecent == true)
                       ? Text(widget.currentFriend.lastThoughtSentOption)
-                      : Expanded(
-                          child: Container(
-                              child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: thoughtOptions.length,
-                                  itemBuilder: (BuildContext ctxt, int index) {
-                                    return Container(
-                                        width: 90.0,
-                                        child: InkWell(
-                                            onTap: () {
-                                              if (!isRecent) {
-                                                sendThought(
-                                                    widget.currentFriend,
-                                                    thoughtOptions[index].code,
-                                                    null);
-                                              }
-                                            },
-                                            child: ListTile(
-                                              title: thoughtOptions[index].icon,
-                                              subtitle: Text(
-                                                  thoughtOptions[index]
-                                                      .caption),
-                                            )));
-                                  }))),
+                      : Container(
+                          child: RaisedButton(
+                              child: Text('Thinking of You'),
+                              onPressed: () {
+                                openActionOptions(widget.currentFriend);
+                              })),
+                  Expanded(child: Text('')),
                   RaisedButton(
                     onPressed: deleteFriend,
                     child: Text('DELETE FRIEND'),
-                  )
+                  ),
                 ],
               ),
             )
@@ -89,13 +72,14 @@ class FriendDetailPageState extends State<FriendDetailPage> {
         ));
   }
 
-  sendThought(FriendModel friend, String thoughtOptionCode, File image) {
-    CommonBloc.of(context).thoughtRepository.addThought(
-        new ThoughtModel(
-            null, friend.friendUserId, thoughtOptionCode, DateTime.now(), null),
-        image,
-        context);
-    Navigator.of(context).pop();
+  void openActionOptions(FriendModel friend) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+              title: Text("Send Thought"),
+              children: <Widget>[new FriendOptionsDialog(friend)]);
+        });
   }
 
   deleteFriend() {
