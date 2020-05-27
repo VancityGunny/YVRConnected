@@ -25,7 +25,8 @@ class UserProvider {
     _firestore.collection('/users').document(foundUserId).updateData({
       'uid': userModel.uid,
       'phone': userModel.phone,
-      'displayName': userModel.displayName
+      'displayName': userModel.displayName,
+      'photoUrl': userModel.photoUrl
     });
   }
 }

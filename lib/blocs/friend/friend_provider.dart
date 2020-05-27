@@ -25,6 +25,9 @@ class FriendProvider {
 
   Future<bool> addFriend(FriendModel newFriend, Uint8List thumbnail) async {
     var friendId;
+    String thumbPath = (thumbnail == null)
+        ? null
+        : 'images/users/' + friendId.toString() + '/thumbnail.png';
     // check if user record does not exist then create the record
     var friendsRef = await _firestore
         .collection('/users')
@@ -35,19 +38,16 @@ class FriendProvider {
     if (friendsRef.documents.length == 0) {
       // if it's not already exists then add new user first
       UserProvider userProvider = UserProvider();
-      friendId = await userProvider.addUser(
-          UserModel(null, newFriend.email, newFriend.displayName, null, []));
+      friendId = await userProvider.addUser(UserModel(
+          null, newFriend.email, newFriend.displayName, null, [], thumbPath));
     } else {
       friendId = friendsRef.documents[0].documentID;
     }
 
-    
     //File newThumbnail = File.fromRawPath(thumbnail);
-    String thumbPath = (thumbnail == null)
-        ? null
-        : 'images/users/' + friendId.toString() + '/thumbnail.png';
+
     var uploadTask = globals.storage.ref().child(thumbPath).putData(thumbnail);
-    
+
     //.putFile(newThumbnail);
     var thumbUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
 
@@ -78,9 +78,10 @@ class FriendProvider {
   }
 
   // update friendLast sent and the thoughts stat
-  void updateFriendLastSent(String toUserId, String thoughtOptionCode,BuildContext context) async {
+  void updateFriendLastSent(
+      String toUserId, String thoughtOptionCode, BuildContext context) async {
     var user = await _firebaseAuth.currentUser();
-    
+
     var userRef =
         _firestore.collection('/users').document(globals.currentUserId);
     var currentFriends = CommonBloc.of(context).allFriends.value;
@@ -118,12 +119,15 @@ class FriendProvider {
     // });
   }
 
-  void removeFriend(String friendUserId,BuildContext context) {
+  void removeFriend(String friendUserId, BuildContext context) {
     var currentFriends = CommonBloc.of(context).allFriends.value;
-    var newFriends = currentFriends.where((element) => element.friendUserId != friendUserId).map((e) => e.toJson()).toList();
-     _firestore
-          .collection('/users')
-          .document(globals.currentUserId)
-          .updateData({'friends': newFriends});
+    var newFriends = currentFriends
+        .where((element) => element.friendUserId != friendUserId)
+        .map((e) => e.toJson())
+        .toList();
+    _firestore
+        .collection('/users')
+        .document(globals.currentUserId)
+        .updateData({'friends': newFriends});
   }
 }

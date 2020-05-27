@@ -6,12 +6,13 @@ class UserModel extends Equatable {
   final String email;
   final String displayName;
   final String phone;
+  final String photoUrl;
   final List<FriendModel> friends;
 
-  UserModel(this.uid, this.email, this.displayName, this.phone, this.friends);
+  UserModel(this.uid, this.email, this.displayName, this.phone, this.friends, this.photoUrl);
 
   @override
-  List<Object> get props => [uid, email, displayName, phone, friends];
+  List<Object> get props => [uid, email, displayName, phone, friends, photoUrl];
 
   factory UserModel.fromJson(Map<dynamic, dynamic> json) {
     return UserModel(
@@ -19,7 +20,8 @@ class UserModel extends Equatable {
         json['email'] as String,
         json['displayName'] as String,
         json['phone'] as String,
-        json['friends'].cast<FriendModel>() as List<FriendModel>);
+        json['friends'].cast<FriendModel>() as List<FriendModel>,
+        json['photoUrl'] as String);
   }
 
   Map<String, dynamic> toJson() {
@@ -29,7 +31,7 @@ class UserModel extends Equatable {
     data['displayName'] = this.displayName;
     data['phone'] = this.phone;
     data['friends'] = this.friends;
-
+    data['photoUrl'] = this.photoUrl;
     return data;
   }
 }

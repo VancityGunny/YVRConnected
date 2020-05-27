@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yvrconnected/blocs/user/user_model.dart';
 import 'package:yvrconnected/blocs/user/user_provider.dart';
@@ -43,26 +42,16 @@ class AuthRepository {
       if (findByEmail.documents.length == 0) {
         // check if user record does not exist then create the record
 
-        var userId = await userProvider.addUser(new UserModel(
-            user.uid, user.email, user.displayName, user.phoneNumber, []));
+        var userId = await userProvider.addUser(new UserModel(user.uid,
+            user.email, user.displayName, user.phoneNumber, [], user.photoUrl));
         globals.currentUserId = userId;
       } else {
         // assume account found by the email
         userProvider.assumeUser(
             findByEmail.documents.first.documentID,
-            new UserModel(
-                user.uid, user.email, user.displayName, user.phoneNumber, []));
+            new UserModel(user.uid, user.email, user.displayName,
+                user.phoneNumber, [], user.photoUrl));
         globals.currentUserId = findByEmail.documents.first.documentID;
-      }
-
-      if (user.photoUrl != null) {
-        String thumbPath = 'images/users/' +
-            globals.currentUserId.toString() +
-            '/thumbnail.png';
-        var uploadTask =
-            globals.storage.ref().child(thumbPath).putFile(File(user.photoUrl));
-        //var thumbUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
-
       }
     }
     return user;

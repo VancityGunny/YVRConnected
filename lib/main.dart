@@ -54,7 +54,7 @@ class MyAppState extends State<MyApp> {
               if (state is AuthenticatedState) {
                 return HomeScreen(state.displayName);
               }
-              return Container();
+              return Container(child: Text('Login Failed'),);
             },
           ),
         )));

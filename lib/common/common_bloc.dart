@@ -12,8 +12,8 @@ import 'package:yvrconnected/common/global_object.dart' as globals;
 
 
 class CommonBloc extends InheritedWidget {
-  final StreamController friendsController = StreamController.broadcast();
-  final StreamController thoughtsController = StreamController.broadcast();
+  StreamController friendsController;
+  StreamController thoughtsController;
   final FriendProvider friendProvider = new FriendProvider();
   final ThoughtRepository thoughtRepository = new ThoughtRepository();
 
@@ -42,6 +42,7 @@ class CommonBloc extends InheritedWidget {
   }
 
   initStream() {
+    friendsController = StreamController.broadcast();
     friendsController.addStream(Firestore.instance
         .collection('/users')
         .document(globals.currentUserId)
@@ -57,6 +58,7 @@ class CommonBloc extends InheritedWidget {
       }
     });
 
+    thoughtsController = StreamController.broadcast();
     thoughtsController.addStream(Firestore.instance
         .collection('/thoughts')
         .document(globals.currentUserId)
