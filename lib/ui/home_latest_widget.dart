@@ -1,5 +1,6 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yvrconnected/blocs/friend/friend_stat_model.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
@@ -66,6 +67,12 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                 child: CircularProgressIndicator(),
               );
             }
+            if (snapshot.data.length == 0) {
+              return Container(
+                alignment: Alignment.center,
+                  child: FaIcon(FontAwesomeIcons.userPlus,
+                      size: 150, color: Color.fromARGB(15, 0, 0, 0)));
+            }
             return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: snapshot.data.length,
@@ -128,6 +135,12 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
+                    }
+                    if (snapshot.data.length == 0) {
+                      return Container(
+                        alignment: Alignment.center,
+                          child: FaIcon(FontAwesomeIcons.folderPlus,
+                              size: 150, color: Color.fromARGB(15, 0, 0, 0)));
                     }
                     return GridView.builder(
                       itemCount: snapshot.data.length,
@@ -199,7 +212,8 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                         ? Image.asset('graphics/default_user_thumbnail.png')
                         : Image.network(currentFriend.thumbnail),
                   )),
-                  (latestThought.imageUrl!=null)??Expanded(child: Image.network(latestThought.imageUrl)),
+                  (latestThought.imageUrl != null) ??
+                      Expanded(child: Image.network(latestThought.imageUrl)),
                   Expanded(
                     child: Container(child: Text(latestThought.fromUserId)),
                   ),
