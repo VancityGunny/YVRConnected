@@ -69,7 +69,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
             }
             if (snapshot.data.length == 0) {
               return Container(
-                alignment: Alignment.center,
+                  alignment: Alignment.center,
                   child: FaIcon(FontAwesomeIcons.userPlus,
                       size: 150, color: Color.fromARGB(15, 0, 0, 0)));
             }
@@ -93,9 +93,9 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                                   alignment: Alignment.center,
                                   widthFactor: 0.85,
                                   heightFactor: 1.0,
-                                  child: (snapshot.data[index].friend.thumbnail
-                                              .isEmpty ==
-                                          true)
+                                  child: (snapshot
+                                              .data[index].friend.thumbnail ==
+                                          null)
                                       ? Image.asset(
                                           'graphics/default_user_thumbnail.png',
                                           width: 50.0,
@@ -138,7 +138,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                     }
                     if (snapshot.data.length == 0) {
                       return Container(
-                        alignment: Alignment.center,
+                          alignment: Alignment.center,
                           child: FaIcon(FontAwesomeIcons.folderPlus,
                               size: 150, color: Color.fromARGB(15, 0, 0, 0)));
                     }
@@ -208,7 +208,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                   Expanded(
                       child: Container(
                     child: (currentFriend != null &&
-                            currentFriend.thumbnail.isEmpty == true)
+                            currentFriend.thumbnail == null)
                         ? Image.asset('graphics/default_user_thumbnail.png')
                         : Image.network(currentFriend.thumbnail),
                   )),
