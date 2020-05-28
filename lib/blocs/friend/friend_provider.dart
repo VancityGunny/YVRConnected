@@ -27,35 +27,39 @@ class FriendProvider {
   Future<bool> addFriend(FriendModel newFriend, Uint8List thumbnail) async {
     var friendId;
     String thumbUrl;
-    String thumbPath = (thumbnail.isEmpty == true)
-        ? null
-        : 'images/users/' + friendId.toString() + '/thumbnail.png';
+
     // check if user record does not exist then create the record
     var friendsRef = await _firestore
         .collection('/users')
         .where('email', isEqualTo: newFriend.email)
         .limit(1)
         .getDocuments();
-
-    if (friendsRef.documents.length == 0) {
+    var newFriendFlag = (friendsRef.documents.length == 0);
+    if (newFriendFlag) {
       var uuid = new Uuid();
       friendId = uuid.v1();
-      // if it's not already exists then add new user first
-      UserProvider userProvider = UserProvider();
-      await userProvider.addUser(
-          friendId,
-          UserModel(null, newFriend.email, newFriend.displayName, null, [],
-              thumbPath));
     } else {
       friendId = friendsRef.documents[0].documentID;
     }
 
+    String thumbPath = (thumbnail.isEmpty == true)
+        ? null
+        : 'images/users/' + friendId.toString() + '/thumbnail.png';
     //File newThumbnail = File.fromRawPath(thumbnail);
     if (thumbnail.isEmpty != true) {
       var uploadTask =
           globals.storage.ref().child(thumbPath).putData(thumbnail);
       //.putFile(newThumbnail);
       thumbUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    }
+
+    if (newFriendFlag) {
+      // if it's not already exists then add new user first
+      UserProvider userProvider = UserProvider();
+      await userProvider.addUser(
+          friendId,
+          UserModel(null, newFriend.email, newFriend.displayName, null, [], [],
+              thumbPath));
     }
 
     if (friendId != null) {
@@ -136,5 +140,33 @@ class FriendProvider {
         .collection('/users')
         .document(globals.currentUserId)
         .updateData({'friends': newFriends});
+  }
+
+  void addSender(String senderId, FriendModel sender, BuildContext context) {
+    if (senderId != null) {
+      // now add that new user id as your friend
+      _firestore
+          .collection('/users')
+          .document(globals.currentUserId)
+          .updateData({
+        'senders': FieldValue.arrayUnion([
+          {
+            'friendId': senderId,
+            'friendName': sender.displayName,
+            'friendEmail': sender.email,
+            'thumbnail': sender.thumbnail
+          }
+        ])
+      });
+    }
+  }
+
+  Future<FriendModel> lookupFriendById(String fromUserId) async {
+    var foundFriend =
+        await _firestore.collection('/users').document(fromUserId).get();
+    var foundUser = UserModel.fromJson(foundFriend.data);
+
+    return FriendModel(fromUserId, foundUser.email, foundUser.displayName,
+        foundUser.photoUrl, null, null);
   }
 }

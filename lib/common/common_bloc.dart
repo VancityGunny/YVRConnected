@@ -10,7 +10,6 @@ import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/blocs/thought/thought_option_model.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;
 
-
 class CommonBloc extends InheritedWidget {
   StreamController friendsController;
   StreamController thoughtsController;
@@ -19,6 +18,8 @@ class CommonBloc extends InheritedWidget {
 
   final BehaviorSubject<List<FriendModel>> allFriends =
       BehaviorSubject<List<FriendModel>>();
+  final BehaviorSubject<List<FriendModel>> allSenders =
+      BehaviorSubject<List<FriendModel>>();
   final BehaviorSubject<List<ThoughtModel>> allReceivedThoughts =
       BehaviorSubject<List<ThoughtModel>>();
   final BehaviorSubject<List<ThoughtModel>> allSentThoughts =
@@ -26,11 +27,15 @@ class CommonBloc extends InheritedWidget {
   final BehaviorSubject<List<FriendStatModel>> topFiveFriends =
       BehaviorSubject<List<FriendStatModel>>();
 
-  final thoughtOptions = [ ThoughtOptionModel('MISS','Miss you', FaIcon(FontAwesomeIcons.sadTear)),
-  ThoughtOptionModel('WISH','Wish U were here', FaIcon(FontAwesomeIcons.streetView)),
-  ThoughtOptionModel('GOLD','Good old time', FaIcon(FontAwesomeIcons.wineGlassAlt)),
-  ThoughtOptionModel('GRAT','Grateful for you', FaIcon(FontAwesomeIcons.prayingHands))
-                          ];
+  final thoughtOptions = [
+    ThoughtOptionModel('MISS', 'Miss you', FaIcon(FontAwesomeIcons.sadTear)),
+    ThoughtOptionModel(
+        'WISH', 'Wish U were here', FaIcon(FontAwesomeIcons.streetView)),
+    ThoughtOptionModel(
+        'GOLD', 'Good old time', FaIcon(FontAwesomeIcons.wineGlassAlt)),
+    ThoughtOptionModel(
+        'GRAT', 'Grateful for you', FaIcon(FontAwesomeIcons.prayingHands))
+  ];
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => true;
@@ -55,6 +60,12 @@ class CommonBloc extends InheritedWidget {
           newFriendsList.add(FriendModel.fromJson(f));
         });
         allFriends.add(newFriendsList);
+
+        var newSendersList = new List<FriendModel>();
+        event.data['senders'].forEach((f) {
+          newSendersList.add(FriendModel.fromJson(f));
+        });
+        allSenders.add(newSendersList);
       }
     });
 
@@ -82,7 +93,7 @@ class CommonBloc extends InheritedWidget {
     });
   }
 
-  List<FriendStatModel> fetchTopFive() {    
+  List<FriendStatModel> fetchTopFive() {
     var thoughtsSentLastMonth = allSentThoughts.value.where((t) =>
         t.createdDate.add(new Duration(days: 30)).compareTo(DateTime.now()) >=
         0);

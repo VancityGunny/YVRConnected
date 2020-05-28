@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 
@@ -19,7 +20,10 @@ class ThoughtRepository {
 
   Future<String> addThought(
       ThoughtModel newThought, File newImage, BuildContext context) async {
-    var newThoughtId = await this._thoughtProvider.addThought(newThought);
+        
+    var uuid = new Uuid();
+    var newThoughtId = uuid.v1();
+    
     var localPath = await CommonBloc.of(context).localPath;
     if (newImage != null) {
       IM.Image originalImage = IM.decodeImage(newImage.readAsBytesSync());
@@ -34,6 +38,7 @@ class ThoughtRepository {
       var thumbUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
       newThought.imageUrl = thumbUrl;
     }
+    await this._thoughtProvider.addThought(newThoughtId, newThought);
 
     if (newThoughtId != null) {
       // update lastThoughtSentDate for that friend

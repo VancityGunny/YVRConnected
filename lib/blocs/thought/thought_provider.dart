@@ -48,10 +48,8 @@ class ThoughtProvider {
     //thoughtsSentByFriend.map((f)=>{friend = f.key, sent = f.})
   }
 
-  Future<String> addThought(ThoughtModel newThought) async {
+  Future<String> addThought(String newThoughtId, ThoughtModel newThought) async {
     //TODO: add checking so you can't send thought to the same person within 24 hours of each thoughs
-    var uuid = new Uuid();
-    var newThoughtId = uuid.v1();
     // add thought to sentThought collection
     var newSentThoughtDoc =
         _firestore.collection('/thoughts').document(globals.currentUserId);
@@ -76,6 +74,7 @@ class ThoughtProvider {
           'fromUserId': globals.currentUserId,
           'thoughtOptionCode': newThought.thoughtOptionCode,
           'createdDate': newThought.createdDate,
+          'imageUrl': newThought.imageUrl,
           'readFlag': false // new message always unread
         }
       ])

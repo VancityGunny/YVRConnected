@@ -12,7 +12,8 @@ class UserProvider {
       'email': newUser.email,
       'phone': newUser.phone,
       'displayName': newUser.displayName,
-      'friends': []
+      'friends': [],
+      'senders':[]
     });
     // add sentThoughts and receivedThought colleciton for the user too
     var newThoughtsObj =

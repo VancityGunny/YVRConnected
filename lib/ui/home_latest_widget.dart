@@ -183,45 +183,63 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
   }
 
   void viewThought(ThoughtModel latestThought) async {
-    var currentFriend = CommonBloc.of(context).allFriends.value.firstWhere(
-        (element) => element.friendUserId == latestThought.fromUserId);
-    var selectedThoughtType = CommonBloc.of(context).thoughtOptions.firstWhere(
-        (element) => latestThought.thoughtOptionCode == element.code);
+    try {
+      var currentFriend = CommonBloc.of(context).allFriends.value.firstWhere(
+          (element) => element.friendUserId == latestThought.fromUserId,
+          orElse: () => null);
+      // if sender is not currently friend
+      if (currentFriend == null) {
+        // lookup our sender collection
+        currentFriend = CommonBloc.of(context).allSenders.value.firstWhere(
+            (element) => element.friendUserId == latestThought.fromUserId,
+            orElse: () => null);
 
-    showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0)),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                      child: new LayoutBuilder(builder: (context, constraint) {
-                    return new Icon(selectedThoughtType.icon.icon,
-                        size: constraint.biggest.height);
-                  })),
-                  Expanded(
-                    child:
-                        Text(selectedThoughtType.caption, textScaleFactor: 2.0),
-                  ),
-                  Expanded(
-                      child: Container(
-                    child: (currentFriend != null &&
-                            currentFriend.thumbnail == null)
-                        ? Image.asset('graphics/default_user_thumbnail.png')
-                        : Image.network(currentFriend.thumbnail),
-                  )),
-                  (latestThought.imageUrl != null) ??
-                      Expanded(child: Image.network(latestThought.imageUrl)),
-                  Expanded(
-                    child: Container(child: Text(latestThought.fromUserId)),
-                  ),
-                  Expanded(
-                    child: Text(latestThought.createdDate.toString()),
-                  )
-                ],
-              ));
-        });
+        // if we haven't lookup this sender before then lookup now
+        if (currentFriend == null) {
+          var currentFriend = await CommonBloc.of(context)
+              .friendProvider
+              .lookupFriendById(latestThought.fromUserId);
+          // now add him to allsenders list for next time
+          await CommonBloc.of(context)
+              .friendProvider
+              .addSender(latestThought.fromUserId, currentFriend, context);
+        }
+      }
+      var selectedThoughtType = CommonBloc.of(context)
+          .thoughtOptions
+          .firstWhere(
+              (element) => latestThought.thoughtOptionCode == element.code,
+              orElse: null);
+
+      showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
+                child: Column(
+                  children: <Widget>[
+                    Expanded(child:
+                        new LayoutBuilder(builder: (context, constraint) {
+                      return new Icon(selectedThoughtType.icon.icon,
+                          size: 100);
+                    })),
+                    Text(selectedThoughtType.caption, textScaleFactor: 2.0),
+                    (latestThought.imageUrl != null)
+                        ? Expanded(child: Image.network(latestThought.imageUrl))
+                        : Text(''),
+                    Container(
+                      child: (currentFriend != null &&
+                              currentFriend.thumbnail == null)
+                          ? Image.asset('graphics/default_user_thumbnail.png',
+                              width: 20, height: 20)
+                          : Image.network(currentFriend.thumbnail,
+                              width: 20, height: 20),
+                    ),
+                    Text(latestThought.createdDate.toString()),
+                  ],
+                ));
+          });
+    } catch (e) {}
   }
 }

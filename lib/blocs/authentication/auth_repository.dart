@@ -47,14 +47,14 @@ class AuthRepository {
         await userProvider.addUser(
             userId.toString(),
             new UserModel(user.uid, user.email, user.displayName,
-                user.phoneNumber, [], user.photoUrl));
+                user.phoneNumber, [], [], user.photoUrl));
         globals.currentUserId = userId;
       } else {
         // assume account found by the email
         userProvider.assumeUser(
             findByEmail.documents.first.documentID,
             new UserModel(user.uid, user.email, user.displayName,
-                user.phoneNumber, [], user.photoUrl));
+                user.phoneNumber, [], [], user.photoUrl));
         globals.currentUserId = findByEmail.documents.first.documentID;
       }
     }
