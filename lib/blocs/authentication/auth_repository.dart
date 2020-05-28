@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:uuid/uuid.dart';
 import 'package:yvrconnected/blocs/user/user_model.dart';
 import 'package:yvrconnected/blocs/user/user_provider.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;
@@ -41,9 +42,12 @@ class AuthRepository {
       var userProvider = UserProvider();
       if (findByEmail.documents.length == 0) {
         // check if user record does not exist then create the record
-
-        var userId = await userProvider.addUser(new UserModel(user.uid,
-            user.email, user.displayName, user.phoneNumber, [], user.photoUrl));
+        var uuid = new Uuid();
+        var userId = uuid.v1();
+        await userProvider.addUser(
+            userId.toString(),
+            new UserModel(user.uid, user.email, user.displayName,
+                user.phoneNumber, [], user.photoUrl));
         globals.currentUserId = userId;
       } else {
         // assume account found by the email

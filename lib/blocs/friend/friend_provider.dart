@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'package:yvrconnected/blocs/user/user_model.dart';
 import 'package:yvrconnected/blocs/user/user_provider.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
@@ -25,7 +26,8 @@ class FriendProvider {
 
   Future<bool> addFriend(FriendModel newFriend, Uint8List thumbnail) async {
     var friendId;
-    String thumbPath = (thumbnail == null)
+    String thumbUrl;
+    String thumbPath = (thumbnail.isEmpty == true)
         ? null
         : 'images/users/' + friendId.toString() + '/thumbnail.png';
     // check if user record does not exist then create the record
@@ -36,20 +38,25 @@ class FriendProvider {
         .getDocuments();
 
     if (friendsRef.documents.length == 0) {
+      var uuid = new Uuid();
+      friendId = uuid.v1();
       // if it's not already exists then add new user first
       UserProvider userProvider = UserProvider();
-      friendId = await userProvider.addUser(UserModel(
-          null, newFriend.email, newFriend.displayName, null, [], thumbPath));
+      await userProvider.addUser(
+          friendId,
+          UserModel(null, newFriend.email, newFriend.displayName, null, [],
+              thumbPath));
     } else {
       friendId = friendsRef.documents[0].documentID;
     }
 
     //File newThumbnail = File.fromRawPath(thumbnail);
-
-    var uploadTask = globals.storage.ref().child(thumbPath).putData(thumbnail);
-
-    //.putFile(newThumbnail);
-    var thumbUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    if (thumbnail.isEmpty != true) {
+      var uploadTask =
+          globals.storage.ref().child(thumbPath).putData(thumbnail);
+      //.putFile(newThumbnail);
+      thumbUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    }
 
     if (friendId != null) {
       // now add that new user id as your friend
@@ -62,7 +69,7 @@ class FriendProvider {
             'friendId': friendId,
             'friendName': newFriend.displayName,
             'friendEmail': newFriend.email,
-            'thumbnail': thumbUrl.toString()
+            'thumbnail': thumbUrl
           }
         ])
       });

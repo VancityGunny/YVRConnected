@@ -86,7 +86,7 @@ class FriendScreenState extends State<FriendScreen> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: new DecorationImage(
-                                  image: (curFriend.thumbnail.isEmpty == true)
+                                  image: (curFriend.thumbnail == null)
                                       ? Image.asset(
                                               'graphics/default_user_thumbnail.png')
                                           .image

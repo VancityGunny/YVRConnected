@@ -1,4 +1,3 @@
-
 import 'package:yvrconnected/blocs/user/user_model.dart';
 import 'package:yvrconnected/blocs/user/user_provider.dart';
 
@@ -8,7 +7,7 @@ class UserRepository {
   UserRepository();
 
   // Return new userId
-  Future<String> addUser(UserModel newUser){
-    return this._userProvider.addUser(newUser);
+  Future<String> addUser(String userId, UserModel newUser) {
+    return this._userProvider.addUser(userId, newUser);
   }
 }

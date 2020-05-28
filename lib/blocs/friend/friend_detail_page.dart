@@ -40,10 +40,9 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                 child: Column(
               children: <Widget>[
                 Container(
-                    color: Colors.red,
                     alignment: Alignment.topCenter,
-                    child: (widget.currentFriend.thumbnail.isEmpty == true)
-                        ? Image.asset('graphics/default_user_thumbnail.png')
+                    child: (widget.currentFriend.thumbnail == null)
+                        ? Image.asset('graphics/default_user_thumbnail.png', width:200)
                         : Image.network(widget.currentFriend.thumbnail,
                             width: 200)),
                 Text(widget.currentFriend.displayName)

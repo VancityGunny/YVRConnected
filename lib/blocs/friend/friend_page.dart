@@ -69,7 +69,7 @@ class _FriendPageState extends State<FriendPage> {
             await CS.ContactsService.getContacts(query: contact.fullName);
         if (foundContacts.length > 0) {
           thumbnail = foundContacts.first.avatar;
-          this.friendThumbnail = thumbnail;
+          this.friendThumbnail = (thumbnail.isEmpty==true)?null:thumbnail;
         }
         // Either the permission was already granted before or the user just granted it.
       }
