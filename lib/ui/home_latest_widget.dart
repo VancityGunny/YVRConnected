@@ -103,7 +103,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                                         )
                                       : Image.network(
                                           snapshot.data[index].friend.thumbnail,
-                                          width: 50.0,
+                                          width: 54.0,
                                           height: 50.0,
                                         )))),
                       Positioned(

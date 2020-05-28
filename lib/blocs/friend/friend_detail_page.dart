@@ -61,7 +61,32 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                               })),
                   Expanded(child: Text('')),
                   RaisedButton(
-                    onPressed: deleteFriend,
+                    onPressed: () {
+                    // confirm before sign out
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                            title: Text('Sign out?'),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  deleteFriend();
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Yes'),
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('No'),
+                              ),
+                            ],
+                          );
+                        },
+                        barrierDismissible: false);
+                  },
                     child: Text('DELETE FRIEND'),
                   ),
                 ],
