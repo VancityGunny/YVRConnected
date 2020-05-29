@@ -143,11 +143,12 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                               size: 150, color: Color.fromARGB(15, 0, 0, 0)));
                     }
                     //filter out read message
-                    var filteredSnapshot = snapshot.data.where((e)=> e.readFlag==false);
+                    var filteredSnapshot =
+                        snapshot.data.where((e) => e.readFlag == false);
                     return GridView.builder(
                       itemCount: filteredSnapshot.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                        crossAxisCount: 5,
                       ),
                       itemBuilder: (context, index) {
                         return GestureDetector(
@@ -161,16 +162,23 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                               //TODO: selectActionOption, // long press release so select whatever was selected
                             },
                             child: Card(
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                      child: Icon(Icons.email), height: 80),
-                                  Text(filteredSnapshot.elementAt(index).thoughtOptionCode,
-                                      style:
-                                          TextStyle(color: Colors.deepPurple))
-                                ],
-                              ),
-                            ));
+                                child: Stack(
+                              children: <Widget>[
+                                Container(                                  
+                                    child: Icon(Icons.email, size:70, color:  Color.fromARGB(15, 0, 0, 0))),
+                                Positioned(
+                                    child: CommonBloc.of(context)
+                                        .thoughtOptions
+                                        .firstWhere((element) =>
+                                            element.code ==
+                                            filteredSnapshot
+                                                .elementAt(index)
+                                                .thoughtOptionCode)
+                                        .icon,
+                                        left:30,
+                                        top:30),
+                              ],
+                            )));
                       },
                     );
                   })),
@@ -238,8 +246,8 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                 ],
               ));
         }).then((value) {
-          // mark thoughts as read so we hide it
-          CommonBloc.of(context).markThoughtAsRead(latestThought.thoughtId);
-        });
+      // mark thoughts as read so we hide it
+      CommonBloc.of(context).markThoughtAsRead(latestThought.thoughtId);
+    });
   }
 }
