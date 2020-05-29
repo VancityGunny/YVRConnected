@@ -81,7 +81,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                     width: 70.0,
                     child: Stack(children: <Widget>[
                       FlareActor(
-                        "graphics/Shinchan.flr",
+                        "graphics/boybody.flr",
                         animation: 'idle',
                         fit: BoxFit.contain,
                       ),
