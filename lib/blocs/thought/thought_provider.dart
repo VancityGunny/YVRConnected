@@ -48,7 +48,8 @@ class ThoughtProvider {
     //thoughtsSentByFriend.map((f)=>{friend = f.key, sent = f.})
   }
 
-  Future<String> addThought(String newThoughtId, ThoughtModel newThought) async {
+  Future<String> addThought(
+      String newThoughtId, ThoughtModel newThought) async {
     //TODO: add checking so you can't send thought to the same person within 24 hours of each thoughs
     // add thought to sentThought collection
     var newSentThoughtDoc =
@@ -81,5 +82,15 @@ class ThoughtProvider {
     });
 
     return newThoughtId;
+  }
+
+  void updateReceivedThoughts(List<ThoughtModel> updatedThoughts) {
+    // add thought to receivedThought collection
+    var newReceivedThoughtDoc =
+        _firestore.collection('/thoughts').document(globals.currentUserId);
+    var newThoughtsCollection = updatedThoughts.map((e) => e.toJson()).toList();
+    newReceivedThoughtDoc.updateData({
+      'receivedThoughts': newThoughtsCollection
+    });
   }
 }

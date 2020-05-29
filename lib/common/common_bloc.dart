@@ -121,4 +121,15 @@ class CommonBloc extends InheritedWidget {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
+
+  void markThoughtAsRead(String thoughtId) {
+    var readThought = this.allReceivedThoughts.value.firstWhere(
+        (element) => element.thoughtId == thoughtId,
+        orElse: () => null);
+    if (readThought != null) {
+      readThought.readFlag = true;
+      // now update the received thoughts
+      thoughtRepository.updateReceivedThoughts(this.allReceivedThoughts.value);
+    }
+  }
 }

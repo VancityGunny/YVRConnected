@@ -142,15 +142,17 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                           child: FaIcon(FontAwesomeIcons.folderPlus,
                               size: 150, color: Color.fromARGB(15, 0, 0, 0)));
                     }
+                    //filter out read message
+                    var filteredSnapshot = snapshot.data.where((e)=> e.readFlag==false);
                     return GridView.builder(
-                      itemCount: snapshot.data.length,
+                      itemCount: filteredSnapshot.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                       ),
                       itemBuilder: (context, index) {
                         return GestureDetector(
                             onTap: () {
-                              viewThought(snapshot.data[index]);
+                              viewThought(filteredSnapshot.elementAt(index));
                             },
                             onLongPress: () {
                               //TODO: open the message
@@ -163,7 +165,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                                 children: <Widget>[
                                   Container(
                                       child: Icon(Icons.email), height: 80),
-                                  Text(snapshot.data[index].thoughtOptionCode,
+                                  Text(filteredSnapshot.elementAt(index).thoughtOptionCode,
                                       style:
                                           TextStyle(color: Colors.deepPurple))
                                 ],
@@ -183,63 +185,61 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
   }
 
   void viewThought(ThoughtModel latestThought) async {
-    try {
-      var currentFriend = CommonBloc.of(context).allFriends.value.firstWhere(
+    var currentFriend = CommonBloc.of(context).allFriends.value.firstWhere(
+        (element) => element.friendUserId == latestThought.fromUserId,
+        orElse: () => null);
+    // if sender is not currently friend
+    if (currentFriend == null) {
+      // lookup our sender collection
+      currentFriend = CommonBloc.of(context).allSenders.value.firstWhere(
           (element) => element.friendUserId == latestThought.fromUserId,
           orElse: () => null);
-      // if sender is not currently friend
+
+      // if we haven't lookup this sender before then lookup now
       if (currentFriend == null) {
-        // lookup our sender collection
-        currentFriend = CommonBloc.of(context).allSenders.value.firstWhere(
-            (element) => element.friendUserId == latestThought.fromUserId,
-            orElse: () => null);
-
-        // if we haven't lookup this sender before then lookup now
-        if (currentFriend == null) {
-          var currentFriend = await CommonBloc.of(context)
-              .friendProvider
-              .lookupFriendById(latestThought.fromUserId);
-          // now add him to allsenders list for next time
-          await CommonBloc.of(context)
-              .friendProvider
-              .addSender(latestThought.fromUserId, currentFriend, context);
-        }
+        var currentFriend = await CommonBloc.of(context)
+            .friendProvider
+            .lookupFriendById(latestThought.fromUserId);
+        // now add him to allsenders list for next time
+        await CommonBloc.of(context)
+            .friendProvider
+            .addSender(latestThought.fromUserId, currentFriend, context);
       }
-      var selectedThoughtType = CommonBloc.of(context)
-          .thoughtOptions
-          .firstWhere(
-              (element) => latestThought.thoughtOptionCode == element.code,
-              orElse: null);
+    }
+    var selectedThoughtType = CommonBloc.of(context).thoughtOptions.firstWhere(
+        (element) => latestThought.thoughtOptionCode == element.code,
+        orElse: () => null);
 
-      showDialog(
-          context: context,
-          builder: (context) {
-            return Dialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
-                child: Column(
-                  children: <Widget>[
-                    Expanded(child:
-                        new LayoutBuilder(builder: (context, constraint) {
-                      return new Icon(selectedThoughtType.icon.icon,
-                          size: 100);
-                    })),
-                    Text(selectedThoughtType.caption, textScaleFactor: 2.0),
-                    (latestThought.imageUrl != null)
-                        ? Expanded(child: Image.network(latestThought.imageUrl))
-                        : Text(''),
-                    Container(
-                      child: (currentFriend != null &&
-                              currentFriend.thumbnail == null)
-                          ? Image.asset('graphics/default_user_thumbnail.png',
-                              width: 20, height: 20)
-                          : Image.network(currentFriend.thumbnail,
-                              width: 20, height: 20),
-                    ),
-                    Text(latestThought.createdDate.toString()),
-                  ],
-                ));
-          });
-    } catch (e) {}
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                      child: new LayoutBuilder(builder: (context, constraint) {
+                    return new Icon(selectedThoughtType.icon.icon, size: 100);
+                  })),
+                  Text(selectedThoughtType.caption, textScaleFactor: 2.0),
+                  (latestThought.imageUrl != null)
+                      ? Expanded(child: Image.network(latestThought.imageUrl))
+                      : Text(''),
+                  Container(
+                    child: (currentFriend != null &&
+                            currentFriend.thumbnail == null)
+                        ? Image.asset('graphics/default_user_thumbnail.png',
+                            width: 20, height: 20)
+                        : Image.network(currentFriend.thumbnail,
+                            width: 20, height: 20),
+                  ),
+                  Text(latestThought.createdDate.toString()),
+                ],
+              ));
+        }).then((value) {
+          // mark thoughts as read so we hide it
+          CommonBloc.of(context).markThoughtAsRead(latestThought.thoughtId);
+        });
   }
 }

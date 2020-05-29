@@ -34,12 +34,22 @@ class ThoughtModel extends Equatable {
   final String thoughtOptionCode;
   final DateTime createdDate;
 
-  ThoughtModel(
-      this.fromUserId, this.toUserId, this.thoughtOptionCode, this.createdDate, this.imageUrl);
+  bool readFlag;
+
+  ThoughtModel(this.fromUserId, this.toUserId, this.thoughtOptionCode,
+      this.createdDate, this.imageUrl,
+      [this.readFlag = false, this.thoughtId]);
 
   @override
-  List<Object> get props =>
-      [thoughtId, fromUserId, toUserId, thoughtOptionCode, createdDate, imageUrl];
+  List<Object> get props => [
+        thoughtId,
+        fromUserId,
+        toUserId,
+        thoughtOptionCode,
+        createdDate,
+        imageUrl,
+        readFlag
+      ];
 
   factory ThoughtModel.fromJson(Map<String, dynamic> json) {
     return ThoughtModel(
@@ -47,7 +57,9 @@ class ThoughtModel extends Equatable {
         json['toUserId'] as String,
         json['thoughtOptionCode'] as String,
         json['createdDate'].toDate() as DateTime,
-        json['imageUrl'] as String);
+        json['imageUrl'] as String,
+        json['readFlag'] as bool,
+        json['thoughtId'] as String);
   }
 
   Map<String, dynamic> toJson() {
@@ -58,6 +70,8 @@ class ThoughtModel extends Equatable {
     data['createdDate'] = this.createdDate;
     data['thoughtId'] = this.thoughtId;
     data['imageUrl'] = this.imageUrl;
+    data['readFlag'] = this.readFlag;
+    data['thoughtId'] = this.thoughtId;
     return data;
   }
 }

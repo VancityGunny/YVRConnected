@@ -52,4 +52,9 @@ class ThoughtRepository {
   Future<List<FriendStatModel>> fetchTopFive(BuildContext context) async {
     return this._thoughtProvider.fetchTopFive(context);
   }
+
+  void updateReceivedThoughts(List<ThoughtModel> updatedThoughts) {
+    this._thoughtProvider.updateReceivedThoughts(updatedThoughts);
+  }
+
 }
