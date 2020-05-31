@@ -17,11 +17,12 @@ class FriendDetailPage extends StatefulWidget {
 }
 
 class FriendDetailPageState extends State<FriendDetailPage> {
+  var isRecent = true;
+
   @override
   Widget build(BuildContext context) {
     var thoughtOptions = CommonBloc.of(context).thoughtOptions;
 
-    var isRecent = true;
     BoxDecoration friendDecoration = BoxDecoration();
     if (widget.currentFriend.lastThoughtSentDate == null ||
         widget.currentFriend.lastThoughtSentDate
@@ -42,17 +43,29 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                 Container(
                     alignment: Alignment.topCenter,
                     child: (widget.currentFriend.thumbnail == null)
-                        ? Image.asset('graphics/default_user_thumbnail.png', width:200)
+                        ? Image.asset('graphics/default_user_thumbnail.png',
+                            width: 200)
                         : Image.network(widget.currentFriend.thumbnail,
                             width: 200)),
-                Text(widget.currentFriend.displayName)
+                RichText(
+                    text: TextSpan(
+                        style: TextStyle(color: Colors.black, fontSize: 30),
+                        children: [
+                      TextSpan(text: widget.currentFriend.displayName)
+                    ])),
               ],
             )),
             Expanded(
               child: Column(
                 children: <Widget>[
                   (isRecent == true)
-                      ? Text(widget.currentFriend.lastThoughtSentOption)
+                      ? Text('Last sent: ' +
+                          CommonBloc.of(context)
+                              .thoughtOptions
+                              .firstWhere((element) =>
+                                  element.code ==
+                                  widget.currentFriend.lastThoughtSentOption)
+                              .caption)
                       : Container(
                           child: RaisedButton(
                               child: Text('Thinking of You'),
@@ -62,31 +75,34 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                   Expanded(child: Text('')),
                   RaisedButton(
                     onPressed: () {
-                    // confirm before sign out
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return AlertDialog(
-                            title: Text('Sign out?'),
-                            actions: <Widget>[
-                              FlatButton(
-                                onPressed: () {
-                                  deleteFriend();
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Yes'),
-                              ),
-                              FlatButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('No'),
-                              ),
-                            ],
-                          );
-                        },
-                        barrierDismissible: false);
-                  },
+                      // confirm before sign out
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog(
+                              title: Text('Sign out?'),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: () {
+                                    deleteFriend();
+                                    Navigator.of(context)
+                                        .pop(); // pop out of dialog
+                                    Navigator.of(context)
+                                        .pop(); // pop out of friend detail page
+                                  },
+                                  child: Text('Yes'),
+                                ),
+                                FlatButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('No'),
+                                ),
+                              ],
+                            );
+                          },
+                          barrierDismissible: false);
+                    },
                     child: Text('DELETE FRIEND'),
                   ),
                 ],
@@ -103,7 +119,9 @@ class FriendDetailPageState extends State<FriendDetailPage> {
           return SimpleDialog(
               title: Text("Send Thought"),
               children: <Widget>[new FriendOptionsDialog(friend)]);
-        });
+        }).then((value) {
+      Navigator.of(context).pop(); // pop out of friend detail page
+    });
   }
 
   deleteFriend() {

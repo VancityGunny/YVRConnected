@@ -43,7 +43,7 @@ class _FriendPageState extends State<FriendPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Friend'),
+        title: Text('Friends'),
       ),
       body: FriendScreen(),
       floatingActionButton:

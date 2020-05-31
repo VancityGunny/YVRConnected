@@ -53,9 +53,9 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                 text: TextSpan(
                     style: DefaultTextStyle.of(context).style,
                     children: [
-              TextSpan(text: 'Your'),
-              TextSpan(text: ' Top'),
-              TextSpan(text: ' Friends')
+              TextSpan(
+                  text: 'Top Friends',
+                  style: TextStyle(color: Colors.black, fontSize: 20))
             ]))),
         Expanded(
             child: Container(
@@ -106,26 +106,21 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                                           width: 54.0,
                                           height: 50.0,
                                         )))),
-                      Positioned(
-                        top: 52.0,
-                        left: 5.0,
-                        child: (index % 2 == 0)
-                            ? Image.asset(
-                                'graphics/boyhair.png',
-                                width: 60.0,
-                                height: 60.0,
-                              )
-                            : Image.asset(
-                                'graphics/girlhair.png',
-                                width: 60.0,
-                                height: 60.0,
-                              ),
-                      )
                     ]),
                   );
                 });
           },
         ))),
+        Container(
+            child: RichText(
+                text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: [
+              TextSpan(
+                text: 'Latest Messages',
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              )
+            ]))),
         Expanded(
           child: Container(
               child: StreamBuilder(
@@ -164,8 +159,10 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                             child: Card(
                                 child: Stack(
                               children: <Widget>[
-                                Container(                                  
-                                    child: Icon(Icons.email, size:70, color:  Color.fromARGB(15, 0, 0, 0))),
+                                Container(
+                                    child: Icon(Icons.email,
+                                        size: 70,
+                                        color: Color.fromARGB(15, 0, 0, 0))),
                                 Positioned(
                                     child: CommonBloc.of(context)
                                         .thoughtOptions
@@ -175,8 +172,8 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                                                 .elementAt(index)
                                                 .thoughtOptionCode)
                                         .icon,
-                                        left:30,
-                                        top:30),
+                                    left: 30,
+                                    top: 30),
                               ],
                             )));
                       },
@@ -185,11 +182,6 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
         ),
       ],
     );
-  }
-
-  Future linkInstagramFeed(String postId) {
-    //print something
-    var linkUrl = postId;
   }
 
   void viewThought(ThoughtModel latestThought) async {
@@ -209,7 +201,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
             .friendProvider
             .lookupFriendById(latestThought.fromUserId);
         // now add him to allsenders list for next time
-        await CommonBloc.of(context)
+        CommonBloc.of(context)
             .friendProvider
             .addSender(latestThought.fromUserId, currentFriend, context);
       }
