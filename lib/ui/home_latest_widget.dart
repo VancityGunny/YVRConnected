@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,6 +18,12 @@ class HomeLatestWidget extends StatefulWidget {
 
 class HomeLatestWidgetState extends State<HomeLatestWidget> {
   List<FriendStatModel> topFiveFriends = List<FriendStatModel>();
+  List<FlSpot> graphData = List<FlSpot>();
+  List<Color> gradientColors = [
+    const Color(0xff23b6e6),
+    const Color(0xff02d39a),
+  ];
+  int maxYAxis = 5;
 
   final RelativeRectTween relativeRectTween = RelativeRectTween(
     begin: RelativeRect.fromLTRB(0, 10, 0, 0),
@@ -46,6 +54,8 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var thoughtOptions = CommonBloc.of(context).thoughtOptions;
+
     return Column(
       children: <Widget>[
         Container(
@@ -71,7 +81,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
               return Container(
                   alignment: Alignment.center,
                   child: FaIcon(FontAwesomeIcons.userPlus,
-                      size: 150, color: Color.fromARGB(15, 0, 0, 0)));
+                      size: 100, color: Color.fromARGB(15, 0, 0, 0)));
             }
             return ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -86,7 +96,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                         fit: BoxFit.contain,
                       ),
                       Positioned(
-                          top: 50,
+                          top: 0,
                           left: 12,
                           child: ClipOval(
                               child: Align(
@@ -111,6 +121,49 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                 });
           },
         ))),
+        AspectRatio(
+            aspectRatio: 1.70,
+            child: StreamBuilder(
+                stream: CommonBloc.of(context).allSentThoughts.stream,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  var allFriendThoughts = snapshot.data;
+
+                  var thoughtsByDay = groupBy(allFriendThoughts,
+                      (t) => DateTime.now().difference(t.createdDate).inDays);
+                  graphData = new List<FlSpot>();
+                  for (int i = 0; i <= 14; i++) {
+                    var value = thoughtsByDay.entries.firstWhere(
+                        (element) => element.key == i,
+                        orElse: () => null);
+                    graphData.add(new FlSpot(i.toDouble(),
+                        (value == null) ? 0.0 : value.value.length.toDouble()));
+                    if (value != null) {
+                      maxYAxis = (value.value.length > maxYAxis)
+                          ? value.value.length +3
+                          : maxYAxis;
+                    }
+                  }
+                  return Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18),
+                        ),
+                        color: Color(0xff232d37)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          right: 18.0, left: 12.0, top: 24, bottom: 12),
+                      child: LineChart(
+                        mainData(),
+                      ),
+                    ),
+                  );
+                })),
         Container(
             child: RichText(
                 text: TextSpan(
@@ -135,7 +188,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                       return Container(
                           alignment: Alignment.center,
                           child: FaIcon(FontAwesomeIcons.folderPlus,
-                              size: 150, color: Color.fromARGB(15, 0, 0, 0)));
+                              size: 100, color: Color.fromARGB(15, 0, 0, 0)));
                     }
                     //filter out read message
                     var filteredSnapshot =
@@ -241,5 +294,92 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
       // mark thoughts as read so we hide it
       CommonBloc.of(context).markThoughtAsRead(latestThought.thoughtId);
     });
+  }
+
+  LineChartData mainData() {
+    return LineChartData(
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            color: const Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return FlLine(
+            color: const Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        bottomTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 22,
+          textStyle: const TextStyle(
+              color: Color(0xff68737d),
+              fontWeight: FontWeight.bold,
+              fontSize: 16),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 2:
+                return '2';
+              case 5:
+                return '5';
+              case 8:
+                return '8';
+              case 12:
+                return 'days ago';
+            }
+            return '';
+          },
+          margin: 8,
+        ),
+        leftTitles: SideTitles(
+          showTitles: true,
+          textStyle: const TextStyle(
+            color: Color(0xff67727d),
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 1:
+                return 'Sent';
+            }
+            return '';
+          },
+          reservedSize: 28,
+          margin: 12,
+        ),
+      ),
+      borderData: FlBorderData(
+          show: true,
+          border: Border.all(color: const Color(0xff37434d), width: 1)),
+      minX: 0,
+      maxX: 14,
+      minY: 0,
+      maxY: maxYAxis.toDouble(),
+      lineBarsData: [
+        LineChartBarData(
+          spots: graphData,
+          isCurved: false,
+          colors: gradientColors,
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            colors:
+                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+          ),
+        ),
+      ],
+    );
   }
 }

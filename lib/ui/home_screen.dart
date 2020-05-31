@@ -29,8 +29,9 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // set user stream
+        // set user stream
     CommonBloc.of(context).initStream();
+
 
     return MultiBlocProvider(
         providers: [
