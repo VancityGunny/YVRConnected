@@ -86,7 +86,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                         fit: BoxFit.contain,
                       ),
                       Positioned(
-                          top: 60,
+                          top: 50,
                           left: 12,
                           child: ClipOval(
                               child: Align(
