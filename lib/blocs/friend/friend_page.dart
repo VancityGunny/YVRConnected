@@ -33,6 +33,7 @@ class FriendPage extends StatefulWidget {
 class _FriendPageState extends State<FriendPage> {
   List<FriendModel> friends;
   Uint8List friendThumbnail;
+  bool isMaxFriends = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -41,13 +42,26 @@ class _FriendPageState extends State<FriendPage> {
 
   @override
   Widget build(BuildContext context) {
+    CommonBloc.of(context).allFriends.listen((friendList) {
+      if (friendList.length >= 50) {
+        setState(() {
+          isMaxFriends = true;
+        });
+      } else {
+        setState(() {
+          isMaxFriends = false;
+        });
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text('Friends'),
       ),
       body: FriendScreen(),
-      floatingActionButton:
-          FloatingActionButton(child: Icon(Icons.add), onPressed: _addFriend),
+      floatingActionButton: new Visibility(
+          visible: !isMaxFriends,
+          child: FloatingActionButton(
+              child: Icon(Icons.add), onPressed: _addFriend)),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
@@ -69,7 +83,7 @@ class _FriendPageState extends State<FriendPage> {
             await CS.ContactsService.getContacts(query: contact.fullName);
         if (foundContacts.length > 0) {
           thumbnail = foundContacts.first.avatar;
-          this.friendThumbnail = (thumbnail.isEmpty==true)?null:thumbnail;
+          this.friendThumbnail = (thumbnail.isEmpty == true) ? null : thumbnail;
         }
         // Either the permission was already granted before or the user just granted it.
       }
