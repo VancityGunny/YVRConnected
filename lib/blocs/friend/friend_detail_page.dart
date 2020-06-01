@@ -20,7 +20,7 @@ class FriendDetailPage extends StatefulWidget {
 
 class FriendDetailPageState extends State<FriendDetailPage> {
   var isRecent = true;
-  List<FlSpot> graphData = List<FlSpot>();
+  List<List<FlSpot>> graphData = List<List<FlSpot>>();
   List<Color> gradientColors = [
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
@@ -31,25 +31,24 @@ class FriendDetailPageState extends State<FriendDetailPage> {
     var allFriendThoughts = CommonBloc.of(context).allSentThoughts.value.where(
         (element) => element.toUserId == widget.currentFriend.friendUserId);
 
-    var thoughtsByDay = groupBy(allFriendThoughts,
-        (t) => DateTime.now().difference(t.createdDate).inDays);
-
-    for (int i = 0; i <= 14; i++) {
-      var value = thoughtsByDay.entries
-          .firstWhere((element) => element.key == i, orElse: () => null);
-      graphData.add(new FlSpot(i.toDouble(), (value == null) ? 0 : 1));
-      // int serie = 0;
-      // thoughtOptions.forEach((option) {
-      //   if (value != null &&
-      //       value.value
-      //           .any((element) => element.thoughtOptionCode == option.code)) {
-      //     graphData.add(new FlSpot(i.toDouble(), 1.0 * serie));
-      //   } else {
-      //     graphData.add(new FlSpot(i.toDouble(), (1.0 * serie) - 1.0));
-      //   }
-      //   serie++;
-      // });
-    }
+    var optionIndex = 0;
+    thoughtOptions.forEach((option) {
+      var thoughtsByDay = groupBy(
+          allFriendThoughts
+              .where((element) => element.thoughtOptionCode == option.code),
+          (t) => DateTime.now().difference(t.createdDate).inDays);
+      // modifier to stack the graph,
+      var optionModifier = 2 * optionIndex;
+      // create new graphdata first
+      graphData.add(new List<FlSpot>());
+      for (int i = 0; i <= 14; i++) {
+        var value = thoughtsByDay.entries
+            .firstWhere((element) => element.key == i, orElse: () => null);
+        graphData[optionIndex].add(new FlSpot(i.toDouble(),
+            (value == null) ? 0.0 + optionModifier : 1.0 + optionModifier));
+      }
+      optionIndex++;
+    });
 
     BoxDecoration friendDecoration = BoxDecoration();
     if (widget.currentFriend.lastThoughtSentDate == null ||
@@ -108,7 +107,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                             borderRadius: BorderRadius.all(
                               Radius.circular(18),
                             ),
-                            color: Color(0xff232d37)),
+                            color: Color(0xffffffff)),
                         child: Padding(
                           padding: const EdgeInsets.only(
                               right: 18.0, left: 12.0, top: 24, bottom: 12),
@@ -178,88 +177,94 @@ class FriendDetailPageState extends State<FriendDetailPage> {
 
   LineChartData mainData() {
     return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: SideTitles(
-          showTitles: true,
-          reservedSize: 22,
-          textStyle: const TextStyle(
-              color: Color(0xff68737d),
-              fontWeight: FontWeight.bold,
-              fontSize: 16),
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 2:
-                return '2';
-              case 5:
-                return '5';
-              case 8:
-                return '8';
-              case 12:
-                return 'days ago';
-            }
-            return '';
-          },
-          margin: 8,
-        ),
-        leftTitles: SideTitles(
-          showTitles: true,
-          textStyle: const TextStyle(
-            color: Color(0xff67727d),
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
-          ),
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 1:
-                return 'Sent';
-            }
-            return '';
-          },
-          reservedSize: 28,
-          margin: 12,
-        ),
-      ),
-      borderData: FlBorderData(
+        gridData: FlGridData(
           show: true,
-          border: Border.all(color: const Color(0xff37434d), width: 1)),
-      minX: 0,
-      maxX: 14,
-      minY: 0,
-      maxY: 3,
-      lineBarsData: [
-        LineChartBarData(
-          spots: graphData,
-          isCurved: true,
-          colors: gradientColors,
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: false,
+          drawVerticalLine: true,
+          getDrawingHorizontalLine: (value) {
+            return FlLine(
+              color: const Color(0xff37434d),
+              strokeWidth: 1,
+            );
+          },
+          getDrawingVerticalLine: (value) {
+            return FlLine(
+              color: const Color(0xff37434d),
+              strokeWidth: 1,
+            );
+          },
+        ),
+        titlesData: FlTitlesData(
+          show: true,
+          bottomTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 22,
+            textStyle: const TextStyle(
+                color: Color(0xff68737d),
+                fontWeight: FontWeight.bold,
+                fontSize: 10),
+            getTitles: (value) {
+              switch (value.toInt()) {
+                case 2:
+                  return '2';
+                case 5:
+                  return '5';
+                case 8:
+                  return '8';
+                case 12:
+                  return 'days ago';
+              }
+              return '';
+            },
+            margin: 8,
           ),
-          belowBarData: BarAreaData(
-            show: true,
-            colors:
-                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+          leftTitles: SideTitles(
+            showTitles: true,
+            textStyle: const TextStyle(
+              color: Color(0xff67727d),
+              fontWeight: FontWeight.bold,
+              fontSize: 10,
+            ),
+            getTitles: (value) {
+              switch (value.toInt()) {
+                case 1:
+                  return 'Miss';
+                  case 3:
+                  return 'Wish';
+                  case 5:
+                  return 'Oldtime';
+                  case 7:
+                  return 'Grateful';
+              }
+              return '';
+            },
+            reservedSize: 28,
+            margin: 12,
           ),
         ),
-      ],
-    );
+        borderData: FlBorderData(
+            show: true,
+            border: Border.all(color: const Color(0xff37434d), width: 1)),
+        minX: 0,
+        maxX: 14,
+        minY: 0,
+        maxY: 8,
+        lineBarsData: graphData.map<LineChartBarData>((graphItem) {
+          return LineChartBarData(
+            spots: graphItem,
+            isCurved: false,
+            colors: gradientColors,
+            barWidth: 5,
+            isStrokeCapRound: true,
+            dotData: FlDotData(
+              show: false,
+            ),
+            belowBarData: BarAreaData(
+              show: true,
+              colors: gradientColors
+                  .map((color) => color.withOpacity(0.3))
+                  .toList(),
+            ),
+          );
+        }).toList());
   }
 }

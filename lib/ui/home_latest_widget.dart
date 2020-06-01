@@ -154,7 +154,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                         borderRadius: BorderRadius.all(
                           Radius.circular(18),
                         ),
-                        color: Color(0xff232d37)),
+                        color: Color(0x00ffffff)),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           right: 18.0, left: 12.0, top: 24, bottom: 12),
