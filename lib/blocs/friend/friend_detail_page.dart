@@ -5,8 +5,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
+import 'package:yvrconnected/blocs/interaction/interaction_model.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
+import 'package:yvrconnected/common/global_object.dart' as globals;
 
 class FriendDetailPage extends StatefulWidget {
   static const String routeName = '/friendDetail';
@@ -68,29 +70,30 @@ class FriendDetailPageState extends State<FriendDetailPage> {
             Row(
               children: <Widget>[
                 Expanded(
-                  flex:1,
+                    flex: 1,
                     child: Column(
-                  children: <Widget>[
-                    Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: (widget.currentFriend.thumbnail == null)
-                            ? Image.asset('graphics/default_user_thumbnail.png',
-                                width: 200)
-                            : Image.network(widget.currentFriend.thumbnail,
-                                width: 200)),
-                    // RichText(
-                    //     overflow: TextOverflow.ellipsis,
-                    //     text: TextSpan(
-                    //         style: TextStyle(
-                    //             color: Colors.black, fontSize: 16),
-                    //         children: [
-                    //           TextSpan(
-                    //               text: widget.currentFriend.displayName)
-                    //         ])),
-                  ],
-                )),
-                Expanded(   
-                  flex:2,               
+                      children: <Widget>[
+                        Container(
+                            padding: EdgeInsets.all(10.0),
+                            child: (widget.currentFriend.thumbnail == null)
+                                ? Image.asset(
+                                    'graphics/default_user_thumbnail.png',
+                                    width: 200)
+                                : Image.network(widget.currentFriend.thumbnail,
+                                    width: 200)),
+                        // RichText(
+                        //     overflow: TextOverflow.ellipsis,
+                        //     text: TextSpan(
+                        //         style: TextStyle(
+                        //             color: Colors.black, fontSize: 16),
+                        //         children: [
+                        //           TextSpan(
+                        //               text: widget.currentFriend.displayName)
+                        //         ])),
+                      ],
+                    )),
+                Expanded(
+                  flex: 2,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,36 +110,47 @@ class FriendDetailPageState extends State<FriendDetailPage> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.all(10),
-                  child: OutlineButton(
-                    onPressed: () {},
-                    child: FaIcon(FontAwesomeIcons.headphones),
-                  ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:
+                    CommonBloc.of(context).interactionOptions.map((intOpt) {
+                  return Container(
+                      margin: EdgeInsets.all(10),
+                      child: OutlineButton(
+                        onPressed: () {
+                          sendInteraction(intOpt.code);
+                        },
+                        child: intOpt.icon,
+                      ));
+                }).toList()
+                // <Widget>[
+                //   Container(
+                //     margin: EdgeInsets.all(10),
+                //     child: OutlineButton(
+                //       onPressed: () {},
+                //       child: FaIcon(FontAwesomeIcons.headphones),
+                //     ),
+                //   ),
+                //   Container(
+                //     margin: EdgeInsets.all(10),
+                //     child: OutlineButton(
+                //       onPressed: () {},
+                //       child: FaIcon(FontAwesomeIcons.eye),
+                //     ),
+                //   ),
+                //   Container(
+                //     margin: EdgeInsets.all(10),
+                //     child: OutlineButton(
+                //       onPressed: () {},
+                //       child: FaIcon(FontAwesomeIcons.userFriends),
+                //     ),
+                //   ),
+                // ],
                 ),
-                 Container(
-                  margin: EdgeInsets.all(10),
-                  child: OutlineButton(
-                    onPressed: () {},
-                    child: FaIcon(FontAwesomeIcons.eye),
-                  ),
-                ),
-                 Container(
-                  margin: EdgeInsets.all(10),
-                  child: OutlineButton(
-                    onPressed: () {},
-                    child: FaIcon(FontAwesomeIcons.userFriends),
-                  ),
-                ),
-              ],
-            ),
             Expanded(
               child: Column(
                 children: <Widget>[
                   (isRecent == true)
-                      ? Text('Today: ' +
+                      ? Text('Current Status: ' +
                           CommonBloc.of(context)
                               .thoughtOptions
                               .firstWhere((element) =>
@@ -170,7 +184,8 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                           context: context,
                           builder: (_) {
                             return AlertDialog(
-                              title: Text('Sign out?'),
+                              title: Text(
+                                  'Do you really want to delete this friend?'),
                               actions: <Widget>[
                                 FlatButton(
                                   onPressed: () {
@@ -314,5 +329,12 @@ class FriendDetailPageState extends State<FriendDetailPage> {
             ),
           );
         }).toList());
+  }
+
+  void sendInteraction(String code) async {
+    await CommonBloc.of(context).thoughtRepository.addInteraction(
+        new InteractionModel(globals.currentUserId,
+            widget.currentFriend.friendUserId, code, DateTime.now(), null),
+        context);
   }
 }

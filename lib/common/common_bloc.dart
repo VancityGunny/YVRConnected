@@ -6,6 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
+import 'package:yvrconnected/blocs/interaction/interaction_model.dart';
+import 'package:yvrconnected/blocs/interaction/interaction_option_model.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/blocs/thought/thought_option_model.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;
@@ -24,6 +26,8 @@ class CommonBloc extends InheritedWidget {
       BehaviorSubject<List<ThoughtModel>>();
   final BehaviorSubject<List<ThoughtModel>> allSentThoughts =
       BehaviorSubject<List<ThoughtModel>>();
+  final BehaviorSubject<List<InteractionModel>> allSentInteractions =
+      BehaviorSubject<List<InteractionModel>>();
   final BehaviorSubject<List<FriendStatModel>> topFiveFriends =
       BehaviorSubject<List<FriendStatModel>>();
 
@@ -35,6 +39,14 @@ class CommonBloc extends InheritedWidget {
         'GOLD', 'Good old time', FaIcon(FontAwesomeIcons.wineGlassAlt)),
     ThoughtOptionModel(
         'GRAT', 'Grateful for you', FaIcon(FontAwesomeIcons.prayingHands))
+  ];
+
+  final interactionOptions = [
+    ThoughtOptionModel(
+        'CALL', 'Phone Call', FaIcon(FontAwesomeIcons.headphonesAlt)),
+    ThoughtOptionModel('VIDEO', 'Video Call', FaIcon(FontAwesomeIcons.eye)),
+    ThoughtOptionModel(
+        'IRL', 'In Person', FaIcon(FontAwesomeIcons.userFriends)),
   ];
 
   @override
@@ -85,6 +97,13 @@ class CommonBloc extends InheritedWidget {
         docs.data['sentThoughts'].forEach((t) {
           newSentThoughtsList.add(ThoughtModel.fromJson(t));
         });
+        try {
+          var newSentInteractionsList = new List<InteractionModel>();
+          docs.data['sentInteractions'].forEach((t) {
+            newSentInteractionsList.add(InteractionModel.fromJson(t));
+          });
+          allSentInteractions.add(newSentInteractionsList);
+        } catch (e) {}
 
         allReceivedThoughts.add(newReceivedThoughtsList);
         allSentThoughts.add(newSentThoughtsList);

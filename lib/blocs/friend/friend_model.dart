@@ -33,13 +33,30 @@ class FriendModel extends Equatable {
   final String thumbnail;
   DateTime lastThoughtSentDate;
   String lastThoughtSentOption;
+  DateTime lastInteractionSentDate;
+  String lastInteractionSentOption;
 
-  FriendModel(this.friendUserId, this.email, this.displayName, this.thumbnail,
-      this.lastThoughtSentDate,this.lastThoughtSentOption);
+  FriendModel(
+      this.friendUserId,
+      this.email,
+      this.displayName,
+      this.thumbnail,
+      this.lastThoughtSentDate,
+      this.lastThoughtSentOption,
+      this.lastInteractionSentDate,
+      this.lastInteractionSentOption);
 
   @override
-  List<Object> get props =>
-      [friendUserId, email, displayName, thumbnail, lastThoughtSentDate,lastThoughtSentOption];
+  List<Object> get props => [
+        friendUserId,
+        email,
+        displayName,
+        thumbnail,
+        lastThoughtSentDate,
+        lastThoughtSentOption,
+        lastInteractionSentDate,
+        lastInteractionSentOption
+      ];
 
   factory FriendModel.fromJson(Map<dynamic, dynamic> json) {
     return FriendModel(
@@ -47,9 +64,14 @@ class FriendModel extends Equatable {
         json['friendEmail'] as String,
         json['friendName'] as String,
         json['thumbnail'] as String,
-        (json['lastThoughtSentDate'] == null) ? null : json['lastThoughtSentDate'].toDate(),
-        json['lastThoughtSentOption'] as String
-        );
+        (json['lastThoughtSentDate'] == null)
+            ? null
+            : json['lastThoughtSentDate'].toDate(),
+        json['lastThoughtSentOption'] as String,
+        (json['lastInteractionSentDate'] == null)
+            ? null
+            : json['lastInteractionSentDate'].toDate(),
+        json['lastInteractionSentOption'] as String);
   }
 
   Map<String, dynamic> toJson() {
@@ -60,6 +82,8 @@ class FriendModel extends Equatable {
     data['thumbnail'] = this.thumbnail;
     data['lastThoughtSentDate'] = this.lastThoughtSentDate;
     data['lastThoughtSentOption'] = this.lastThoughtSentOption;
+    data['lastInteractionSentDate'] = this.lastThoughtSentDate;
+    data['lastInteractionSentOption'] = this.lastThoughtSentOption;
     return data;
   }
 }

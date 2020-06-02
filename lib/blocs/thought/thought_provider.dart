@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
+import 'package:yvrconnected/blocs/interaction/interaction_model.dart';
 import 'package:yvrconnected/blocs/thought/thought_model.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;
@@ -82,6 +83,26 @@ class ThoughtProvider {
     });
 
     return newThoughtId;
+  }
+
+  Future<String> addInteraction(
+      String newInteractionId, InteractionModel newInteraction) async {
+    //TODO: add checking so you can't send thought to the same person within 24 hours of each thoughs
+    // add thought to sentThought collection
+    var newSentThoughtDoc =
+        _firestore.collection('/thoughts').document(globals.currentUserId);
+    newSentThoughtDoc.updateData({
+      'sentInteractions': FieldValue.arrayUnion([
+        {
+          'interactionId': newInteractionId,
+          'toUserId': newInteraction.toUserId,
+          'interactionOptionCode': newInteraction.interactionOptionCode,
+          'createdDate': newInteraction.createdDate
+        }
+      ])
+    });
+
+    return newInteractionId;
   }
 
   void updateReceivedThoughts(List<ThoughtModel> updatedThoughts) {

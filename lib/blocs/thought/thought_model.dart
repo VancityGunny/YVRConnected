@@ -71,7 +71,6 @@ class ThoughtModel extends Equatable {
     data['thoughtId'] = this.thoughtId;
     data['imageUrl'] = this.imageUrl;
     data['readFlag'] = this.readFlag;
-    data['thoughtId'] = this.thoughtId;
     return data;
   }
 }

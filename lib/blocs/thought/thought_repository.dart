@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
+import 'package:yvrconnected/blocs/interaction/interaction_model.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 
 import 'package:image/image.dart' as IM;
@@ -47,6 +48,25 @@ class ThoughtRepository {
           newThought.toUserId, newThought.thoughtOptionCode, context);
     }
     return newThoughtId;
+  }
+
+  Future<String> addInteraction(
+      InteractionModel newInteraction, BuildContext context) async {
+        
+    var uuid = new Uuid();
+    var newInteractionId = uuid.v1();
+    
+    var localPath = await CommonBloc.of(context).localPath;
+    
+    await this._thoughtProvider.addInteraction(newInteractionId, newInteraction);
+
+    if (newInteractionId != null) {
+      // update latestInteractionSent for that friend
+      var friendProvider = FriendProvider();
+      friendProvider.updateFriendLastInteracted(
+          newInteraction.toUserId, newInteraction.interactionOptionCode, context);
+    }
+    return newInteractionId;
   }
 
   Future<List<FriendStatModel>> fetchTopFive(BuildContext context) async {

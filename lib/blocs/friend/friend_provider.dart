@@ -167,6 +167,24 @@ class FriendProvider {
     var foundUser = UserModel.fromJson(foundFriend.data);
 
     return FriendModel(fromUserId, foundUser.email, foundUser.displayName,
-        foundUser.photoUrl, null, null);
+        foundUser.photoUrl, null, null, null, null);
+  }
+
+  void updateFriendLastInteracted(String toUserId, String interactionOptionCode,
+      BuildContext context) async {
+    var user = await _firebaseAuth.currentUser();
+
+    var userRef =
+        _firestore.collection('/users').document(globals.currentUserId);
+    var currentFriends = CommonBloc.of(context).allFriends.value;
+    List<Map<String, dynamic>> newFriends = new List<Map<String, dynamic>>();
+    currentFriends.forEach((f) {
+      if (f.friendUserId == toUserId) {
+        f.lastInteractionSentDate = DateTime.now();
+        f.lastInteractionSentOption = interactionOptionCode;
+      }
+      newFriends.add(f.toJson());
+    });
+    userRef.updateData({'friends': newFriends});
   }
 }
