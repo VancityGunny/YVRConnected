@@ -6,3 +6,4 @@ import 'package:yvrconnected/blocs/user/user_model.dart';
 UserModel loggedInUser;
 String currentUserId;
 FirebaseStorage storage = FirebaseStorage.instance;
+bool includeImageFlag;

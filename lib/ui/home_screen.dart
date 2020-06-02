@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yvrconnected/blocs/authentication/index.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
@@ -29,9 +30,8 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-        // set user stream
+    // set user stream
     CommonBloc.of(context).initStream();
-
 
     return MultiBlocProvider(
         providers: [
@@ -53,7 +53,17 @@ class HomeScreenState extends State<HomeScreen> {
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.exit_to_app),
+                  icon: FaIcon(FontAwesomeIcons.infoCircle),
+                  onPressed: () {
+                    // go to about page
+                    showAboutDialog(
+                        context: context,
+                        applicationName: 'YVRConnected',
+                        applicationVersion: '0.0.1b');
+                  },
+                ),
+                IconButton(
+                  icon: Icon(FontAwesomeIcons.signOutAlt),
                   onPressed: () {
                     // confirm before sign out
                     showDialog(

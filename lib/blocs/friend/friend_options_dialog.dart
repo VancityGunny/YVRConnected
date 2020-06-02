@@ -6,6 +6,9 @@ import 'package:yvrconnected/blocs/friend/friend_model.dart';
 import 'package:yvrconnected/blocs/thought/thought_model.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
 
+import 'package:yvrconnected/common/global_object.dart' as globals;
+
+
 class FriendOptionsDialog extends StatefulWidget {
   final FriendModel friend;
   @override
@@ -18,12 +21,13 @@ class FriendOptionsDialog extends StatefulWidget {
 }
 
 class FriendOptionsDialogState extends State<FriendOptionsDialog> {
-  bool includeImageFlag = false;
+  bool includeImageFlag;
   bool isProcessing = false;
 
   @override
   void initState() {
     super.initState();
+    includeImageFlag = globals.includeImageFlag??false;
   }
 
   @override
@@ -43,6 +47,7 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
                 value: includeImageFlag,
                 onChanged: (newValue) {
                   setState(() {
+                    globals.includeImageFlag = newValue;
                     includeImageFlag = newValue;
                   });
                 }),
@@ -83,6 +88,6 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
           .then((value) => isProcessing = false);
     }
 
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(thoughtOptionCode);
   }
 }

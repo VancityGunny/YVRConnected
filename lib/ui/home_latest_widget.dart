@@ -145,16 +145,11 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                         (value == null) ? 0.0 : value.value.length.toDouble()));
                     if (value != null) {
                       maxYAxis = (value.value.length > maxYAxis)
-                          ? value.value.length +3
+                          ? value.value.length + 3
                           : maxYAxis;
                     }
                   }
                   return Container(
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18),
-                        ),
-                        color: Color(0x00ffffff)),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           right: 18.0, left: 12.0, top: 24, bottom: 12),
@@ -298,6 +293,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
 
   LineChartData mainData() {
     return LineChartData(
+      lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -325,12 +321,12 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
               fontSize: 16),
           getTitles: (value) {
             switch (value.toInt()) {
-              case 2:
-                return '2';
-              case 5:
-                return '5';
-              case 8:
-                return '8';
+              case 3:
+                return '3';
+              case 6:
+                return '6';
+              case 9:
+                return '9';
               case 12:
                 return 'days ago';
             }

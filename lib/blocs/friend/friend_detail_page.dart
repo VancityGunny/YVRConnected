@@ -86,7 +86,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
               child: Column(
                 children: <Widget>[
                   (isRecent == true)
-                      ? Text('Last sent: ' +
+                      ? Text('Today: ' +
                           CommonBloc.of(context)
                               .thoughtOptions
                               .firstWhere((element) =>
@@ -103,11 +103,6 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                     child: AspectRatio(
                       aspectRatio: 1.70,
                       child: Container(
-                        decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(18),
-                            ),
-                            color: Color(0xffffffff)),
                         child: Padding(
                           padding: const EdgeInsets.only(
                               right: 18.0, left: 12.0, top: 24, bottom: 12),
@@ -157,16 +152,18 @@ class FriendDetailPageState extends State<FriendDetailPage> {
         ));
   }
 
-  void openActionOptions(FriendModel friend) {
-    showDialog(
+  void openActionOptions(FriendModel friend) async {
+    var result = await showDialog(
         context: context,
         builder: (context) {
           return SimpleDialog(
               title: Text("Send Thought"),
               children: <Widget>[new FriendOptionsDialog(friend)]);
-        }).then((value) {
-      Navigator.of(context).pop(); // pop out of friend detail page
-    });
+        });
+    if (result != null) {
+      Navigator.of(context)
+          .pop(); // pop out of friend detail page, if we select something
+    }
   }
 
   deleteFriend() {
@@ -177,6 +174,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
 
   LineChartData mainData() {
     return LineChartData(
+        lineTouchData: LineTouchData(enabled: false),
         gridData: FlGridData(
           show: true,
           drawVerticalLine: true,
@@ -204,12 +202,12 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                 fontSize: 10),
             getTitles: (value) {
               switch (value.toInt()) {
-                case 2:
-                  return '2';
-                case 5:
-                  return '5';
-                case 8:
-                  return '8';
+                case 3:
+                  return '3';
+                case 6:
+                  return '6';
+                case 9:
+                  return '9';
                 case 12:
                   return 'days ago';
               }
@@ -228,11 +226,11 @@ class FriendDetailPageState extends State<FriendDetailPage> {
               switch (value.toInt()) {
                 case 1:
                   return 'Miss';
-                  case 3:
+                case 3:
                   return 'Wish';
-                  case 5:
+                case 5:
                   return 'Oldtime';
-                  case 7:
+                case 7:
                   return 'Grateful';
               }
               return '';
