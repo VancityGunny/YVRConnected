@@ -114,4 +114,13 @@ class ThoughtProvider {
       'receivedThoughts': newThoughtsCollection
     });
   }
+
+  void updateSentInteractions(List<InteractionModel> updatedInteractions) {
+     var newSentInteractionDocs =
+        _firestore.collection('/thoughts').document(globals.currentUserId);
+    var newInteractionsCollection = updatedInteractions.map((e) => e.toJson()).toList();
+    newSentInteractionDocs.updateData({
+      'sentInteractions': newInteractionsCollection
+    });
+  }
 }

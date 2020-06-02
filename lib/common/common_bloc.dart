@@ -103,7 +103,12 @@ class CommonBloc extends InheritedWidget {
             newSentInteractionsList.add(InteractionModel.fromJson(t));
           });
           allSentInteractions.add(newSentInteractionsList);
-        } catch (e) {}
+        } catch (e) {
+          // assume not exist, we have to add it to this
+          this
+              .thoughtRepository
+              .updateSentInteractions(new List<InteractionModel>());
+        }
 
         allReceivedThoughts.add(newReceivedThoughtsList);
         allSentThoughts.add(newSentThoughtsList);

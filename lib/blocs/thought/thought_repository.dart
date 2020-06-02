@@ -76,5 +76,7 @@ class ThoughtRepository {
   void updateReceivedThoughts(List<ThoughtModel> updatedThoughts) {
     this._thoughtProvider.updateReceivedThoughts(updatedThoughts);
   }
-
+  void updateSentInteractions(List<InteractionModel> updatedInteractions) {
+    this._thoughtProvider.updateSentInteractions(updatedInteractions);
+  }
 }

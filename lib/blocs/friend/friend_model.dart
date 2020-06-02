@@ -59,6 +59,20 @@ class FriendModel extends Equatable {
       ];
 
   factory FriendModel.fromJson(Map<dynamic, dynamic> json) {
+    var tmpLastInteractionSentDate;
+    try {
+      tmpLastInteractionSentDate = json['lastInteractionSentDate'].toDate();
+    } catch (e) {
+      // just set to null
+      tmpLastInteractionSentDate = null;
+    }
+    var tmpLastInteractionOption;
+    try {
+      tmpLastInteractionOption = json['lastInteractionSentOption'];
+    } catch (e) {
+      // just set to null
+      tmpLastInteractionOption = null;
+    }
     return FriendModel(
         json['friendId'] as String,
         json['friendEmail'] as String,
@@ -68,10 +82,8 @@ class FriendModel extends Equatable {
             ? null
             : json['lastThoughtSentDate'].toDate(),
         json['lastThoughtSentOption'] as String,
-        (json['lastInteractionSentDate'] == null)
-            ? null
-            : json['lastInteractionSentDate'].toDate(),
-        json['lastInteractionSentOption'] as String);
+        tmpLastInteractionSentDate,
+        tmpLastInteractionOption);
   }
 
   Map<String, dynamic> toJson() {
