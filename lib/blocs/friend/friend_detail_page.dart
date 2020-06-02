@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
@@ -64,24 +65,73 @@ class FriendDetailPageState extends State<FriendDetailPage> {
         ),
         body: Column(
           children: <Widget>[
-            Expanded(
-                child: Column(
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex:1,
+                    child: Column(
+                  children: <Widget>[
+                    Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: (widget.currentFriend.thumbnail == null)
+                            ? Image.asset('graphics/default_user_thumbnail.png',
+                                width: 200)
+                            : Image.network(widget.currentFriend.thumbnail,
+                                width: 200)),
+                    // RichText(
+                    //     overflow: TextOverflow.ellipsis,
+                    //     text: TextSpan(
+                    //         style: TextStyle(
+                    //             color: Colors.black, fontSize: 16),
+                    //         children: [
+                    //           TextSpan(
+                    //               text: widget.currentFriend.displayName)
+                    //         ])),
+                  ],
+                )),
+                Expanded(   
+                  flex:2,               
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('Last heard:'),
+                      Text('          3 days ago'),
+                      Text('Last seen:'),
+                      Text('          7 days ago'),
+                      Text('Last meet:'),
+                      Text('          21 days ago'),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                    alignment: Alignment.topCenter,
-                    child: (widget.currentFriend.thumbnail == null)
-                        ? Image.asset('graphics/default_user_thumbnail.png',
-                            width: 200)
-                        : Image.network(widget.currentFriend.thumbnail,
-                            width: 200)),
-                RichText(
-                    text: TextSpan(
-                        style: TextStyle(color: Colors.black, fontSize: 30),
-                        children: [
-                      TextSpan(text: widget.currentFriend.displayName)
-                    ])),
+                  margin: EdgeInsets.all(10),
+                  child: OutlineButton(
+                    onPressed: () {},
+                    child: FaIcon(FontAwesomeIcons.headphones),
+                  ),
+                ),
+                 Container(
+                  margin: EdgeInsets.all(10),
+                  child: OutlineButton(
+                    onPressed: () {},
+                    child: FaIcon(FontAwesomeIcons.eye),
+                  ),
+                ),
+                 Container(
+                  margin: EdgeInsets.all(10),
+                  child: OutlineButton(
+                    onPressed: () {},
+                    child: FaIcon(FontAwesomeIcons.userFriends),
+                  ),
+                ),
               ],
-            )),
+            ),
             Expanded(
               child: Column(
                 children: <Widget>[
