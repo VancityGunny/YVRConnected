@@ -75,12 +75,15 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                       children: <Widget>[
                         Container(
                             padding: EdgeInsets.all(10.0),
-                            child: (widget.currentFriend.thumbnail == null)
-                                ? Image.asset(
-                                    'graphics/default_user_thumbnail.png',
-                                    width: 200)
-                                : Image.network(widget.currentFriend.thumbnail,
-                                    width: 200)),
+                            child: Hero(
+                                tag: widget.currentFriend.friendUserId,
+                                child: (widget.currentFriend.thumbnail == null)
+                                    ? Image.asset(
+                                        'graphics/default_user_thumbnail.png',
+                                        width: 200)
+                                    : Image.network(
+                                        widget.currentFriend.thumbnail,
+                                        width: 200))),
                         // RichText(
                         //     overflow: TextOverflow.ellipsis,
                         //     text: TextSpan(

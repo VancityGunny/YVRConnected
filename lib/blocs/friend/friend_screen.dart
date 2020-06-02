@@ -81,21 +81,23 @@ class FriendScreenState extends State<FriendScreen> {
                   child: Card(
                     child: Column(
                       children: <Widget>[
-                        Container(
-                            foregroundDecoration: friendDecoration,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: new DecorationImage(
-                                  image: (curFriend.thumbnail == null)
-                                      ? Image.asset(
-                                              'graphics/default_user_thumbnail.png')
-                                          .image
-                                      : Image.network(curFriend.thumbnail)
-                                          .image,
-                                  fit: BoxFit.cover),
-                            ),
-                            width: 80,
-                            height: 80),
+                        Hero(
+                            tag: curFriend.friendUserId,
+                            child: Container(
+                                foregroundDecoration: friendDecoration,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: new DecorationImage(
+                                      image: (curFriend.thumbnail == null)
+                                          ? Image.asset(
+                                                  'graphics/default_user_thumbnail.png')
+                                              .image
+                                          : Image.network(curFriend.thumbnail)
+                                              .image,
+                                      fit: BoxFit.cover),
+                                ),
+                                width: 80,
+                                height: 80)),
                         Container(
                           child: Flexible(
                             child: Align(
