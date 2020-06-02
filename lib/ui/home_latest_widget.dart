@@ -103,19 +103,28 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                                   alignment: Alignment.center,
                                   widthFactor: 0.85,
                                   heightFactor: 1.0,
-                                  child: (snapshot
-                                              .data[index].friend.thumbnail ==
-                                          null)
-                                      ? Image.asset(
-                                          'graphics/default_user_thumbnail.png',
-                                          width: 50.0,
-                                          height: 50.0,
-                                        )
-                                      : Image.network(
-                                          snapshot.data[index].friend.thumbnail,
-                                          width: 54.0,
-                                          height: 50.0,
-                                        )))),
+                                  child: FadeInImage(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      placeholder: Image.asset(
+                                        'graphics/default_user_thumbnail.png',
+                                        width: 50.0,
+                                        height: 50.0,
+                                      ).image,
+                                      image: (snapshot.data[index].friend
+                                                  .thumbnail ==
+                                              null)
+                                          ? Image.asset(
+                                              'graphics/default_user_thumbnail.png',
+                                              width: 50.0,
+                                              height: 50.0,
+                                            ).image
+                                          : Image.network(
+                                              snapshot
+                                                  .data[index].friend.thumbnail,
+                                              width: 50.0,
+                                              height: 50.0,
+                                            ).image)))),
                     ]),
                   );
                 });

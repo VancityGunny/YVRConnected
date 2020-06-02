@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:collection/collection.dart';
+import 'package:customgauge/customgauge.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/interaction/interaction_model.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
@@ -24,6 +22,7 @@ class FriendDetailPage extends StatefulWidget {
 class FriendDetailPageState extends State<FriendDetailPage> {
   var isRecent = true;
   List<List<FlSpot>> graphData = List<List<FlSpot>>();
+  double interactionGaugeValue = 0;
   List<Color> gradientColors = [
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
@@ -51,6 +50,26 @@ class FriendDetailPageState extends State<FriendDetailPage> {
             (value == null) ? 0.0 + optionModifier : 1.0 + optionModifier));
       }
       optionIndex++;
+    });
+
+    // get interaction from last 14 days
+    var allFriendInteractions = CommonBloc.of(context)
+        .allSentInteractions
+        .value
+        .where((element) =>
+            element.toUserId == widget.currentFriend.friendUserId &&
+            DateTime.now().difference(element.createdDate).inDays <= 14);
+    interactionGaugeValue =
+        allFriendInteractions.fold(0, (previousValue, currentItem) {
+      switch (currentItem.interactionOptionCode) {
+        case 'CALL':
+          return previousValue + 1;
+        case 'VIDEO':
+          return previousValue + 2;
+        case 'IRL':
+          return previousValue + 4;
+      }
+      return previousValue + 1;
     });
 
     BoxDecoration friendDecoration = BoxDecoration();
@@ -96,20 +115,23 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                       ],
                     )),
                 Expanded(
-                  flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text('Last heard:'),
-                      Text('          3 days ago'),
-                      Text('Last seen:'),
-                      Text('          7 days ago'),
-                      Text('Last meet:'),
-                      Text('          21 days ago'),
-                    ],
-                  ),
-                )
+                    child: Container(
+                      width:100,
+                      alignment: Alignment.center,
+                      
+                        child: CustomGauge(
+                  maxValue: 10,
+                  minValue: 0,
+                  gaugeSize: 100,
+                  segments: [
+                    GaugeSegment('Low', 2, Colors.red),
+                    GaugeSegment('Medium', 2, Colors.orange),
+                    GaugeSegment('High', 6, Colors.green),
+                  ],
+                  currentValue: interactionGaugeValue,
+                  displayWidget:
+                      Text('Friendship', style: TextStyle(fontSize: 8)),
+                )))
               ],
             ),
             Row(
@@ -174,7 +196,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                           padding: const EdgeInsets.only(
                               right: 18.0, left: 12.0, top: 24, bottom: 12),
                           child: LineChart(
-                            mainData(),
+                            thoughtSentData(),
                           ),
                         ),
                       ),
@@ -240,7 +262,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
         .removeFriend(widget.currentFriend.friendUserId, context);
   }
 
-  LineChartData mainData() {
+  LineChartData thoughtSentData() {
     return LineChartData(
         lineTouchData: LineTouchData(enabled: false),
         gridData: FlGridData(

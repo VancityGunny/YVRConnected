@@ -88,12 +88,19 @@ class FriendScreenState extends State<FriendScreen> {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: new DecorationImage(
-                                      image: (curFriend.thumbnail == null)
-                                          ? Image.asset(
-                                                  'graphics/default_user_thumbnail.png')
-                                              .image
-                                          : Image.network(curFriend.thumbnail)
-                                              .image,
+                                      image: FadeInImage(
+                                        width: 80.0,
+                                        height: 80.0,
+                                        placeholder: Image.asset(
+                                                'graphics/default_user_thumbnail.png')
+                                            .image,
+                                        image: (curFriend.thumbnail == null)
+                                            ? Image.asset(
+                                                    'graphics/default_user_thumbnail.png')
+                                                .image
+                                            : Image.network(curFriend.thumbnail)
+                                                .image,
+                                      ).image,
                                       fit: BoxFit.cover),
                                 ),
                                 width: 80,

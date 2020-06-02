@@ -43,8 +43,8 @@ class CommonBloc extends InheritedWidget {
 
   final interactionOptions = [
     ThoughtOptionModel(
-        'CALL', 'Phone Call', FaIcon(FontAwesomeIcons.headphonesAlt)),
-    ThoughtOptionModel('VIDEO', 'Video Call', FaIcon(FontAwesomeIcons.eye)),
+        'CALL', 'Phone Call', FaIcon(FontAwesomeIcons.phoneVolume)),
+    ThoughtOptionModel('VIDEO', 'Video Call', FaIcon(FontAwesomeIcons.video)),
     ThoughtOptionModel(
         'IRL', 'In Person', FaIcon(FontAwesomeIcons.userFriends)),
   ];
