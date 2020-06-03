@@ -52,26 +52,6 @@ class FriendDetailPageState extends State<FriendDetailPage> {
       optionIndex++;
     });
 
-    // get interaction from last 14 days
-    var allFriendInteractions = CommonBloc.of(context)
-        .allSentInteractions
-        .value
-        .where((element) =>
-            element.toUserId == widget.currentFriend.friendUserId &&
-            DateTime.now().difference(element.createdDate).inDays <= 14);
-    interactionGaugeValue =
-        allFriendInteractions.fold(0, (previousValue, currentItem) {
-      switch (currentItem.interactionOptionCode) {
-        case 'CALL':
-          return previousValue + 1;
-        case 'VIDEO':
-          return previousValue + 2;
-        case 'IRL':
-          return previousValue + 4;
-      }
-      return previousValue + 1;
-    });
-
     BoxDecoration friendDecoration = BoxDecoration();
     if (widget.currentFriend.lastThoughtSentDate == null ||
         widget.currentFriend.lastThoughtSentDate
@@ -116,22 +96,54 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                     )),
                 Expanded(
                     child: Container(
-                      width:100,
-                      alignment: Alignment.center,
-                      
-                        child: CustomGauge(
-                  maxValue: 10,
-                  minValue: 0,
-                  gaugeSize: 100,
-                  segments: [
-                    GaugeSegment('Low', 2, Colors.red),
-                    GaugeSegment('Medium', 2, Colors.orange),
-                    GaugeSegment('High', 6, Colors.green),
-                  ],
-                  currentValue: interactionGaugeValue,
-                  displayWidget:
-                      Text('Friendship', style: TextStyle(fontSize: 8)),
-                )))
+                        width: 100,
+                        alignment: Alignment.center,
+                        child: StreamBuilder(
+                            stream: CommonBloc.of(context)
+                                .allSentInteractions
+                                .stream,
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              // Calculate gauge value
+                              // get interaction from last 14 days
+                              var allFriendInteractions = snapshot.data.where(
+                                  (element) =>
+                                      element.toUserId ==
+                                          widget.currentFriend.friendUserId &&
+                                      DateTime.now()
+                                              .difference(element.createdDate)
+                                              .inDays <=
+                                          14);
+                              interactionGaugeValue = allFriendInteractions
+                                  .fold(0.0, (previousValue, currentItem) {
+                                switch (currentItem.interactionOptionCode) {
+                                  case 'CALL':
+                                    return previousValue + 1;
+                                  case 'VIDEO':
+                                    return previousValue + 2;
+                                  case 'IRL':
+                                    return previousValue + 4;
+                                }
+                                return previousValue + 1;
+                              });
+                              return CustomGauge(
+                                maxValue: 10,
+                                minValue: 0,
+                                gaugeSize: 100,
+                                segments: [
+                                  GaugeSegment('Low', 2, Colors.red),
+                                  GaugeSegment('Medium', 2, Colors.orange),
+                                  GaugeSegment('High', 6, Colors.green),
+                                ],
+                                currentValue: interactionGaugeValue,
+                                displayWidget: Text('Friendship',
+                                    style: TextStyle(fontSize: 8)),
+                              );
+                            })))
               ],
             ),
             Row(
