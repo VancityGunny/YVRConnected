@@ -4,7 +4,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/interaction/interaction_model.dart';
-import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;
 
@@ -51,8 +50,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
       }
       optionIndex++;
     });
-
-    BoxDecoration friendDecoration = BoxDecoration();
+    
     if (widget.currentFriend.lastThoughtSentDate == null ||
         widget.currentFriend.lastThoughtSentDate
                 .add(new Duration(hours: 24))

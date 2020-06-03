@@ -7,7 +7,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/interaction/interaction_model.dart';
-import 'package:yvrconnected/blocs/interaction/interaction_option_model.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/blocs/thought/thought_option_model.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;

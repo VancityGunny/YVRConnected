@@ -20,12 +20,18 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   FriendBloc _friendBloc;
-  StreamController ctrl;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _friendBloc = FriendBloc();
+  }
+
+  @override
+void dispose() {
+    // TODO: implement dispose
+    _friendBloc.close();
+    super.dispose();
   }
 
   @override

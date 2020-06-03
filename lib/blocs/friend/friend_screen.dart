@@ -25,6 +25,8 @@ class FriendScreenState extends State<FriendScreen> {
 
   @override
   void dispose() {
+    _thoughtBloc.close();
+    controller.close();
     super.dispose();
   }
 

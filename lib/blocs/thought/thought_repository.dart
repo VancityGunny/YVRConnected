@@ -56,7 +56,6 @@ class ThoughtRepository {
     var uuid = new Uuid();
     var newInteractionId = uuid.v1();
     
-    var localPath = await CommonBloc.of(context).localPath;
     
     await this._thoughtProvider.addInteraction(newInteractionId, newInteraction);
 

@@ -17,7 +17,7 @@ class FriendOptionsDialog extends StatefulWidget {
     return FriendOptionsDialogState();
   }
 
-  FriendOptionsDialog(FriendModel this.friend);
+  FriendOptionsDialog(this.friend);
 }
 
 class FriendOptionsDialogState extends State<FriendOptionsDialog> {
