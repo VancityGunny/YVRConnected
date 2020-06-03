@@ -54,8 +54,6 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var thoughtOptions = CommonBloc.of(context).thoughtOptions;
-
     return Column(
       children: <Widget>[
         Container(
