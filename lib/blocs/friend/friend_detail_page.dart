@@ -165,18 +165,22 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children:
                         CommonBloc.of(context).interactionOptions.map((intOpt) {
-                          var isRecent = recentInteractions.any((f) =>
-                                  f.interactionOptionCode == intOpt.code);
+                      var isRecent = recentInteractions
+                          .any((f) => f.interactionOptionCode == intOpt.code);
                       return Container(
                           margin: EdgeInsets.all(10),
-                          child: OutlineButton(
+                          child: RaisedButton(
+                            color:
+                                (isRecent) ? Colors.green : Colors.blue,
                             onPressed: () {
                               if (!isRecent) {
                                 sendInteraction(intOpt.code);
                               }
                             },
                             child: Icon(intOpt.icon.icon,
-                            color: (isRecent)?Colors.grey: Colors.lightBlue),
+                                color: (isRecent)
+                                    ? Colors.greenAccent
+                                    : Colors.lightBlue),
                           ));
                     }).toList(),
                   );
