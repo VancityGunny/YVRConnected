@@ -26,8 +26,10 @@ class FriendDetailPageState extends State<FriendDetailPage> {
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
   ];
+  var interactionStream;
   @override
   Widget build(BuildContext context) {
+    interactionStream = CommonBloc.of(context).allSentInteractions.stream;
     var thoughtOptions = CommonBloc.of(context).thoughtOptions;
     var allFriendThoughts = CommonBloc.of(context).allSentThoughts.value.where(
         (element) => element.toUserId == widget.currentFriend.friendUserId);
@@ -50,7 +52,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
       }
       optionIndex++;
     });
-    
+
     if (widget.currentFriend.lastThoughtSentDate == null ||
         widget.currentFriend.lastThoughtSentDate
                 .add(new Duration(hours: 24))
@@ -97,9 +99,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                         width: 100,
                         alignment: Alignment.center,
                         child: StreamBuilder(
-                            stream: CommonBloc.of(context)
-                                .allSentInteractions
-                                .stream,
+                            stream: interactionStream,
                             builder: (context, snapshot) {
                               if (!snapshot.hasData) {
                                 return Center(
@@ -144,43 +144,43 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                             })))
               ],
             ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children:
-                    CommonBloc.of(context).interactionOptions.map((intOpt) {
-                  return Container(
-                      margin: EdgeInsets.all(10),
-                      child: OutlineButton(
-                        onPressed: () {
-                          sendInteraction(intOpt.code);
-                        },
-                        child: intOpt.icon,
-                      ));
-                }).toList()
-                // <Widget>[
-                //   Container(
-                //     margin: EdgeInsets.all(10),
-                //     child: OutlineButton(
-                //       onPressed: () {},
-                //       child: FaIcon(FontAwesomeIcons.headphones),
-                //     ),
-                //   ),
-                //   Container(
-                //     margin: EdgeInsets.all(10),
-                //     child: OutlineButton(
-                //       onPressed: () {},
-                //       child: FaIcon(FontAwesomeIcons.eye),
-                //     ),
-                //   ),
-                //   Container(
-                //     margin: EdgeInsets.all(10),
-                //     child: OutlineButton(
-                //       onPressed: () {},
-                //       child: FaIcon(FontAwesomeIcons.userFriends),
-                //     ),
-                //   ),
-                // ],
-                ),
+            StreamBuilder(
+                stream: interactionStream,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  // check isrecent for each button, if sent within 1 day
+                  var recentInteractions = snapshot.data.where((interaction) =>
+                      interaction.toUserId ==
+                          widget.currentFriend.friendUserId &&
+                      DateTime.now()
+                              .difference(interaction.createdDate)
+                              .inHours <=
+                          24);
+
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:
+                        CommonBloc.of(context).interactionOptions.map((intOpt) {
+                          var isRecent = recentInteractions.any((f) =>
+                                  f.interactionOptionCode == intOpt.code);
+                      return Container(
+                          margin: EdgeInsets.all(10),
+                          child: OutlineButton(
+                            onPressed: () {
+                              if (!isRecent) {
+                                sendInteraction(intOpt.code);
+                              }
+                            },
+                            child: Icon(intOpt.icon.icon,
+                            color: (isRecent)?Colors.grey: Colors.lightBlue),
+                          ));
+                    }).toList(),
+                  );
+                }),
             Expanded(
               child: Column(
                 children: <Widget>[
