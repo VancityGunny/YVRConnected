@@ -70,9 +70,9 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                   text: 'Top Friends',
                   style: TextStyle(color: Colors.black, fontSize: 20))
             ]))),
-        Expanded(
-            child: Container(
-                child: StreamBuilder(
+        Container(
+          height:160,
+            child: StreamBuilder(
           stream: CommonBloc.of(context).topFiveFriends.stream,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -142,7 +142,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                       ]));
                 });
           },
-        ))),
+        )),
         Container(
           alignment: Alignment.bottomRight,
           child: FlatButton(
@@ -306,7 +306,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,                
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
                       child: Container(
