@@ -62,16 +62,17 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
     return Column(
       children: <Widget>[
         Container(
+          padding: EdgeInsets.all(10),
             child: RichText(
                 text: TextSpan(
                     style: DefaultTextStyle.of(context).style,
                     children: [
               TextSpan(
-                  text: 'Top Friends',
+                  text: 'Active Friends',
                   style: TextStyle(color: Colors.black, fontSize: 20))
             ]))),
         Container(
-          height:160,
+          height:100,
             child: StreamBuilder(
           stream: CommonBloc.of(context).topFiveFriends.stream,
           builder: (context, snapshot) {
@@ -96,7 +97,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                     isBoy = false;
                   }
 
-                  return Container(
+                  return Container(                  
                       width: 70.0,
                       child: Stack(children: <Widget>[
                         FlareActor(
@@ -105,10 +106,12 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                               : "graphics/girlbody.flr",
                           animation: (isBoy) ? 'idleboy' : 'idlegirl',
                           fit: BoxFit.contain,
+                          alignment: Alignment.bottomCenter,
                         ),
-                        Positioned(
-                            top: 10,
-                            left: 12,
+                        Container(
+                          alignment: Alignment.topCenter,
+                            // top: 10,
+                            // left: 12,
                             child: ClipOval(
                                 child: Align(
                                     alignment: Alignment.center,
@@ -201,6 +204,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                   );
                 })),
         Container(
+          padding: EdgeInsets.all(10),
             child: RichText(
                 text: TextSpan(
                     style: DefaultTextStyle.of(context).style,
