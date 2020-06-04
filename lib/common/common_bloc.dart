@@ -31,11 +31,11 @@ class CommonBloc extends InheritedWidget {
       BehaviorSubject<List<FriendStatModel>>();
 
   final thoughtOptions = [
-    ThoughtOptionModel('MISS', 'Miss you', FaIcon(FontAwesomeIcons.sadTear)),
+    ThoughtOptionModel('MISS', 'Miss you', FaIcon(FontAwesomeIcons.solidSmileWink)),
     ThoughtOptionModel(
         'WISH', 'Wish U were here', FaIcon(FontAwesomeIcons.streetView)),
     ThoughtOptionModel(
-        'GOLD', 'Good old time', FaIcon(FontAwesomeIcons.wineGlassAlt)),
+        'GOLD', 'Good old time', FaIcon(FontAwesomeIcons.glassCheers)),
     ThoughtOptionModel(
         'GRAT', 'Grateful for you', FaIcon(FontAwesomeIcons.prayingHands))
   ];

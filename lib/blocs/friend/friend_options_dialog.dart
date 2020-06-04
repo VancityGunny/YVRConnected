@@ -41,6 +41,7 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
     } else {
       return Column(children: <Widget>[
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Include Image? '),
             Switch(

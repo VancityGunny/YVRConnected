@@ -169,9 +169,9 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                           .any((f) => f.interactionOptionCode == intOpt.code);
                       return Container(
                           margin: EdgeInsets.all(10),
-                          child: RaisedButton(
-                            color:
-                                (isRecent) ? Colors.green : Colors.blue,
+                          child: RaisedButton(                            
+                            color:                            
+                                (isRecent) ? Colors.green : Colors.white,
                             onPressed: () {
                               if (!isRecent) {
                                 sendInteraction(intOpt.code);
@@ -180,7 +180,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                             child: Icon(intOpt.icon.icon,
                                 color: (isRecent)
                                     ? Colors.greenAccent
-                                    : Colors.lightBlue),
+                                    : Colors.black),
                           ));
                     }).toList(),
                   );
@@ -198,7 +198,8 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                               .caption)
                       : Container(
                           child: RaisedButton(
-                              child: Text('Thinking of You'),
+                            color:Colors.white,
+                              child: Text('Send Thought'),
                               onPressed: () {
                                 openActionOptions(widget.currentFriend);
                               })),
@@ -217,6 +218,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                     ),
                   ),
                   RaisedButton(
+                    color: Colors.white,
                     onPressed: () {
                       // confirm before sign out
                       showDialog(

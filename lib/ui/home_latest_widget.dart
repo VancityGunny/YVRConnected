@@ -1,11 +1,16 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yvrconnected/blocs/friend/friend_stat_model.dart';
+import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
+import 'package:yvrconnected/common/commonfunctions.dart';
 
 // Widget to show all latest thoughts received
 class HomeLatestWidget extends StatefulWidget {
@@ -85,51 +90,80 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                 scrollDirection: Axis.horizontal,
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext ctxt, int index) {
+                  var random = new Random();
+                  var isBoy = true;
+                  if (random.nextInt(2) == 1) {
+                    isBoy = false;
+                  }
+
                   return Container(
-                    width: 70.0,
-                    child: Stack(children: <Widget>[
-                      FlareActor(
-                        "graphics/boybody.flr",
-                        animation: 'idle',
-                        fit: BoxFit.contain,
-                      ),
-                      Positioned(
-                          top: 0,
-                          left: 12,
-                          child: ClipOval(
-                              child: Align(
-                                  alignment: Alignment.center,
-                                  widthFactor: 0.85,
-                                  heightFactor: 1.0,
-                                  child: FadeInImage(
-                                      width: 50.0,
-                                      height: 50.0,
-                                      placeholder: Image.asset(
-                                        'graphics/default_user_thumbnail.png',
-                                        width: 50.0,
-                                        height: 50.0,
-                                      ).image,
-                                      image: (snapshot.data[index].friend
-                                                  .thumbnail ==
-                                              null)
-                                          ? Image.asset(
+                      width: 70.0,
+                      child: Stack(children: <Widget>[
+                        FlareActor(
+                          (isBoy)
+                              ? "graphics/boybody.flr"
+                              : "graphics/girlbody.flr",
+                          animation: (isBoy) ? 'idleboy' : 'idlegirl',
+                          fit: BoxFit.contain,
+                        ),
+                        Positioned(
+                            top: 10,
+                            left: 12,
+                            child: ClipOval(
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    widthFactor: 0.85,
+                                    heightFactor: 1.0,
+                                    child: Hero(
+                                        tag: snapshot
+                                            .data[index].friend.friendUserId,
+                                        child: FadeInImage(
+                                            width: 50.0,
+                                            height: 50.0,
+                                            placeholder: Image.asset(
                                               'graphics/default_user_thumbnail.png',
                                               width: 50.0,
                                               height: 50.0,
-                                            ).image
-                                          : Image.network(
-                                              snapshot
-                                                  .data[index].friend.thumbnail,
-                                              width: 50.0,
-                                              height: 50.0,
-                                            ).image)))),
-                    ]),
-                  );
+                                            ).image,
+                                            image: (snapshot.data[index].friend
+                                                        .thumbnail ==
+                                                    null)
+                                                ? Image.asset(
+                                                    'graphics/default_user_thumbnail.png',
+                                                    width: 50.0,
+                                                    height: 50.0,
+                                                  ).image
+                                                : Image.network(
+                                                    snapshot.data[index].friend
+                                                        .thumbnail,
+                                                    width: 50.0,
+                                                    height: 50.0,
+                                                  ).image)))))
+                      ]));
                 });
           },
         ))),
-        AspectRatio(
-            aspectRatio: 1.70,
+        Container(
+          alignment: Alignment.bottomRight,
+          child: FlatButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (BuildContext context) {
+                  return BlocProvider(
+                      create: (BuildContext context) => FriendBloc(),
+                      child: FriendPage());
+                }),
+              );
+            },
+            child: Text(
+              'See All Friends',
+              style: TextStyle(color: Colors.lightBlue),
+            ),
+          ),
+        ),
+        Container(
+            height: 120.0,
             child: StreamBuilder(
                 stream: CommonBloc.of(context).allSentThoughts.stream,
                 builder: (context, snapshot) {
@@ -159,7 +193,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                   return Container(
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          right: 18.0, left: 12.0, top: 24, bottom: 12),
+                          right: 18.0, left: 12.0, top: 12, bottom: 12),
                       child: LineChart(
                         mainData(),
                       ),
@@ -186,7 +220,10 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                         child: CircularProgressIndicator(),
                       );
                     }
-                    if (snapshot.data.length == 0) {
+                    if (snapshot.data
+                            .where((f) => f.readFlag == false)
+                            .length ==
+                        0) {
                       return Container(
                           alignment: Alignment.center,
                           child: FaIcon(FontAwesomeIcons.folderPlus,
@@ -213,22 +250,19 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                             },
                             child: Card(
                                 child: Stack(
+                              alignment: Alignment.center,
                               children: <Widget>[
-                                Container(
-                                    child: Icon(Icons.email,
-                                        size: 70,
-                                        color: Color.fromARGB(15, 0, 0, 0))),
-                                Positioned(
-                                    child: CommonBloc.of(context)
-                                        .thoughtOptions
-                                        .firstWhere((element) =>
-                                            element.code ==
-                                            filteredSnapshot
-                                                .elementAt(index)
-                                                .thoughtOptionCode)
-                                        .icon,
-                                    left: 30,
-                                    top: 30),
+                                Icon(Icons.email,
+                                    size: 60,
+                                    color: Color.fromARGB(15, 0, 0, 0)),
+                                CommonBloc.of(context)
+                                    .thoughtOptions
+                                    .firstWhere((element) =>
+                                        element.code ==
+                                        filteredSnapshot
+                                            .elementAt(index)
+                                            .thoughtOptionCode)
+                                    .icon,
                               ],
                             )));
                       },
@@ -282,6 +316,8 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                       ? Expanded(child: Image.network(latestThought.imageUrl))
                       : Text(''),
                   Container(
+                    padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                    alignment: Alignment.bottomRight,
                     child: (currentFriend != null &&
                             currentFriend.thumbnail == null)
                         ? Image.asset('graphics/default_user_thumbnail.png',
@@ -289,7 +325,14 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                         : Image.network(currentFriend.thumbnail,
                             width: 20, height: 20),
                   ),
-                  Text(latestThought.createdDate.toString()),
+                  Container(
+                      alignment: Alignment.bottomRight,
+                      padding: EdgeInsets.fromLTRB(0, 0, 5, 5),
+                      child: Text(
+                        CommonFunctions.formatPostDateForDisplay(
+                            latestThought.createdDate),
+                        textAlign: TextAlign.right,
+                      )),
                 ],
               ));
         }).then((value) {
@@ -325,7 +368,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
           textStyle: const TextStyle(
               color: Color(0xff68737d),
               fontWeight: FontWeight.bold,
-              fontSize: 16),
+              fontSize: 12),
           getTitles: (value) {
             switch (value.toInt()) {
               case 3:
@@ -346,7 +389,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
           textStyle: const TextStyle(
             color: Color(0xff67727d),
             fontWeight: FontWeight.bold,
-            fontSize: 15,
+            fontSize: 12,
           ),
           getTitles: (value) {
             switch (value.toInt()) {
