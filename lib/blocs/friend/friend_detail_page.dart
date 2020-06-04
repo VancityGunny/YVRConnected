@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
 import 'package:yvrconnected/blocs/interaction/interaction_model.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
+import 'package:yvrconnected/common/commonfunctions.dart';
 import 'package:yvrconnected/common/global_object.dart' as globals;
 
 class FriendDetailPage extends StatefulWidget {
@@ -158,30 +159,61 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                           widget.currentFriend.friendUserId &&
                       DateTime.now()
                               .difference(interaction.createdDate)
-                              .inHours <=
+                              .inHours <
                           24);
 
                   return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children:
                         CommonBloc.of(context).interactionOptions.map((intOpt) {
-                      var isRecent = recentInteractions
-                          .any((f) => f.interactionOptionCode == intOpt.code);
+                      var isRecent = false;
+                      var lastSentInteractionTime;
+                      var lastSentInteraction = recentInteractions
+                          .toList()
+                          .firstWhere(
+                              (f) => f.interactionOptionCode == intOpt.code,
+                              orElse: () => null);
+
+                      if (lastSentInteraction != null) {
+                        isRecent = true;
+                        lastSentInteractionTime =
+                            CommonFunctions.formatPostDateForDisplay(
+                                lastSentInteraction.createdDate);
+                      }
+
                       return Container(
-                          margin: EdgeInsets.all(10),
-                          child: RaisedButton(                            
-                            color:                            
-                                (isRecent) ? Colors.green : Colors.white,
-                            onPressed: () {
-                              if (!isRecent) {
-                                sendInteraction(intOpt.code);
-                              }
-                            },
-                            child: Icon(intOpt.icon.icon,
-                                color: (isRecent)
-                                    ? Colors.greenAccent
-                                    : Colors.black),
-                          ));
+                          child: (isRecent)
+                              ? Wrap(                                
+                                  children: <Widget>[
+                                    Wrap(
+                                      spacing: 10.0,
+                                      children: <Widget>[
+                                        Icon(intOpt.icon.icon,
+                                            color: Colors.green, size: 18.0),
+                                        Column(
+                                          children: <Widget>[
+                                            Text(
+                                              'last contact',
+                                              style: TextStyle(fontSize: 10.0),
+                                            ),
+                                            Text(
+                                              lastSentInteractionTime,
+                                              style: TextStyle(fontSize: 10.0),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                )
+                              : RaisedButton(
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    sendInteraction(intOpt.code);
+                                  },
+                                  child: Icon(intOpt.icon.icon,
+                                      color: Colors.black),
+                                ));
                     }).toList(),
                   );
                 }),
@@ -198,7 +230,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                               .caption)
                       : Container(
                           child: RaisedButton(
-                            color:Colors.white,
+                              color: Colors.white,
                               child: Text('Send Thought'),
                               onPressed: () {
                                 openActionOptions(widget.currentFriend);
