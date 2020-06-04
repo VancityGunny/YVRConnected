@@ -306,11 +306,13 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,                
                 children: <Widget>[
                   Expanded(
-                      child: new LayoutBuilder(builder: (context, constraint) {
-                    return new Icon(selectedThoughtType.icon.icon, size: 100);
-                  })),
+                      child: Container(
+                          alignment: Alignment.center,
+                          child: new Icon(selectedThoughtType.icon.icon,
+                              size: 100))),
                   Text(selectedThoughtType.caption, textScaleFactor: 2.0),
                   (latestThought.imageUrl != null)
                       ? Expanded(child: Image.network(latestThought.imageUrl))
