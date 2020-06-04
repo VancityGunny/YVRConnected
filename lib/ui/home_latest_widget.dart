@@ -6,8 +6,11 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:yvrconnected/blocs/friend/friend_stat_model.dart';
 import 'package:yvrconnected/blocs/friend/index.dart';
+import 'package:yvrconnected/blocs/interaction/interaction_model.dart';
 import 'package:yvrconnected/blocs/thought/index.dart';
 import 'package:yvrconnected/common/common_bloc.dart';
 import 'package:yvrconnected/common/commonfunctions.dart';
@@ -24,9 +27,14 @@ class HomeLatestWidget extends StatefulWidget {
 class HomeLatestWidgetState extends State<HomeLatestWidget> {
   List<FriendStatModel> topFiveFriends = List<FriendStatModel>();
   List<FlSpot> graphData = List<FlSpot>();
+  List<FlSpot> graphInteractionsData = new List<FlSpot>();
   List<Color> gradientColors = [
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
+  ];
+  List<Color> alternateGradientColors = [
+    const Color(0xffe62256),
+    const Color(0xffd4028a),
   ];
   int maxYAxis = 5;
 
@@ -59,93 +67,95 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // *** Calculate the graph data for thoughts and interaction statistic ***//
+
     return Column(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
             child: RichText(
                 text: TextSpan(
                     style: DefaultTextStyle.of(context).style,
                     children: [
-              TextSpan(
-                  text: 'Active Friends',
-                  style: TextStyle(color: Colors.black, fontSize: 20))
-            ]))),
+                  TextSpan(
+                      text: 'Active Friends',
+                      style: TextStyle(color: Colors.black, fontSize: 20))
+                ]))),
         Container(
-          height:100,
+            height: 100,
             child: StreamBuilder(
-          stream: CommonBloc.of(context).topFiveFriends.stream,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.data.length == 0) {
-              return Container(
-                  alignment: Alignment.center,
-                  child: FaIcon(FontAwesomeIcons.userPlus,
-                      size: 100, color: Color.fromARGB(15, 0, 0, 0)));
-            }
-            return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: snapshot.data.length,
-                itemBuilder: (BuildContext ctxt, int index) {
-                  var random = new Random();
-                  var isBoy = true;
-                  if (random.nextInt(2) == 1) {
-                    isBoy = false;
-                  }
+              stream: CommonBloc.of(context).topFiveFriends.stream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.data.length == 0) {
+                  return Container(
+                      alignment: Alignment.center,
+                      child: FaIcon(FontAwesomeIcons.userPlus,
+                          size: 100, color: Color.fromARGB(15, 0, 0, 0)));
+                }
+                return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext ctxt, int index) {
+                      var random = new Random();
+                      var isBoy = true;
+                      if (random.nextInt(2) == 1) {
+                        isBoy = false;
+                      }
 
-                  return Container(                  
-                      width: 70.0,
-                      child: Stack(children: <Widget>[
-                        FlareActor(
-                          (isBoy)
-                              ? "graphics/boybody.flr"
-                              : "graphics/girlbody.flr",
-                          animation: (isBoy) ? 'idleboy' : 'idlegirl',
-                          fit: BoxFit.contain,
-                          alignment: Alignment.bottomCenter,
-                        ),
-                        Container(
-                          alignment: Alignment.topCenter,
-                            // top: 10,
-                            // left: 12,
-                            child: ClipOval(
-                                child: Align(
-                                    alignment: Alignment.center,
-                                    widthFactor: 0.85,
-                                    heightFactor: 1.0,
-                                    child: Hero(
-                                        tag: snapshot
-                                            .data[index].friend.friendUserId,
-                                        child: FadeInImage(
-                                            width: 50.0,
-                                            height: 50.0,
-                                            placeholder: Image.asset(
-                                              'graphics/default_user_thumbnail.png',
-                                              width: 50.0,
-                                              height: 50.0,
-                                            ).image,
-                                            image: (snapshot.data[index].friend
-                                                        .thumbnail ==
-                                                    null)
-                                                ? Image.asset(
-                                                    'graphics/default_user_thumbnail.png',
-                                                    width: 50.0,
-                                                    height: 50.0,
-                                                  ).image
-                                                : Image.network(
-                                                    snapshot.data[index].friend
-                                                        .thumbnail,
-                                                    width: 50.0,
-                                                    height: 50.0,
-                                                  ).image)))))
-                      ]));
-                });
-          },
-        )),
+                      return Container(
+                          width: 70.0,
+                          child: Stack(children: <Widget>[
+                            FlareActor(
+                              (isBoy)
+                                  ? "graphics/boybody.flr"
+                                  : "graphics/girlbody.flr",
+                              animation: (isBoy) ? 'idleboy' : 'idlegirl',
+                              fit: BoxFit.contain,
+                              alignment: Alignment.bottomCenter,
+                            ),
+                            Container(
+                                alignment: Alignment.topCenter,
+                                // top: 10,
+                                // left: 12,
+                                child: ClipOval(
+                                    child: Align(
+                                        alignment: Alignment.center,
+                                        widthFactor: 0.85,
+                                        heightFactor: 1.0,
+                                        child: Hero(
+                                            tag: snapshot.data[index].friend
+                                                .friendUserId,
+                                            child: FadeInImage(
+                                                width: 50.0,
+                                                height: 50.0,
+                                                placeholder: Image.asset(
+                                                  'graphics/default_user_thumbnail.png',
+                                                  width: 50.0,
+                                                  height: 50.0,
+                                                ).image,
+                                                image: (snapshot.data[index]
+                                                            .friend.thumbnail ==
+                                                        null)
+                                                    ? Image.asset(
+                                                        'graphics/default_user_thumbnail.png',
+                                                        width: 50.0,
+                                                        height: 50.0,
+                                                      ).image
+                                                    : Image.network(
+                                                        snapshot.data[index]
+                                                            .friend.thumbnail,
+                                                        width: 50.0,
+                                                        height: 50.0,
+                                                      ).image)))))
+                          ]));
+                    });
+              },
+            )),
         Container(
           alignment: Alignment.bottomRight,
           child: FlatButton(
@@ -167,53 +177,101 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
         ),
         Container(
             height: 120.0,
-            child: StreamBuilder(
-                stream: CommonBloc.of(context).allSentThoughts.stream,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  right: 18.0, left: 12.0, top: 12, bottom: 12),
+              child: MultiProvider(
+                  providers: [
+                    StreamProvider<List<InteractionModel>>.value(value: CommonBloc.of(context).allSentInteractions.stream),
+                    StreamProvider<List<ThoughtModel>>.value(value: CommonBloc.of(context).allSentThoughts.stream),                   
+                  ],
+                  child: Builder(
+                    builder: (BuildContext context) {
+                      List<InteractionModel> allFriendInteractions =
+                          Provider.of<List<InteractionModel>>(context);
+                      List<ThoughtModel> allFriendThoughts =
+                          Provider.of<List<ThoughtModel>>(context);
 
-                  var allFriendThoughts = snapshot.data;
+                      if (allFriendInteractions == null ||
+                          allFriendInteractions == null) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      graphData = new List<FlSpot>();
+                      graphInteractionsData = new List<FlSpot>();
+                      if (allFriendThoughts != null) {
+                        var thoughtsByDay = groupBy(
+                            allFriendThoughts,
+                            (t) => DateTime.now()
+                                .difference(t.createdDate)
+                                .inDays);
 
-                  var thoughtsByDay = groupBy(allFriendThoughts,
-                      (t) => DateTime.now().difference(t.createdDate).inDays);
-                  graphData = new List<FlSpot>();
-                  for (int i = 0; i <= 14; i++) {
-                    var value = thoughtsByDay.entries.firstWhere(
-                        (element) => element.key == i,
-                        orElse: () => null);
-                    graphData.add(new FlSpot(i.toDouble(),
-                        (value == null) ? 0.0 : value.value.length.toDouble()));
-                    if (value != null) {
-                      maxYAxis = (value.value.length > maxYAxis)
-                          ? value.value.length + 3
-                          : maxYAxis;
-                    }
-                  }
-                  return Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          right: 18.0, left: 12.0, top: 12, bottom: 12),
-                      child: LineChart(
+                        for (int i = 0; i <= 14; i++) {
+                          var value = thoughtsByDay.entries.firstWhere(
+                              (element) => element.key == i,
+                              orElse: () => null);
+                          graphData.add(new FlSpot(
+                              i.toDouble(),
+                              (value == null)
+                                  ? 0.0
+                                  : value.value.length.toDouble()));
+                          if (value != null) {
+                            maxYAxis = (value.value.length > maxYAxis)
+                                ? value.value.length + 3
+                                : maxYAxis;
+                          }
+                        }
+                      }
+                      var maxY = 0.0;
+                      if (allFriendInteractions != null) {
+                        var interactionsByDay = groupBy(
+                            allFriendInteractions,
+                            (t) => DateTime.now()
+                                .difference(t.createdDate)
+                                .inDays);
+
+                        for (int i = 0; i <= 14; i++) {
+                          var value = interactionsByDay.entries.firstWhere(
+                              (element) => element.key == i,
+                              orElse: () => null);
+                          var newSpot = new FlSpot(
+                              i.toDouble(),
+                              (value == null)
+                                  ? 0.0
+                                  : value.value.length.toDouble());
+                          graphInteractionsData.add(newSpot);
+                          maxY = (newSpot.y > maxY) ? newSpot.y : maxY;
+                        }
+                        // cap max Y at 30 for this graph
+                        var capY = maxYAxis;
+                        if (maxY > capY) {
+                          List<FlSpot> newAdjustedGraph = new List<FlSpot>();
+                          var divideBy = maxY / capY;
+                          graphInteractionsData.forEach((element) {
+                            newAdjustedGraph.add(
+                                new FlSpot(element.x, element.y / divideBy));
+                          });
+                          graphInteractionsData = newAdjustedGraph;
+                        }
+                      }
+                      return LineChart(
                         mainData(),
-                      ),
-                    ),
-                  );
-                })),
+                      );
+                    },
+                  )),
+            )),
         Container(
-          padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
             child: RichText(
                 text: TextSpan(
                     style: DefaultTextStyle.of(context).style,
                     children: [
-              TextSpan(
-                text: 'Latest Messages',
-                style: TextStyle(color: Colors.black, fontSize: 20),
-              )
-            ]))),
+                  TextSpan(
+                    text: 'Latest Messages',
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  )
+                ]))),
         Expanded(
           child: Container(
               child: StreamBuilder(
@@ -390,22 +448,39 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
           },
           margin: 8,
         ),
-        leftTitles: SideTitles(
-          showTitles: true,
+        rightTitles: SideTitles(
+           showTitles: true,
           textStyle: const TextStyle(
-            color: Color(0xff67727d),
+            color: Color(0xffe62256),
             fontWeight: FontWeight.bold,
             fontSize: 12,
           ),
           getTitles: (value) {
             switch (value.toInt()) {
               case 1:
-                return 'Sent';
+                return 'Contact';
             }
             return '';
           },
           reservedSize: 28,
-          margin: 12,
+          margin: 15,
+        ),
+        leftTitles: SideTitles(
+          showTitles: true,
+          textStyle: const TextStyle(
+            color: Color(0xff23b6e6),
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 1:
+                return 'Thought';
+            }
+            return '';
+          },
+          reservedSize: 28,
+          margin: 15,
         ),
       ),
       borderData: FlBorderData(
@@ -420,6 +495,21 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
           spots: graphData,
           isCurved: false,
           colors: gradientColors,
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            colors:
+                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+          ),
+        ),
+        LineChartBarData(
+          spots: graphInteractionsData,
+          isCurved: false,
+          colors: alternateGradientColors,
           barWidth: 5,
           isStrokeCapRound: true,
           dotData: FlDotData(
