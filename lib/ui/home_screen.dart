@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -28,7 +27,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-void dispose() {
+  void dispose() {
     // TODO: implement dispose
     _friendBloc.close();
     super.dispose();
@@ -53,7 +52,9 @@ void dispose() {
               title: Text('Home'),
               actions: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.contacts),
+                  icon: Icon(
+                    Icons.contacts,
+                  ),
                   onPressed: () {
                     _goToContactScreen(context);
                   },

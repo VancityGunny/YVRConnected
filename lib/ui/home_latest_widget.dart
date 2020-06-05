@@ -83,7 +83,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                       style: TextStyle(color: Colors.black, fontSize: 20))
                 ]))),
         Container(
-            height: 100,
+            height: 110,
             child: StreamBuilder(
               stream: pageCommonBloc.topFiveFriends.stream,
               builder: (context, snapshot) {
@@ -120,13 +120,15 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                               alignment: Alignment.bottomCenter,
                             ),
                             Container(
+                              
                                 alignment: Alignment.topCenter,
+                                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                                 // top: 10,
                                 // left: 12,
                                 child: ClipOval(
                                     child: Align(
                                         alignment: Alignment.center,
-                                        widthFactor: 0.85,
+                                        widthFactor: 0.80,
                                         heightFactor: 1.0,
                                         child: Hero(
                                             tag: snapshot.data[index].friend
@@ -152,7 +154,16 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                                                             .friend.thumbnail,
                                                         width: 50.0,
                                                         height: 50.0,
-                                                      ).image)))))
+                                                      ).image))))),
+                            Container(
+                              alignment: Alignment.topCenter,
+                              child: Image.asset(
+                                  (isBoy)
+                                      ? "graphics/boyhair.png"
+                                      : 'graphics/girlhair.png',
+                                  width: 50.0,
+                                  height: 50.0),
+                            )
                           ]));
                     });
               },
@@ -183,8 +194,10 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                   right: 18.0, left: 12.0, top: 12, bottom: 12),
               child: MultiProvider(
                   providers: [
-                    StreamProvider<List<InteractionModel>>.value(value: pageCommonBloc.allSentInteractions.stream),
-                    StreamProvider<List<ThoughtModel>>.value(value: pageCommonBloc.allSentThoughts.stream),                   
+                    StreamProvider<List<InteractionModel>>.value(
+                        value: pageCommonBloc.allSentInteractions.stream),
+                    StreamProvider<List<ThoughtModel>>.value(
+                        value: pageCommonBloc.allSentThoughts.stream),
                   ],
                   child: Builder(
                     builder: (BuildContext context) {
@@ -269,7 +282,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                     style: DefaultTextStyle.of(context).style,
                     children: [
                   TextSpan(
-                    text: 'Latest Messages',
+                    text: 'Incoming Messages',
                     style: TextStyle(color: Colors.black, fontSize: 20),
                   )
                 ]))),
@@ -318,8 +331,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                                 Icon(Icons.email,
                                     size: 60,
                                     color: Color.fromARGB(15, 0, 0, 0)),
-                                pageCommonBloc
-                                    .thoughtOptions
+                                pageCommonBloc.thoughtOptions
                                     .firstWhere((element) =>
                                         element.code ==
                                         filteredSnapshot
@@ -337,7 +349,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
   }
 
   void viewThought(ThoughtModel latestThought) async {
-    var currentFriend =pageCommonBloc.allFriends.value.firstWhere(
+    var currentFriend = pageCommonBloc.allFriends.value.firstWhere(
         (element) => element.friendUserId == latestThought.fromUserId,
         orElse: () => null);
     // if sender is not currently friend
@@ -349,12 +361,10 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
 
       // if we haven't lookup this sender before then lookup now
       if (currentFriend == null) {
-        var currentFriend = await pageCommonBloc
-            .friendProvider
+        var currentFriend = await pageCommonBloc.friendProvider
             .lookupFriendById(latestThought.fromUserId);
         // now add him to allsenders list for next time
-        pageCommonBloc
-            .friendProvider
+        pageCommonBloc.friendProvider
             .addSender(latestThought.fromUserId, currentFriend, context);
       }
     }
@@ -450,7 +460,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
           margin: 8,
         ),
         rightTitles: SideTitles(
-           showTitles: true,
+          showTitles: true,
           textStyle: const TextStyle(
             color: Color(0xffe62256),
             fontWeight: FontWeight.bold,

@@ -42,6 +42,11 @@ class MyAppState extends State<MyApp> {
             _authenticationBloc, //bloc: _authenticationBloc,
         child: CommonBloc(
             child: MaterialApp(
+          theme: ThemeData(
+            primaryColor: Colors.yellow[800],
+            accentColor: Colors.yellow[600]
+          ),
+          debugShowCheckedModeBanner: false,
           home: BlocBuilder(
             bloc: _authenticationBloc,
             builder: (BuildContext context, AuthState state) {
@@ -54,7 +59,9 @@ class MyAppState extends State<MyApp> {
               if (state is AuthenticatedState) {
                 return HomeScreen(state.displayName);
               }
-              return Container(child: Text('Login Failed'),);
+              return Container(
+                child: Text('Login Failed'),
+              );
             },
           ),
         )));

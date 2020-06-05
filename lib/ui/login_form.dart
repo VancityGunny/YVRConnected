@@ -20,6 +20,9 @@ class _LoginFormState extends State<LoginForm> {
     return BlocListener(
       bloc: BlocProvider.of<AuthBloc>(context),
       listener: (BuildContext context, AuthState state) {
+        if (state is LogInSuccessState) {
+          BlocProvider.of<AuthBloc>(context).add(LoggedInEvent());
+        }
         if (state is LogInFailureState) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
@@ -34,9 +37,7 @@ class _LoginFormState extends State<LoginForm> {
             );
         }
 
-        if (state is LogInSuccessState) {
-          BlocProvider.of<AuthBloc>(context).add(LoggedInEvent());
-        }
+        
       },
       child: BlocBuilder(
         bloc: BlocProvider.of<AuthBloc>(context),

@@ -195,7 +195,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                                         Column(
                                           children: <Widget>[
                                             Text(
-                                              'last contact',
+                                              'daily contact',
                                               style: TextStyle(fontSize: 10.0),
                                             ),
                                             Text(
