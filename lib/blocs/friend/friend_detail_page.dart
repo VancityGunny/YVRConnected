@@ -58,7 +58,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
 
     if (widget.currentFriend.lastThoughtSentDate == null ||
         widget.currentFriend.lastThoughtSentDate
-                .add(new Duration(hours: 24))
+                .add(new Duration(hours: 2))
                 .compareTo(DateTime.now()) <
             0) {
       isRecent = false;
@@ -168,7 +168,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children:
                         pageCommonBloc.interactionOptions.map((intOpt) {
-                      var isRecent = false;
+                      var isRecentInteraction = false;
                       var lastSentInteractionTime;
                       var lastSentInteraction = recentInteractions
                           .toList()
@@ -177,14 +177,14 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                               orElse: () => null);
 
                       if (lastSentInteraction != null) {
-                        isRecent = true;
+                        isRecentInteraction = true;
                         lastSentInteractionTime =
                             CommonFunctions.formatPostDateForDisplay(
                                 lastSentInteraction.createdDate);
                       }
 
                       return Container(
-                          child: (isRecent)
+                          child: (isRecentInteraction)
                               ? Wrap(                                
                                   children: <Widget>[
                                     Wrap(
