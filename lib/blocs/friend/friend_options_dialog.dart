@@ -23,7 +23,7 @@ class FriendOptionsDialog extends StatefulWidget {
 class FriendOptionsDialogState extends State<FriendOptionsDialog> {
   bool includeImageFlag;
   bool isProcessing = false;
-
+  CommonBloc pageCommonBloc;
   @override
   void initState() {
     super.initState();
@@ -32,7 +32,8 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var thoughtOptions = CommonBloc.of(context).thoughtOptions;
+    pageCommonBloc = CommonBloc.of(context);
+    var thoughtOptions = pageCommonBloc.thoughtOptions;
     // TODO: implement build
     if (isProcessing) {
       return Center(
@@ -79,7 +80,7 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
       imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
     }
     if (includeImageFlag == false || imageFile != null) {
-      await CommonBloc.of(context)
+      await pageCommonBloc
           .thoughtRepository
           .addThought(
               new ThoughtModel(null, friend.friendUserId, thoughtOptionCode,

@@ -34,6 +34,7 @@ class _FriendPageState extends State<FriendPage> {
   List<FriendModel> friends;
   Uint8List friendThumbnail;
   bool isMaxFriends = false;
+  CommonBloc pageCommonBloc;
   @override
   void initState() {
     // TODO: implement initState
@@ -42,7 +43,8 @@ class _FriendPageState extends State<FriendPage> {
 
   @override
   Widget build(BuildContext context) {
-    CommonBloc.of(context).allFriends.listen((friendList) {
+    pageCommonBloc = CommonBloc.of(context);
+    pageCommonBloc.allFriends.listen((friendList) {
       if (friendList.length >= 50) {
         setState(() {
           isMaxFriends = true;
@@ -70,7 +72,7 @@ class _FriendPageState extends State<FriendPage> {
     // make sure that the friend is not already in the list
     final EmailContact contact = await FlutterContactPicker.pickEmailContact();
 
-    FriendModel dupFriend = CommonBloc.of(context)
+    FriendModel dupFriend = pageCommonBloc
         .allFriends
         .value
         .firstWhere((f) => f.email == contact.email.email, orElse: () => null);

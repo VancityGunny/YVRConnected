@@ -25,6 +25,7 @@ class HomeLatestWidget extends StatefulWidget {
 }
 
 class HomeLatestWidgetState extends State<HomeLatestWidget> {
+  CommonBloc pageCommonBloc;
   List<FriendStatModel> topFiveFriends = List<FriendStatModel>();
   List<FlSpot> graphData = List<FlSpot>();
   List<FlSpot> graphInteractionsData = new List<FlSpot>();
@@ -68,7 +69,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
   @override
   Widget build(BuildContext context) {
     // *** Calculate the graph data for thoughts and interaction statistic ***//
-
+    pageCommonBloc = CommonBloc.of(context);
     return Column(
       children: <Widget>[
         Container(
@@ -84,7 +85,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
         Container(
             height: 100,
             child: StreamBuilder(
-              stream: CommonBloc.of(context).topFiveFriends.stream,
+              stream: pageCommonBloc.topFiveFriends.stream,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
@@ -182,8 +183,8 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                   right: 18.0, left: 12.0, top: 12, bottom: 12),
               child: MultiProvider(
                   providers: [
-                    StreamProvider<List<InteractionModel>>.value(value: CommonBloc.of(context).allSentInteractions.stream),
-                    StreamProvider<List<ThoughtModel>>.value(value: CommonBloc.of(context).allSentThoughts.stream),                   
+                    StreamProvider<List<InteractionModel>>.value(value: pageCommonBloc.allSentInteractions.stream),
+                    StreamProvider<List<ThoughtModel>>.value(value: pageCommonBloc.allSentThoughts.stream),                   
                   ],
                   child: Builder(
                     builder: (BuildContext context) {
@@ -275,7 +276,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
         Expanded(
           child: Container(
               child: StreamBuilder(
-                  stream: CommonBloc.of(context).allReceivedThoughts.stream,
+                  stream: pageCommonBloc.allReceivedThoughts.stream,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Center(
@@ -317,7 +318,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                                 Icon(Icons.email,
                                     size: 60,
                                     color: Color.fromARGB(15, 0, 0, 0)),
-                                CommonBloc.of(context)
+                                pageCommonBloc
                                     .thoughtOptions
                                     .firstWhere((element) =>
                                         element.code ==
@@ -336,28 +337,28 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
   }
 
   void viewThought(ThoughtModel latestThought) async {
-    var currentFriend = CommonBloc.of(context).allFriends.value.firstWhere(
+    var currentFriend =pageCommonBloc.allFriends.value.firstWhere(
         (element) => element.friendUserId == latestThought.fromUserId,
         orElse: () => null);
     // if sender is not currently friend
     if (currentFriend == null) {
       // lookup our sender collection
-      currentFriend = CommonBloc.of(context).allSenders.value.firstWhere(
+      currentFriend = pageCommonBloc.allSenders.value.firstWhere(
           (element) => element.friendUserId == latestThought.fromUserId,
           orElse: () => null);
 
       // if we haven't lookup this sender before then lookup now
       if (currentFriend == null) {
-        var currentFriend = await CommonBloc.of(context)
+        var currentFriend = await pageCommonBloc
             .friendProvider
             .lookupFriendById(latestThought.fromUserId);
         // now add him to allsenders list for next time
-        CommonBloc.of(context)
+        pageCommonBloc
             .friendProvider
             .addSender(latestThought.fromUserId, currentFriend, context);
       }
     }
-    var selectedThoughtType = CommonBloc.of(context).thoughtOptions.firstWhere(
+    var selectedThoughtType = pageCommonBloc.thoughtOptions.firstWhere(
         (element) => latestThought.thoughtOptionCode == element.code,
         orElse: () => null);
 
@@ -401,7 +402,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
               ));
         }).then((value) {
       // mark thoughts as read so we hide it
-      CommonBloc.of(context).markThoughtAsRead(latestThought.thoughtId);
+      pageCommonBloc.markThoughtAsRead(latestThought.thoughtId);
     });
   }
 

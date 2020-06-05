@@ -27,12 +27,14 @@ class FriendDetailPageState extends State<FriendDetailPage> {
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
   ];
+  CommonBloc pageCommonBloc;
   var interactionStream;
   @override
   Widget build(BuildContext context) {
-    interactionStream = CommonBloc.of(context).allSentInteractions.stream;
-    var thoughtOptions = CommonBloc.of(context).thoughtOptions;
-    var allFriendThoughts = CommonBloc.of(context).allSentThoughts.value.where(
+    pageCommonBloc = CommonBloc.of(context);
+    interactionStream = pageCommonBloc.allSentInteractions.stream;
+    var thoughtOptions = pageCommonBloc.thoughtOptions;
+    var allFriendThoughts = pageCommonBloc.allSentThoughts.value.where(
         (element) => element.toUserId == widget.currentFriend.friendUserId);
 
     var optionIndex = 0;
@@ -165,7 +167,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children:
-                        CommonBloc.of(context).interactionOptions.map((intOpt) {
+                        pageCommonBloc.interactionOptions.map((intOpt) {
                       var isRecent = false;
                       var lastSentInteractionTime;
                       var lastSentInteraction = recentInteractions
@@ -222,7 +224,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                 children: <Widget>[
                   (isRecent == true)
                       ? Text('Current Status: ' +
-                          CommonBloc.of(context)
+                          pageCommonBloc
                               .thoughtOptions
                               .firstWhere((element) =>
                                   element.code ==
@@ -305,7 +307,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
   }
 
   deleteFriend() {
-    CommonBloc.of(context)
+    pageCommonBloc
         .friendProvider
         .removeFriend(widget.currentFriend.friendUserId, context);
   }
@@ -405,7 +407,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
   }
 
   void sendInteraction(String code) async {
-    await CommonBloc.of(context).thoughtRepository.addInteraction(
+    await pageCommonBloc.thoughtRepository.addInteraction(
         new InteractionModel(globals.currentUserId,
             widget.currentFriend.friendUserId, code, DateTime.now(), null),
         context);
