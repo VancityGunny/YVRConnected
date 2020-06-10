@@ -31,21 +31,22 @@ class CommonBloc extends InheritedWidget {
       BehaviorSubject<List<FriendStatModel>>();
 
   final thoughtOptions = [
-    ThoughtOptionModel('MISS', 'Miss you', FaIcon(FontAwesomeIcons.solidSmileWink)),
     ThoughtOptionModel(
-        'WISH', 'Wish U were here', FaIcon(FontAwesomeIcons.streetView)),
+        'MISS', 'Miss you', FaIcon(FontAwesomeIcons.solidSmileWink), "I'm thinking about you."),
     ThoughtOptionModel(
-        'GOLD', 'Good old time', FaIcon(FontAwesomeIcons.glassCheers)),
+        'WISH', 'Wish U were here', FaIcon(FontAwesomeIcons.streetView),"It would be nice if you were here with me now."),
     ThoughtOptionModel(
-        'GRAT', 'Grateful for you', FaIcon(FontAwesomeIcons.prayingHands))
+        'GOLD', 'Good old time', FaIcon(FontAwesomeIcons.glassCheers),"I'm remembering the great time we had together."),
+    ThoughtOptionModel(
+        'GRAT', 'Grateful for you', FaIcon(FontAwesomeIcons.prayingHands),"I'm so thankful to have you in my life.")
   ];
 
   final interactionOptions = [
     ThoughtOptionModel(
-        'CALL', 'Phone Call', FaIcon(FontAwesomeIcons.phoneVolume)),
-    ThoughtOptionModel('VIDEO', 'Video Call', FaIcon(FontAwesomeIcons.video)),
+        'CALL', 'Phone Call', FaIcon(FontAwesomeIcons.phoneVolume),'Phone Call'),
+    ThoughtOptionModel('VIDEO', 'Video Call', FaIcon(FontAwesomeIcons.video), 'Video Call'),
     ThoughtOptionModel(
-        'IRL', 'In Person', FaIcon(FontAwesomeIcons.userFriends)),
+        'IRL', 'In Person', FaIcon(FontAwesomeIcons.userFriends), 'In Person'),
   ];
 
   @override

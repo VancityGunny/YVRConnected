@@ -5,10 +5,11 @@ class ThoughtOptionModel extends Equatable {
   final String code;
   final String caption;
   final FaIcon icon;
+  final String description;
 
-  ThoughtOptionModel(this.code, this.caption, this.icon);
+  ThoughtOptionModel(this.code, this.caption, this.icon, this.description);
 
   @override
-  List<Object> get props => [code, caption, icon];
+  List<Object> get props => [code, caption, icon, description];
   
 }

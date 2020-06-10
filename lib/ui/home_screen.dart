@@ -49,7 +49,7 @@ class HomeScreenState extends State<HomeScreen> {
         ],
         child: Scaffold(
             appBar: AppBar(
-              title: Text('Home'),
+              title: Text('YVRFriends'),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(

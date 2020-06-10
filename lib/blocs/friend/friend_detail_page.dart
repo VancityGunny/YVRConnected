@@ -229,7 +229,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                               .firstWhere((element) =>
                                   element.code ==
                                   widget.currentFriend.lastThoughtSentOption)
-                              .caption)
+                              .description)
                       : Container(
                           child: RaisedButton(
                               color: Colors.white,

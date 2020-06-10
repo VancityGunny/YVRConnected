@@ -120,7 +120,6 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                               alignment: Alignment.bottomCenter,
                             ),
                             Container(
-                              
                                 alignment: Alignment.topCenter,
                                 padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                                 // top: 10,
@@ -376,20 +375,29 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
         context: context,
         builder: (context) {
           return Dialog(
+            
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
-                      child: Container(
+                      child: FittedBox(
                           alignment: Alignment.center,
+                          fit: BoxFit.none,
                           child: new Icon(selectedThoughtType.icon.icon,
-                              size: 100))),
-                  Text(selectedThoughtType.caption, textScaleFactor: 2.0),
+                              size: 70.0))),
+                  Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(selectedThoughtType.description,
+                          textScaleFactor: 2.0)),
                   (latestThought.imageUrl != null)
                       ? Expanded(child: Image.network(latestThought.imageUrl))
-                      : Text(''),
+                      : Expanded(
+                          child: Container(
+                          height: 150.0,
+                          child: Text(''),
+                        )),
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                     alignment: Alignment.bottomRight,
