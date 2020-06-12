@@ -29,7 +29,7 @@ class FriendProvider {
     // check if user record does not exist then create the record
     var friendsRef = await _firestore
         .collection('/users')
-        .where('phone', isEqualTo: newFriend.phone)
+        .where('email', isEqualTo: newFriend.email)
         .limit(1)
         .getDocuments();
     var newFriendFlag = (friendsRef.documents.length == 0);
@@ -56,7 +56,7 @@ class FriendProvider {
       UserProvider userProvider = UserProvider();
       await userProvider.addUser(
           friendId,
-          UserModel(null, null, newFriend.displayName, newFriend.phone, [], [],
+          UserModel(null, newFriend.email, newFriend.displayName, null, [], [],
               thumbPath));
     }
 
@@ -70,7 +70,7 @@ class FriendProvider {
           {
             'friendId': friendId,
             'friendName': newFriend.displayName,
-            'friendPhone': newFriend.phone,
+            'friendEmail': newFriend.email,
             'thumbnail': thumbUrl
           }
         ])
@@ -150,7 +150,7 @@ class FriendProvider {
           {
             'friendId': senderId,
             'friendName': sender.displayName,
-            'friendPhone': sender.phone,
+            'friendEmail': sender.email,
             'thumbnail': sender.thumbnail
           }
         ])

@@ -70,10 +70,10 @@ class _FriendPageState extends State<FriendPage> {
 
   void _addFriend() async {
     // make sure that the friend is not already in the list
-    final PhoneContact contact = await FlutterContactPicker.pickPhoneContact();
+    final EmailContact contact = await FlutterContactPicker.pickEmailContact();
 
     FriendModel dupFriend = pageCommonBloc.allFriends.value.firstWhere(
-        (f) => f.phone == contact.phoneNumber.number,
+        (f) => f.email == contact.email.email,
         orElse: () => null);
 
     if (dupFriend == null) {
@@ -88,7 +88,7 @@ class _FriendPageState extends State<FriendPage> {
         }
         // Either the permission was already granted before or the user just granted it.
       }
-      FriendModel newFriend = new FriendModel(null, contact.phoneNumber.number,
+      FriendModel newFriend = new FriendModel(null, contact.email.email,
           contact.fullName, null, null, null, null, null);
       BlocProvider.of<FriendBloc>(context)
           .add(AddingFriendEvent(newFriend, thumbnail));
