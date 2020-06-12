@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:yvrconnected/blocs/authentication/index.dart';
+import 'package:yvrfriends/blocs/authentication/index.dart';
 
 class LoginForm extends StatefulWidget {
 

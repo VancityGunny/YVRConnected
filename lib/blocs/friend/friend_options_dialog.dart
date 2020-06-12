@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:yvrconnected/blocs/friend/friend_model.dart';
-import 'package:yvrconnected/blocs/thought/thought_model.dart';
-import 'package:yvrconnected/common/common_bloc.dart';
+import 'package:yvrfriends/blocs/friend/friend_model.dart';
+import 'package:yvrfriends/blocs/thought/thought_model.dart';
+import 'package:yvrfriends/common/common_bloc.dart';
 
-import 'package:yvrconnected/common/global_object.dart' as globals;
+import 'package:yvrfriends/common/global_object.dart' as globals;
 
 
 class FriendOptionsDialog extends StatefulWidget {

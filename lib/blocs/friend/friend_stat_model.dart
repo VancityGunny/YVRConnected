@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:yvrconnected/blocs/friend/friend_model.dart';
+import 'package:yvrfriends/blocs/friend/friend_model.dart';
 
 class FriendStatModel extends Equatable {
   final FriendModel friend;

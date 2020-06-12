@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import 'package:yvrconnected/blocs/friend/index.dart';
-import 'package:yvrconnected/blocs/interaction/interaction_model.dart';
-import 'package:yvrconnected/blocs/thought/index.dart';
+import 'package:yvrfriends/blocs/friend/index.dart';
+import 'package:yvrfriends/blocs/interaction/interaction_model.dart';
+import 'package:yvrfriends/blocs/thought/index.dart';
 
 import 'package:image/image.dart' as IM;
-import 'package:yvrconnected/common/common_bloc.dart';
-import 'package:yvrconnected/common/global_object.dart' as globals;
+import 'package:yvrfriends/common/common_bloc.dart';
+import 'package:yvrfriends/common/global_object.dart' as globals;
 
 class ThoughtRepository {
   final ThoughtProvider _thoughtProvider = ThoughtProvider();

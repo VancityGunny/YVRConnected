@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:yvrconnected/blocs/authentication/auth_repository.dart';
-import 'package:yvrconnected/blocs/authentication/index.dart';
+import 'package:yvrfriends/blocs/authentication/auth_repository.dart';
+import 'package:yvrfriends/blocs/authentication/index.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;

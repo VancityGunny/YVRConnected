@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:yvrconnected/blocs/friend/index.dart';
-import 'package:yvrconnected/common/common_bloc.dart';
+import 'package:yvrfriends/blocs/friend/index.dart';
+import 'package:yvrfriends/common/common_bloc.dart';
 
 class FriendPage extends StatefulWidget {
   static const String routeName = '/friend';

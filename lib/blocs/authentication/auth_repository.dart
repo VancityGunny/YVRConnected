@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uuid/uuid.dart';
-import 'package:yvrconnected/blocs/user/user_model.dart';
-import 'package:yvrconnected/blocs/user/user_provider.dart';
-import 'package:yvrconnected/common/global_object.dart' as globals;
+import 'package:yvrfriends/blocs/user/user_model.dart';
+import 'package:yvrfriends/blocs/user/user_provider.dart';
+import 'package:yvrfriends/common/global_object.dart' as globals;
 
 class AuthRepository {
   final FirebaseAuth _firebaseAuth;

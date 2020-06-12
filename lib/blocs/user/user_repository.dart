@@ -1,5 +1,5 @@
-import 'package:yvrconnected/blocs/user/user_model.dart';
-import 'package:yvrconnected/blocs/user/user_provider.dart';
+import 'package:yvrfriends/blocs/user/user_model.dart';
+import 'package:yvrfriends/blocs/user/user_provider.dart';
 
 class UserRepository {
   final UserProvider _userProvider = UserProvider();

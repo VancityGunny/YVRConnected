@@ -1,4 +1,4 @@
-package com.yvrconnected.yvrconnected
+package com.yvrfriends.yvrfriends
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

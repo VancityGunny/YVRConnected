@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:yvrconnected/blocs/user/user_model.dart';
+import 'package:yvrfriends/blocs/user/user_model.dart';
 
 Firestore _firestore = Firestore.instance;
 

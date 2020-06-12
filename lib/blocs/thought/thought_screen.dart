@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yvrconnected/blocs/thought/index.dart';
+import 'package:yvrfriends/blocs/thought/index.dart';
 
 class ThoughtScreen extends StatefulWidget {
   const ThoughtScreen({

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yvrconnected/common/commonfunctions.dart';
+import 'package:yvrfriends/common/commonfunctions.dart';
 
 class ContactsPage extends StatefulWidget {
   @override

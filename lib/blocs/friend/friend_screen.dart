@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:yvrconnected/blocs/friend/index.dart';
-import 'package:yvrconnected/blocs/thought/index.dart';
-import 'package:yvrconnected/common/common_bloc.dart';
+import 'package:yvrfriends/blocs/friend/index.dart';
+import 'package:yvrfriends/blocs/thought/index.dart';
+import 'package:yvrfriends/common/common_bloc.dart';
 
 class FriendScreen extends StatefulWidget {
   @override

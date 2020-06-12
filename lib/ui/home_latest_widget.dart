@@ -8,12 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:yvrconnected/blocs/friend/friend_stat_model.dart';
-import 'package:yvrconnected/blocs/friend/index.dart';
-import 'package:yvrconnected/blocs/interaction/interaction_model.dart';
-import 'package:yvrconnected/blocs/thought/index.dart';
-import 'package:yvrconnected/common/common_bloc.dart';
-import 'package:yvrconnected/common/commonfunctions.dart';
+import 'package:yvrfriends/blocs/friend/friend_stat_model.dart';
+import 'package:yvrfriends/blocs/friend/index.dart';
+import 'package:yvrfriends/blocs/interaction/interaction_model.dart';
+import 'package:yvrfriends/blocs/thought/index.dart';
+import 'package:yvrfriends/common/common_bloc.dart';
+import 'package:yvrfriends/common/commonfunctions.dart';
 
 // Widget to show all latest thoughts received
 class HomeLatestWidget extends StatefulWidget {

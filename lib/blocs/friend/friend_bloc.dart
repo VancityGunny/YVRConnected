@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:yvrconnected/blocs/friend/index.dart';
+import 'package:yvrfriends/blocs/friend/index.dart';
 import 'dart:developer' as developer;
 
 class FriendBloc extends Bloc<FriendEvent, FriendState> {

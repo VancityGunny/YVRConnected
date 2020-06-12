@@ -1,4 +1,4 @@
-# yvrconnected
+# yvrfriends
 
 A new Flutter project.
 

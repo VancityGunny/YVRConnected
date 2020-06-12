@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:yvrconnected/blocs/friend/index.dart';
+import 'package:yvrfriends/blocs/friend/index.dart';
 
 class FriendRepository {
   final FriendProvider _friendProvider = FriendProvider();
