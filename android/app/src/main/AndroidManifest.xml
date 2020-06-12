@@ -37,7 +37,7 @@
             "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
     android:label="@string/app_name" />
     
-<provider android:authorities="com.facebook.app.FacebookContentProvider277772480063223"
+<provider android:authorities="com.facebook.app.FacebookContentProvider2875572525892492"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true"/>
 
