@@ -28,6 +28,17 @@ class AuthenticatedState extends AuthState {
   List<Object> get props => null;
 }
 
+class PhoneVerificationAuthState extends AuthState {
+  PhoneVerificationAuthState();
+
+  @override
+  String toString() => 'PhoneVerificationAuthState';
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+}
+
 class UnauthenticatedState extends AuthState {
   @override
   String toString() => 'UnauthenticatedState';

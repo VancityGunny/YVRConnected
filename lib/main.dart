@@ -7,6 +7,7 @@ import 'package:yvrfriends/blocs/authentication/auth_repository.dart';
 import 'package:yvrfriends/simple_bloc_delegate.dart';
 import 'package:yvrfriends/ui/home_screen.dart';
 import 'package:yvrfriends/ui/login_screen.dart';
+import 'package:yvrfriends/ui/login_with_phone.dart';
 import 'package:yvrfriends/ui/splash_screen.dart';
 import 'blocs/authentication/auth_event.dart';
 import 'blocs/authentication/auth_state.dart';
@@ -54,6 +55,10 @@ class MyAppState extends State<MyApp> {
               }
               if (state is UnauthenticatedState) {
                 return LoginScreen();
+              }
+              if(state is PhoneVerificationAuthState){
+                // now go do phone verification
+                return LoginOTP();
               }
               if (state is AuthenticatedState) {
                 return HomeScreen(state.displayName);

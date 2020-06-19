@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:yvrfriends/blocs/authentication/auth_repository.dart';
 import 'package:yvrfriends/blocs/authentication/index.dart';
@@ -26,6 +27,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield* _mapLoggedOutToState();
     } else if (event is LogInWithGooglePressedEvent) {
       yield* _mapLoginWithGooglePressedToState();
+    } else if (event is LogInWithPhonePressedEvent) {
+      yield* _mapLoginWithPhonePressedToState(event);
     }
   }
 
@@ -35,8 +38,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       if (isSignedIn) {
         final user = await _authRepository.getUser();
-
-        yield AuthenticatedState(user.displayName);
+        if (user.phone != null) {
+          // as long as we have phone number, whether it be from gmail account or verified by phone we don't care
+          yield AuthenticatedState(user.displayName);
+        } else {
+          yield PhoneVerificationAuthState();
+        }
       } else {
         yield UnauthenticatedState();
       }
@@ -48,7 +55,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _mapLoggedInToState() async* {
     final user = await _authRepository.getUser();
 
-    yield AuthenticatedState(user.displayName);
+    yield PhoneVerificationAuthState();
   }
 
   Stream<AuthState> _mapLoggedOutToState() async* {
@@ -62,6 +69,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _authRepository.signInWithGoogle();
 
       yield LogInSuccessState();
+    } catch (_) {
+      yield LogInFailureState();
+    }
+  }
+
+  Stream<AuthState> _mapLoginWithPhonePressedToState(
+      LogInWithPhonePressedEvent event) async* {
+    try {
+      await _authRepository.signInWithPhoneNumber(
+          event.credential, event.phoneNumber);
+
+      final user = await _authRepository.getUser();
+      yield AuthenticatedState(user.displayName);
     } catch (_) {
       yield LogInFailureState();
     }

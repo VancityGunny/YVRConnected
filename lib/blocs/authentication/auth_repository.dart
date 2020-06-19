@@ -29,35 +29,88 @@ class AuthRepository {
     await _firebaseAuth.signInWithCredential(credential);
     var user = await _firebaseAuth.currentUser();
 
+    return user;
+  }
+
+  Future<void> signInWithPhoneNumber(AuthCredential credential, String phoneNumber) async {
+
+    
+    // now we merge with existing firebase user
+    FirebaseUser currentUser = await _firebaseAuth.currentUser();
+    await currentUser.linkWithCredential(credential).then((value) async {
+      await createOrAssumeUser(value, currentUser, phoneNumber);
+    });
+
+    // AuthResult authResult =
+    //     await _firebaseAuth.signInWithCredential(credential);
+  }
+
+  Future createOrAssumeUser(
+      AuthResult authResult, FirebaseUser currentUser, phoneNumber) async {
+    if (authResult.user == null) {
+      return;
+    }
+
+    var userProvider = new UserProvider();
+    // update user add phone number and marked as verified
     var foundUsers = await _firestore
         .collection('/users')
-        .where('uid', isEqualTo: user.uid)
+        .where('uid', isEqualTo: currentUser.uid)
         .getDocuments();
-    if (foundUsers.documents.length == 0) {
-      var findByEmail = await _firestore
+    // assume account found by id
+    if (foundUsers.documents.length > 0) {
+      await userProvider.assumeUser(
+          foundUsers.documents.first.documentID,
+          new UserModel(
+              currentUser.uid,
+              currentUser.email,
+              currentUser.displayName,
+              phoneNumber,
+              [],
+              [],
+              currentUser.photoUrl));
+      globals.currentUserId = foundUsers.documents.first.documentID;
+      return; // if existing then just update this and return
+    } else {
+      // can't find match by uid
+      // try to find match by phone number
+      var foundUsersByPhone = await _firestore
           .collection('/users')
-          .where('email', isEqualTo: user.email)
+          .where('phone', isEqualTo: phoneNumber)
           .getDocuments();
-      var userProvider = UserProvider();
-      if (findByEmail.documents.length == 0) {
+      // create new user if not already exists
+
+      if (foundUsersByPhone.documents.length == 0) {
         // check if user record does not exist then create the record
         var uuid = new Uuid();
         var userId = uuid.v1();
         await userProvider.addUser(
             userId.toString(),
-            new UserModel(user.uid, user.email, user.displayName,
-                user.phoneNumber, [], [], user.photoUrl));
+            new UserModel(
+                currentUser.uid,
+                currentUser.email,
+                currentUser.displayName,
+                phoneNumber,
+                [],
+                [],
+                currentUser.photoUrl));
         globals.currentUserId = userId;
       } else {
-        // assume account found by the email
-        userProvider.assumeUser(
-            findByEmail.documents.first.documentID,
-            new UserModel(user.uid, user.email, user.displayName,
-                user.phoneNumber, [], [], user.photoUrl));
-        globals.currentUserId = findByEmail.documents.first.documentID;
+        // assume user
+        await userProvider.assumeUser(
+            foundUsersByPhone.documents.first.documentID,
+            new UserModel(
+                currentUser.uid,
+                currentUser.email,
+                currentUser.displayName,
+                phoneNumber,
+                [],
+                [],
+                currentUser.photoUrl));
+        globals.currentUserId = foundUsersByPhone.documents.first.documentID;
       }
+      return;
     }
-    return user;
   }
 
   Future<void> signOut() async {
@@ -79,9 +132,13 @@ class AuthRepository {
         .collection('/users')
         .where('uid', isEqualTo: user.uid)
         .getDocuments();
-    var loggedInUser = UserModel.fromJson(foundUsers.documents[0].data);
-    globals.loggedInUser = loggedInUser;
-    globals.currentUserId = foundUsers.documents[0].documentID;
-    return loggedInUser;
+    if (foundUsers.documents.length > 0) {
+      var loggedInUser = UserModel.fromJson(foundUsers.documents[0].data);
+      globals.loggedInUser = loggedInUser;
+      globals.currentUserId = foundUsers.documents[0].documentID;
+      return loggedInUser;
+    } else {
+      return null;
+    }
   }
 }

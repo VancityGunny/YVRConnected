@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/rendering.dart';
 
 import 'package:meta/meta.dart';
 
@@ -37,6 +39,19 @@ class LoggedOutEvent extends AuthEvent {
 class LogInWithGooglePressedEvent extends AuthEvent {
   @override
   String toString() => 'LogInWithGooglePressedEvent';
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+}
+
+class LogInWithPhonePressedEvent extends AuthEvent {
+  final AuthCredential credential;
+  final String phoneNumber;
+  LogInWithPhonePressedEvent(this.credential, this.phoneNumber);
+
+  @override
+  String toString() => 'LogInWithPhonePressedEvent';
 
   @override
   // TODO: implement props

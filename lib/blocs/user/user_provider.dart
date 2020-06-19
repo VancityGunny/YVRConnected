@@ -22,7 +22,7 @@ class UserProvider {
     return newUserObj.documentID;
   }
 
-  void assumeUser(String foundUserId, UserModel userModel) {
+  Future<void> assumeUser(String foundUserId, UserModel userModel) async {
     _firestore.collection('/users').document(foundUserId).updateData({
       'uid': userModel.uid,
       'phone': userModel.phone,
