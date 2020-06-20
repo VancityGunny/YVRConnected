@@ -41,7 +41,6 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final delegate = S.of(context);
     return BlocProvider(
         create: (BuildContext context) =>
             _authenticationBloc, //bloc: _authenticationBloc,
@@ -60,6 +59,7 @@ class MyAppState extends State<MyApp> {
           home: BlocBuilder(
             bloc: _authenticationBloc,
             builder: (BuildContext context, AuthState state) {
+              final delegate = S.of(context);
               if (state is UninitAuthState) {
                 return SplashScreen();
               }
