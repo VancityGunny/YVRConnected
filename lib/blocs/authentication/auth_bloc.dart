@@ -54,8 +54,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _mapLoggedInToState() async* {
     final user = await _authRepository.getUser();
-
-    yield PhoneVerificationAuthState();
+    if (user.phone != null) {
+      // as long as we have phone number, whether it be from gmail account or verified by phone we don't care
+      yield AuthenticatedState(user.displayName);
+    } else {
+      yield PhoneVerificationAuthState();
+    }
   }
 
   Stream<AuthState> _mapLoggedOutToState() async* {

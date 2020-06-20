@@ -21,7 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "activeFriendsTitle" : MessageLookupByLibrary.simpleMessage("仲のいいお友達"),
+    "activeFriendsTitle" : MessageLookupByLibrary.simpleMessage("仲の良いお友達"),
     "codeGoodOldTimeLong" : MessageLookupByLibrary.simpleMessage("あなたと一緒に過ごしたときが懐かしい"),
     "codeGoodOldTimeOneWord" : MessageLookupByLibrary.simpleMessage("懐"),
     "codeGoodOldTimeShort" : MessageLookupByLibrary.simpleMessage("懐かしい"),
@@ -47,7 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "friendshipLabel" : MessageLookupByLibrary.simpleMessage("友情"),
     "hoursAgoSuffix" : MessageLookupByLibrary.simpleMessage("時間前"),
     "includeImageLable" : MessageLookupByLibrary.simpleMessage("画像添付"),
-    "incomingMessagesTitle" : MessageLookupByLibrary.simpleMessage("メッセージ着信"),
+    "incomingMessagesTitle" : MessageLookupByLibrary.simpleMessage("受信メッセージ"),
     "justNowLabel" : MessageLookupByLibrary.simpleMessage("たった今"),
     "loginFailed" : MessageLookupByLibrary.simpleMessage("登録失敗"),
     "loginTitle" : MessageLookupByLibrary.simpleMessage("ログイン"),
@@ -55,7 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "noButton" : MessageLookupByLibrary.simpleMessage("いいえ"),
     "phoneAuthenticationTitle" : MessageLookupByLibrary.simpleMessage("電話番号認証"),
     "seeAllFriendsButton" : MessageLookupByLibrary.simpleMessage("全てのお友達"),
-    "sendThoughtButton" : MessageLookupByLibrary.simpleMessage("送信完了"),
+    "sendThoughtButton" : MessageLookupByLibrary.simpleMessage("メッセージ送信"),
     "signInWithGoogleButton" : MessageLookupByLibrary.simpleMessage("Googleで登録"),
     "signOutLabel" : MessageLookupByLibrary.simpleMessage("サインアウト"),
     "thoughtLabel" : MessageLookupByLibrary.simpleMessage("メッセージ"),
