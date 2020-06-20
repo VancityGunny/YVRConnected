@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yvrfriends/blocs/authentication/auth_bloc.dart';
 import 'package:yvrfriends/blocs/authentication/auth_event.dart';
 import 'package:yvrfriends/blocs/authentication/auth_repository.dart';
+import 'package:yvrfriends/generated/l10n.dart';
 
 class LoginOTP extends StatefulWidget {
   @override
@@ -18,8 +19,9 @@ class _LoginOTPState extends State<LoginOTP> {
   String _smsCode;
   @override
   Widget build(BuildContext context) {
+    final delegate = S.of(context);
     return Scaffold(
-        appBar: AppBar(title: Text('Phone Authentication')),
+        appBar: AppBar(title: Text(delegate.phoneAuthenticationTitle)),
         body: GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -144,11 +146,11 @@ class _LoginOTPState extends State<LoginOTP> {
       // setState(() {
       print(
           'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
-      // showDialog(
-      //     child: new AlertDialog(
-      //       content: Text(authException.message),
-      //     ),
-      //     context: context);
+      showDialog(
+          child: new AlertDialog(
+            content: Text(authException.message),
+          ),
+          context: context);
     };
 
     final PhoneCodeSent codeSent =

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:yvrfriends/blocs/authentication/auth_bloc.dart';
@@ -12,6 +13,8 @@ import 'package:yvrfriends/ui/splash_screen.dart';
 import 'blocs/authentication/auth_event.dart';
 import 'blocs/authentication/auth_state.dart';
 import 'common/common_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:yvrfriends/generated/l10n.dart';
 
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
@@ -38,11 +41,18 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final delegate = S.of(context);
     return BlocProvider(
         create: (BuildContext context) =>
             _authenticationBloc, //bloc: _authenticationBloc,
         child: CommonBloc(
             child: MaterialApp(
+          localizationsDelegates: [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate
+          ],
+          supportedLocales: S.delegate.supportedLocales,
           theme: ThemeData(
               primaryColor: Colors.yellow[800],
               accentColor: Colors.yellow[600]),
@@ -56,7 +66,7 @@ class MyAppState extends State<MyApp> {
               if (state is UnauthenticatedState) {
                 return LoginScreen();
               }
-              if(state is PhoneVerificationAuthState){
+              if (state is PhoneVerificationAuthState) {
                 // now go do phone verification
                 return LoginOTP();
               }
@@ -65,7 +75,7 @@ class MyAppState extends State<MyApp> {
               }
               return Scaffold(
                   body: Container(
-                child: Text('Login Failed'),
+                child: Text(delegate.loginFailed),
               ));
             },
           ),

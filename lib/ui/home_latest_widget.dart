@@ -14,6 +14,7 @@ import 'package:yvrfriends/blocs/interaction/interaction_model.dart';
 import 'package:yvrfriends/blocs/thought/index.dart';
 import 'package:yvrfriends/common/common_bloc.dart';
 import 'package:yvrfriends/common/commonfunctions.dart';
+import 'package:yvrfriends/generated/l10n.dart';
 
 // Widget to show all latest thoughts received
 class HomeLatestWidget extends StatefulWidget {
@@ -68,6 +69,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final delegate = S.of(context);
     // *** Calculate the graph data for thoughts and interaction statistic ***//
     pageCommonBloc = CommonBloc.of(context);
     return Column(
@@ -79,7 +81,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                     style: DefaultTextStyle.of(context).style,
                     children: [
                   TextSpan(
-                      text: 'Active Friends',
+                      text: delegate.activeFriendsTitle,
                       style: TextStyle(color: Colors.black, fontSize: 20))
                 ]))),
         Container(
@@ -181,7 +183,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
               );
             },
             child: Text(
-              'See All Friends',
+              delegate.seeAllFriendsButton,
               style: TextStyle(color: Colors.lightBlue),
             ),
           ),
@@ -281,7 +283,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                     style: DefaultTextStyle.of(context).style,
                     children: [
                   TextSpan(
-                    text: 'Incoming Messages',
+                    text: delegate.incomingMessagesTitle,
                     style: TextStyle(color: Colors.black, fontSize: 20),
                   )
                 ]))),
@@ -375,7 +377,6 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
         context: context,
         builder: (context) {
           return Dialog(
-            
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
               child: Column(
@@ -413,7 +414,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                       padding: EdgeInsets.fromLTRB(0, 0, 5, 5),
                       child: Text(
                         CommonFunctions.formatPostDateForDisplay(
-                            latestThought.createdDate),
+                            latestThought.createdDate, context),
                         textAlign: TextAlign.right,
                       )),
                 ],
@@ -425,6 +426,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
   }
 
   LineChartData mainData() {
+    final delegate = S.of(context);
     return LineChartData(
       lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
@@ -461,7 +463,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
               case 9:
                 return '9';
               case 12:
-                return 'days ago';
+                return  delegate.daysAgoSuffix;
             }
             return '';
           },
@@ -477,7 +479,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
           getTitles: (value) {
             switch (value.toInt()) {
               case 1:
-                return 'Contact';
+                return delegate.contactLabel;
             }
             return '';
           },
@@ -494,7 +496,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
           getTitles: (value) {
             switch (value.toInt()) {
               case 1:
-                return 'Thought';
+                return delegate.thoughtLabel;
             }
             return '';
           },

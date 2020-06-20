@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yvrfriends/generated/l10n.dart';
 
 class CommonFunctions {
   static void pushPage(BuildContext context, Widget page) {
@@ -17,20 +18,24 @@ class CommonFunctions {
     // CommonFunctions.pushPage(
     //     context, MyHomePage(title: 'Flutter Demo Home Page'));
   }
-  static String formatPostDateForDisplay(DateTime postedDate) {
+  static String formatPostDateForDisplay(
+      DateTime postedDate, BuildContext context) {
+    final delegate = S.of(context);
     var timeElapsed = DateTime.now().difference(postedDate);
     if (timeElapsed.inDays < 1) {
       if (timeElapsed.inHours < 1) {
         if (timeElapsed.inMinutes < 1) {
-          return 'Just now';
+          return delegate.justNowLabel;
         } else {
-          return timeElapsed.inMinutes.toString() + ' minute(s) ago';
+          return timeElapsed.inMinutes.toString() +
+              ' ' +
+              delegate.minutesAgoSuffix;
         }
       } else {
-        return timeElapsed.inHours.toString() + ' hour(s) ago';
+        return timeElapsed.inHours.toString() + ' ' + delegate.hoursAgoSuffix;
       }
     } else {
-      return timeElapsed.inDays.toString() + ' day(s) ago';
+      return timeElapsed.inDays.toString() + ' ' + delegate.daysAgoSuffix;
     }
   }
 }

@@ -7,6 +7,7 @@ import 'package:yvrfriends/blocs/interaction/interaction_model.dart';
 import 'package:yvrfriends/common/common_bloc.dart';
 import 'package:yvrfriends/common/commonfunctions.dart';
 import 'package:yvrfriends/common/global_object.dart' as globals;
+import 'package:yvrfriends/generated/l10n.dart';
 
 class FriendDetailPage extends StatefulWidget {
   static const String routeName = '/friendDetail';
@@ -31,6 +32,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
   var interactionStream;
   @override
   Widget build(BuildContext context) {
+    final delegate = S.of(context);
     pageCommonBloc = CommonBloc.of(context);
     interactionStream = pageCommonBloc.allSentInteractions.stream;
     var thoughtOptions = pageCommonBloc.thoughtOptions;
@@ -141,7 +143,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                                   GaugeSegment('High', 6, Colors.green),
                                 ],
                                 currentValue: interactionGaugeValue,
-                                displayWidget: Text('Friendship',
+                                displayWidget: Text(delegate.friendshipLabel,
                                     style: TextStyle(fontSize: 8)),
                               );
                             })))
@@ -166,8 +168,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
 
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children:
-                        pageCommonBloc.interactionOptions.map((intOpt) {
+                    children: pageCommonBloc.interactionOptions.map((intOpt) {
                       var isRecentInteraction = false;
                       var lastSentInteractionTime;
                       var lastSentInteraction = recentInteractions
@@ -180,12 +181,12 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                         isRecentInteraction = true;
                         lastSentInteractionTime =
                             CommonFunctions.formatPostDateForDisplay(
-                                lastSentInteraction.createdDate);
+                                lastSentInteraction.createdDate, context);
                       }
 
                       return Container(
                           child: (isRecentInteraction)
-                              ? Wrap(                                
+                              ? Wrap(
                                   children: <Widget>[
                                     Wrap(
                                       spacing: 10.0,
@@ -223,9 +224,9 @@ class FriendDetailPageState extends State<FriendDetailPage> {
               child: Column(
                 children: <Widget>[
                   (isRecent == true)
-                      ? Text('Current Status: ' +
-                          pageCommonBloc
-                              .thoughtOptions
+                      ? Text(delegate.currentStatusLabel +
+                          ': ' +
+                          pageCommonBloc.thoughtOptions
                               .firstWhere((element) =>
                                   element.code ==
                                   widget.currentFriend.lastThoughtSentOption)
@@ -233,7 +234,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                       : Container(
                           child: RaisedButton(
                               color: Colors.white,
-                              child: Text('Send Thought'),
+                              child: Text(delegate.sendThoughtButton),
                               onPressed: () {
                                 openActionOptions(widget.currentFriend);
                               })),
@@ -270,20 +271,20 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                                     Navigator.of(context)
                                         .pop(); // pop out of friend detail page
                                   },
-                                  child: Text('Yes'),
+                                  child: Text(delegate.yesButton),
                                 ),
                                 FlatButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('No'),
+                                  child: Text(delegate.noButton),
                                 ),
                               ],
                             );
                           },
                           barrierDismissible: false);
                     },
-                    child: Text('DELETE FRIEND'),
+                    child: Text(delegate.deleteFriendButton),
                   ),
                 ],
               ),
@@ -307,8 +308,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
   }
 
   deleteFriend() {
-    pageCommonBloc
-        .friendProvider
+    pageCommonBloc.friendProvider
         .removeFriend(widget.currentFriend.friendUserId, context);
   }
 

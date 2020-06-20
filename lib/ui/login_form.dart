@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yvrfriends/blocs/authentication/index.dart';
+import 'package:yvrfriends/generated/l10n.dart';
 
 class LoginForm extends StatefulWidget {
 
@@ -17,6 +18,7 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final delegate = S.of(context);
     return BlocListener(
       bloc: BlocProvider.of<AuthBloc>(context),
       listener: (BuildContext context, AuthState state) {
@@ -30,7 +32,7 @@ class _LoginFormState extends State<LoginForm> {
               SnackBar(
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text('Login Failure'), Icon(Icons.error)],
+                  children: [Text(delegate.loginFailed), Icon(Icons.error)],
                 ),
                 backgroundColor: Colors.red,
               ),
@@ -76,6 +78,7 @@ class _LoginFormState extends State<LoginForm> {
 class GoogleLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final delegate = S.of(context);
     return RaisedButton.icon(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
@@ -86,7 +89,7 @@ class GoogleLoginButton extends StatelessWidget {
           LogInWithGooglePressedEvent(),
         );
       },
-      label: Text('Sign in with Google', style: TextStyle(color: Colors.white)),
+      label: Text(delegate.signInWithGoogleButton, style: TextStyle(color: Colors.white)),
       color: Colors.redAccent,
     );
   }

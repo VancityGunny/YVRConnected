@@ -5,6 +5,7 @@ import 'package:yvrfriends/blocs/authentication/index.dart';
 import 'package:yvrfriends/blocs/friend/index.dart';
 import 'package:yvrfriends/blocs/thought/index.dart';
 import 'package:yvrfriends/common/common_bloc.dart';
+import 'package:yvrfriends/generated/l10n.dart';
 import 'package:yvrfriends/ui/home_latest_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -35,6 +36,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final delegate = S.of(context);
     // set user stream
     CommonBloc.of(context).initStream();
 
@@ -77,7 +79,7 @@ class HomeScreenState extends State<HomeScreen> {
                         context: context,
                         builder: (_) {
                           return AlertDialog(
-                            title: Text('Sign out?'),
+                            title: Text(delegate.signOutLabel + '?'),
                             actions: <Widget>[
                               FlatButton(
                                 onPressed: () {
@@ -86,13 +88,13 @@ class HomeScreenState extends State<HomeScreen> {
                                   );
                                   Navigator.of(context).pop();
                                 },
-                                child: Text('Yes'),
+                                child: Text(delegate.yesButton),
                               ),
                               FlatButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: Text('No'),
+                                child: Text(delegate.noButton),
                               ),
                             ],
                           );

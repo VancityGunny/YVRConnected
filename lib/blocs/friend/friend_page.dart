@@ -6,6 +6,7 @@ import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:yvrfriends/blocs/friend/index.dart';
 import 'package:yvrfriends/common/common_bloc.dart';
+import 'package:yvrfriends/generated/l10n.dart';
 
 class FriendPage extends StatefulWidget {
   static const String routeName = '/friend';
@@ -43,6 +44,7 @@ class _FriendPageState extends State<FriendPage> {
 
   @override
   Widget build(BuildContext context) {
+    final delegate = S.of(context);
     pageCommonBloc = CommonBloc.of(context);
     pageCommonBloc.allFriends.listen((friendList) {
       if (friendList.length >= 50) {
@@ -57,7 +59,7 @@ class _FriendPageState extends State<FriendPage> {
     });
     return Scaffold(
       appBar: AppBar(
-        title: Text('Friends'),
+        title: Text(delegate.friendsLabel),
       ),
       body: FriendScreen(),
       floatingActionButton: new Visibility(

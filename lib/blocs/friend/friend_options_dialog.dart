@@ -7,7 +7,7 @@ import 'package:yvrfriends/blocs/thought/thought_model.dart';
 import 'package:yvrfriends/common/common_bloc.dart';
 
 import 'package:yvrfriends/common/global_object.dart' as globals;
-
+import 'package:yvrfriends/generated/l10n.dart';
 
 class FriendOptionsDialog extends StatefulWidget {
   final FriendModel friend;
@@ -27,11 +27,12 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
   @override
   void initState() {
     super.initState();
-    includeImageFlag = globals.includeImageFlag??false;
+    includeImageFlag = globals.includeImageFlag ?? false;
   }
 
   @override
   Widget build(BuildContext context) {
+    final delegate = S.of(context);
     pageCommonBloc = CommonBloc.of(context);
     var thoughtOptions = pageCommonBloc.thoughtOptions;
     // TODO: implement build
@@ -44,7 +45,7 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Include Image? '),
+            Text(delegate.includeImageLable + '? '),
             Switch(
                 value: includeImageFlag,
                 onChanged: (newValue) {
@@ -80,8 +81,7 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
       imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
     }
     if (includeImageFlag == false || imageFile != null) {
-      await pageCommonBloc
-          .thoughtRepository
+      await pageCommonBloc.thoughtRepository
           .addThought(
               new ThoughtModel(null, friend.friendUserId, thoughtOptionCode,
                   DateTime.now(), null),
