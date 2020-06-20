@@ -35,7 +35,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
     final delegate = S.of(context);
     pageCommonBloc = CommonBloc.of(context);
     interactionStream = pageCommonBloc.allSentInteractions.stream;
-    var thoughtOptions = pageCommonBloc.thoughtOptions;
+    var thoughtOptions = CommonBloc.thoughtOptions;
     var allFriendThoughts = pageCommonBloc.allSentThoughts.value.where(
         (element) => element.toUserId == widget.currentFriend.friendUserId);
 
@@ -168,7 +168,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
 
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: pageCommonBloc.interactionOptions.map((intOpt) {
+                    children: CommonBloc.interactionOptions.map((intOpt) {
                       var isRecentInteraction = false;
                       var lastSentInteractionTime;
                       var lastSentInteraction = recentInteractions
@@ -196,7 +196,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                                         Column(
                                           children: <Widget>[
                                             Text(
-                                              'daily contact',
+                                              delegate.dailyContactLabel,
                                               style: TextStyle(fontSize: 10.0),
                                             ),
                                             Text(
@@ -226,7 +226,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                   (isRecent == true)
                       ? Text(delegate.currentStatusLabel +
                           ': ' +
-                          pageCommonBloc.thoughtOptions
+                          CommonBloc.thoughtOptions
                               .firstWhere((element) =>
                                   element.code ==
                                   widget.currentFriend.lastThoughtSentOption)
@@ -260,8 +260,8 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                           context: context,
                           builder: (_) {
                             return AlertDialog(
-                              title: Text(
-                                  'Do you really want to delete this friend?'),
+                              title:
+                                  Text(delegate.deleteFriendConfirmation + '?'),
                               actions: <Widget>[
                                 FlatButton(
                                   onPressed: () {
@@ -294,11 +294,12 @@ class FriendDetailPageState extends State<FriendDetailPage> {
   }
 
   void openActionOptions(FriendModel friend) async {
+    final delegate = S.of(context);
     var result = await showDialog(
         context: context,
         builder: (context) {
           return SimpleDialog(
-              title: Text("Send Thought"),
+              title: Text(delegate.sendThoughtButton),
               children: <Widget>[new FriendOptionsDialog(friend)]);
         });
     if (result != null) {
@@ -313,6 +314,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
   }
 
   LineChartData thoughtSentData() {
+    final delegate = S.of(context);
     return LineChartData(
         lineTouchData: LineTouchData(enabled: false),
         gridData: FlGridData(
@@ -349,7 +351,7 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                 case 9:
                   return '9';
                 case 12:
-                  return 'days ago';
+                  return delegate.daysAgoSuffix;
               }
               return '';
             },
@@ -365,13 +367,13 @@ class FriendDetailPageState extends State<FriendDetailPage> {
             getTitles: (value) {
               switch (value.toInt()) {
                 case 1:
-                  return 'Miss';
+                  return delegate.codeMissYouOneWord;
                 case 3:
-                  return 'Wish';
+                  return delegate.codeWishUWereHereOneWord;
                 case 5:
-                  return 'Oldtime';
+                  return delegate.codeGoodOldTimeOneWord;
                 case 7:
-                  return 'Grateful';
+                  return delegate.codeGratefulForYouOneWord;
               }
               return '';
             },

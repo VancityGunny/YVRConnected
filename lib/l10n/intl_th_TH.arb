@@ -31,5 +31,11 @@
     "codeInPersonShort": "พบกัน",
     "incomingMessagesTitle": "ข้อความที่ได้รับ",
     "contactLabel": "ติดต่อ",
-    "thoughtLabel": "ความคิดถึง"
+    "thoughtLabel": "ความคิดถึง",
+    "deleteFriendConfirmation": "ยืนยันลบเพื่อนคนนี้",
+    "dailyContactLabel": "ติดต่อวันนี้",
+    "codeMissYouOneWord":"คิดถึง",
+    "codeWishUWereHereOneWord":"ใกล้",
+    "codeGoodOldTimeOneWord":"รำลึก",
+    "codeGratefulForYouOneWord":"ขอบคุณ"
 }

@@ -31,5 +31,11 @@
     "codeInPersonShort": "対面",
     "incomingMessagesTitle": "メッセージ着信",
     "contactLabel": "連絡",
-    "thoughtLabel": "メッセージ"
+    "thoughtLabel": "メッセージ",
+    "deleteFriendConfirmation": "友達を削除してもよろしいですか",
+    "dailyContactLabel": "連絡",
+    "codeMissYouOneWord":"想",
+    "codeWishUWereHereOneWord":"願",
+    "codeGoodOldTimeOneWord":"懐",
+    "codeGratefulForYouOneWord":"感謝"
 }

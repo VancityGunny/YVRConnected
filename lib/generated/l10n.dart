@@ -362,6 +362,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Do you really want to delete this friend`
+  String get deleteFriendConfirmation {
+    return Intl.message(
+      'Do you really want to delete this friend',
+      name: 'deleteFriendConfirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `daily contact`
+  String get dailyContactLabel {
+    return Intl.message(
+      'daily contact',
+      name: 'dailyContactLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Miss`
+  String get codeMissYouOneWord {
+    return Intl.message(
+      'Miss',
+      name: 'codeMissYouOneWord',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wish`
+  String get codeWishUWereHereOneWord {
+    return Intl.message(
+      'Wish',
+      name: 'codeWishUWereHereOneWord',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Oldtime`
+  String get codeGoodOldTimeOneWord {
+    return Intl.message(
+      'Oldtime',
+      name: 'codeGoodOldTimeOneWord',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grateful`
+  String get codeGratefulForYouOneWord {
+    return Intl.message(
+      'Grateful',
+      name: 'codeGratefulForYouOneWord',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -370,7 +430,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
-      Locale.fromSubtags(languageCode: 'jp', countryCode: 'JP'),
+      Locale.fromSubtags(languageCode: 'ja', countryCode: 'JP'),
       Locale.fromSubtags(languageCode: 'th', countryCode: 'TH'),
     ];
   }

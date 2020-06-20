@@ -34,7 +34,7 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
   Widget build(BuildContext context) {
     final delegate = S.of(context);
     pageCommonBloc = CommonBloc.of(context);
-    var thoughtOptions = pageCommonBloc.thoughtOptions;
+    var thoughtOptions = CommonBloc.thoughtOptions;
     // TODO: implement build
     if (isProcessing) {
       return Center(

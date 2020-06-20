@@ -1,5 +1,5 @@
 // DO NOT EDIT. This is code generated via package:intl/generate_localized.dart
-// This is a library that provides messages for a jp_JP locale. All the
+// This is a library that provides messages for a ja_JP locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
 
@@ -17,26 +17,32 @@ final messages = new MessageLookup();
 typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 
 class MessageLookup extends MessageLookupByLibrary {
-  String get localeName => 'jp_JP';
+  String get localeName => 'ja_JP';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "activeFriendsTitle" : MessageLookupByLibrary.simpleMessage("仲のいいお友達"),
     "codeGoodOldTimeLong" : MessageLookupByLibrary.simpleMessage("あなたと一緒に過ごしたときが懐かしい"),
+    "codeGoodOldTimeOneWord" : MessageLookupByLibrary.simpleMessage("懐"),
     "codeGoodOldTimeShort" : MessageLookupByLibrary.simpleMessage("懐かしい"),
     "codeGratefulForYouLong" : MessageLookupByLibrary.simpleMessage("あなたがいてくれてよかった"),
+    "codeGratefulForYouOneWord" : MessageLookupByLibrary.simpleMessage("感謝"),
     "codeGratefulForYouShort" : MessageLookupByLibrary.simpleMessage("ありがとう"),
     "codeInPersonShort" : MessageLookupByLibrary.simpleMessage("対面"),
     "codeMissYouLong" : MessageLookupByLibrary.simpleMessage("あなたのことを想っている"),
+    "codeMissYouOneWord" : MessageLookupByLibrary.simpleMessage("想"),
     "codeMissYouShort" : MessageLookupByLibrary.simpleMessage("会いたい"),
     "codePhoneCallShort" : MessageLookupByLibrary.simpleMessage("音声通話"),
     "codeVideoCallShort" : MessageLookupByLibrary.simpleMessage("ビデオ通話"),
     "codeWishUWereHereLong" : MessageLookupByLibrary.simpleMessage("あなたにここにいてほしかった"),
+    "codeWishUWereHereOneWord" : MessageLookupByLibrary.simpleMessage("願"),
     "codeWishUWereHereShort" : MessageLookupByLibrary.simpleMessage("ここにいて"),
     "contactLabel" : MessageLookupByLibrary.simpleMessage("連絡"),
     "currentStatusLabel" : MessageLookupByLibrary.simpleMessage("現在のステータス"),
+    "dailyContactLabel" : MessageLookupByLibrary.simpleMessage("連絡"),
     "daysAgoSuffix" : MessageLookupByLibrary.simpleMessage("日前"),
     "deleteFriendButton" : MessageLookupByLibrary.simpleMessage("友達削除"),
+    "deleteFriendConfirmation" : MessageLookupByLibrary.simpleMessage("友達を削除してもよろしいですか"),
     "friendsLabel" : MessageLookupByLibrary.simpleMessage("友達"),
     "friendshipLabel" : MessageLookupByLibrary.simpleMessage("友情"),
     "hoursAgoSuffix" : MessageLookupByLibrary.simpleMessage("時間前"),

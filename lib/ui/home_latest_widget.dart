@@ -332,7 +332,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                                 Icon(Icons.email,
                                     size: 60,
                                     color: Color.fromARGB(15, 0, 0, 0)),
-                                pageCommonBloc.thoughtOptions
+                                CommonBloc.thoughtOptions
                                     .firstWhere((element) =>
                                         element.code ==
                                         filteredSnapshot
@@ -369,7 +369,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
             .addSender(latestThought.fromUserId, currentFriend, context);
       }
     }
-    var selectedThoughtType = pageCommonBloc.thoughtOptions.firstWhere(
+    var selectedThoughtType = CommonBloc.thoughtOptions.firstWhere(
         (element) => latestThought.thoughtOptionCode == element.code,
         orElse: () => null);
 

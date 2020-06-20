@@ -10,6 +10,7 @@ import 'package:yvrfriends/blocs/interaction/interaction_model.dart';
 import 'package:yvrfriends/blocs/thought/index.dart';
 import 'package:yvrfriends/blocs/thought/thought_option_model.dart';
 import 'package:yvrfriends/common/global_object.dart' as globals;
+import 'package:yvrfriends/generated/l10n.dart';
 
 class CommonBloc extends InheritedWidget {
   StreamController friendsController;
@@ -30,24 +31,11 @@ class CommonBloc extends InheritedWidget {
   final BehaviorSubject<List<FriendStatModel>> topFiveFriends =
       BehaviorSubject<List<FriendStatModel>>();
 
-  final thoughtOptions = [
-    ThoughtOptionModel(
-        'MISS', 'Miss you', FaIcon(FontAwesomeIcons.solidSmileWink), "I'm thinking about you."),
-    ThoughtOptionModel(
-        'WISH', 'Wish U were here', FaIcon(FontAwesomeIcons.streetView),"It would be nice if you were here with me now."),
-    ThoughtOptionModel(
-        'GOLD', 'Good old time', FaIcon(FontAwesomeIcons.glassCheers),"I'm remembering the great time we had together."),
-    ThoughtOptionModel(
-        'GRAT', 'Grateful for you', FaIcon(FontAwesomeIcons.prayingHands),"I'm so thankful to have you in my life.")
-  ];
+  static List<ThoughtOptionModel> thoughtOptions =
+      new List<ThoughtOptionModel>();
 
-  final interactionOptions = [
-    ThoughtOptionModel(
-        'CALL', 'Phone Call', FaIcon(FontAwesomeIcons.phoneVolume),'Phone Call'),
-    ThoughtOptionModel('VIDEO', 'Video Call', FaIcon(FontAwesomeIcons.video), 'Video Call'),
-    ThoughtOptionModel(
-        'IRL', 'In Person', FaIcon(FontAwesomeIcons.userFriends), 'In Person'),
-  ];
+  static List<ThoughtOptionModel> interactionOptions =
+      new List<ThoughtOptionModel>();
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => true;
@@ -55,7 +43,42 @@ class CommonBloc extends InheritedWidget {
   CommonBloc({Key key, Widget child}) : super(key: key, child: child);
 
   static CommonBloc of(BuildContext context) {
+    if (thoughtOptions.length == 0) {
+      populateOptions(context);
+    }
     return context.dependOnInheritedWidgetOfExactType<CommonBloc>();
+  }
+
+  static void populateOptions(BuildContext context) {
+    final delegate = S.of(context);
+    thoughtOptions.add(ThoughtOptionModel('MISS', delegate.codeMissYouShort,
+        FaIcon(FontAwesomeIcons.solidSmileWink), delegate.codeMissYouLong));
+    thoughtOptions.add(ThoughtOptionModel(
+        'WISH',
+        delegate.codeWishUWereHereShort,
+        FaIcon(FontAwesomeIcons.streetView),
+        delegate.codeWishUWereHereLong));
+    thoughtOptions.add(ThoughtOptionModel('GOLD', delegate.codeGoodOldTimeShort,
+        FaIcon(FontAwesomeIcons.glassCheers), delegate.codeGoodOldTimeLong));
+    thoughtOptions.add(ThoughtOptionModel(
+        'GRAT',
+        delegate.codeGratefulForYouShort,
+        FaIcon(FontAwesomeIcons.prayingHands),
+        delegate.codeGratefulForYouLong));
+
+    interactionOptions.add(ThoughtOptionModel(
+        'CALL',
+        delegate.codePhoneCallShort,
+        FaIcon(FontAwesomeIcons.phoneVolume),
+        delegate.codePhoneCallShort));
+
+    interactionOptions.add(ThoughtOptionModel(
+        'VIDEO',
+        delegate.codeVideoCallShort,
+        FaIcon(FontAwesomeIcons.video),
+        delegate.codeVideoCallShort));
+    interactionOptions.add(ThoughtOptionModel('IRL', delegate.codeInPersonShort,
+        FaIcon(FontAwesomeIcons.userFriends), delegate.codeInPersonShort));
   }
 
   initStream() {

@@ -31,5 +31,11 @@
     "codeInPersonShort": "In Person",
     "incomingMessagesTitle": "Incoming Messages",
     "contactLabel": "Contact",
-    "thoughtLabel": "Thought"
+    "thoughtLabel": "Thought",
+    "deleteFriendConfirmation": "Do you really want to delete this friend",
+    "dailyContactLabel": "daily contact",
+    "codeMissYouOneWord":"Miss",
+    "codeWishUWereHereOneWord":"Wish",
+    "codeGoodOldTimeOneWord":"Oldtime",
+    "codeGratefulForYouOneWord":"Grateful"
 }
