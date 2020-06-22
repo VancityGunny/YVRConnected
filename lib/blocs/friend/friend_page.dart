@@ -104,12 +104,11 @@ class _FriendPageState extends State<FriendPage> {
       return;
     }
     FriendModel dupFriend = pageCommonBloc.allFriends.value.firstWhere(
-        (f) => f.phone == contact.phoneNumber.number,
+        (f) => f.phone == newFriend.phone,
         orElse: () => null);
 
     if (dupFriend == null) {
-      FriendModel newFriend = new FriendModel(null, contact.phoneNumber.number,
-          contact.fullName, null, null, null, null, null);
+      
       BlocProvider.of<FriendBloc>(context)
           .add(AddingFriendEvent(newFriend, thumbnail));
     } else {
