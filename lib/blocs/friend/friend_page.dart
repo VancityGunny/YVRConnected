@@ -103,12 +103,10 @@ class _FriendPageState extends State<FriendPage> {
     } else {
       return;
     }
-    FriendModel dupFriend = pageCommonBloc.allFriends.value.firstWhere(
-        (f) => f.phone == newFriend.phone,
-        orElse: () => null);
+    FriendModel dupFriend = pageCommonBloc.allFriends.value
+        .firstWhere((f) => f.phone == newFriend.phone, orElse: () => null);
 
     if (dupFriend == null) {
-      
       BlocProvider.of<FriendBloc>(context)
           .add(AddingFriendEvent(newFriend, thumbnail));
     } else {
@@ -136,7 +134,7 @@ class FriendAddDialogState extends State<FriendAddDialog> {
   String phoneNumber;
   String phoneISOCode;
   bool isValidPhoneNumber = false;
-  File _image;
+  Uint8List _image;
   String errorMessage;
   final _friendFormKey = GlobalKey<FormState>();
   var newFriend =
@@ -146,6 +144,7 @@ class FriendAddDialogState extends State<FriendAddDialog> {
   @override
   void initState() {
     super.initState();
+    _image = widget.thumbnail;
     _formattedPhoneNumber = PhoneService.fetchCountryData(
             context, 'packages/international_phone_input/assets/countries.json')
         .then((list) {
@@ -236,9 +235,12 @@ class FriendAddDialogState extends State<FriendAddDialog> {
               Center(
                 child: _image == null
                     ? Text('No image selected.')
-                    : Image.file(_image),
+                    : Image.memory(_image),
               ),
-              Text((errorMessage==null)?"":errorMessage, style: TextStyle(color: Colors.red),),
+              Text(
+                (errorMessage == null) ? "" : errorMessage,
+                style: TextStyle(color: Colors.red),
+              ),
               RaisedButton(
                 onPressed: () {
                   try {
@@ -266,10 +268,8 @@ class FriendAddDialogState extends State<FriendAddDialog> {
                             Navigator.of(context).pop(
                                 {"newFriend": newFriend, "thumbnail": null});
                           } else {
-                            _image.readAsBytes().then((value) {
-                              Navigator.of(context).pop(
-                                  {"newFriend": newFriend, "thumbnail": value});
-                            });
+                            Navigator.of(context).pop(
+                                {"newFriend": newFriend, "thumbnail": _image});
                           }
                         } else {
                           // do nothing
@@ -305,8 +305,10 @@ class FriendAddDialogState extends State<FriendAddDialog> {
     var pickedFile = await picker.getImage(
         source: ImageSource.gallery, maxWidth: 200.0, maxHeight: 200.0);
     if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
+      await File(pickedFile.path).readAsBytes().then((value) {
+        setState(() {
+          _image = value;
+        });
       });
     }
   }
