@@ -80,7 +80,7 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
       // upload and resize image first
       var picker = ImagePicker();
       var pickedFile = await picker.getImage(
-          source: ImageSource.camera, maxWidth: 200.0, maxHeight: 200.0);
+          source: ImageSource.camera, maxWidth: 200.0, maxHeight: 300.0);
       imageFile = File(pickedFile.path);
       //imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
     }
