@@ -4,6 +4,7 @@ import 'package:contacts_service/contacts_service.dart' as CS;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:international_phone_input/international_phone_input.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
@@ -137,6 +138,7 @@ class FriendAddDialogState extends State<FriendAddDialog> {
   String phoneISOCode;
   bool isValidPhoneNumber = false;
   File _image;
+  String errorMessage;
   final _friendFormKey = GlobalKey<FormState>();
   var newFriend =
       new FriendModel(null, null, null, null, null, null, null, null);
@@ -184,7 +186,7 @@ class FriendAddDialogState extends State<FriendAddDialog> {
               new TextFormField(
                 initialValue: widget.contact.fullName,
                 decoration: const InputDecoration(
-                  icon: const Icon(Icons.restaurant),
+                  icon: const FaIcon(FontAwesomeIcons.idCard),
                   hintText: 'You can change your friend display name here',
                   labelText: 'Friend Name',
                 ),
@@ -237,6 +239,7 @@ class FriendAddDialogState extends State<FriendAddDialog> {
                     ? Text('No image selected.')
                     : Image.file(_image),
               ),
+              Text((errorMessage==null)?"":errorMessage, style: TextStyle(color: Colors.red),),
               RaisedButton(
                 onPressed: () {
                   try {
@@ -271,6 +274,9 @@ class FriendAddDialogState extends State<FriendAddDialog> {
                           }
                         } else {
                           // do nothing
+                          setState(() {
+                            errorMessage = "Invalid phone number";
+                          });
                         }
                       });
                     } else {
@@ -280,7 +286,6 @@ class FriendAddDialogState extends State<FriendAddDialog> {
                     isValidPhoneNumber = false;
                   }
                 },
-                color: (isValidPhoneNumber) ? Colors.blue : Colors.grey,
                 child: Text('Submit'),
               )
             ],
