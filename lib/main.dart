@@ -73,10 +73,12 @@ class MyAppState extends State<MyApp> {
               if (state is AuthenticatedState) {
                 return HomeScreen(state.displayName);
               }
-              return Scaffold(
-                  body: Container(
-                child: Text(delegate.loginFailed),
-              ));
+              if (state is LogInFailureState) {
+                return Scaffold(
+                    body: Container(
+                  child: Text(delegate.loginFailed),
+                ));
+              }
             },
           ),
         )));
