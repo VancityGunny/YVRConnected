@@ -78,7 +78,11 @@ class FriendOptionsDialogState extends State<FriendOptionsDialog> {
     File imageFile;
     if (includeImageFlag) {
       // upload and resize image first
-      imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+      var picker = ImagePicker();
+      var pickedFile = await picker.getImage(
+          source: ImageSource.camera, maxWidth: 200.0, maxHeight: 200.0);
+      imageFile = File(pickedFile.path);
+      //imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
     }
     if (includeImageFlag == false || imageFile != null) {
       await pageCommonBloc.thoughtRepository

@@ -40,11 +40,11 @@ class FriendProvider {
       friendId = friendsRef.documents[0].documentID;
     }
 
-    String thumbPath = (thumbnail.isEmpty == true)
+    String thumbPath = (thumbnail != null && thumbnail.isEmpty == true)
         ? null
         : 'images/users/' + friendId.toString() + '/thumbnail.png';
     //File newThumbnail = File.fromRawPath(thumbnail);
-    if (thumbnail.isEmpty != true) {
+    if (thumbnail != null && thumbnail.isEmpty != true) {
       var uploadTask =
           globals.storage.ref().child(thumbPath).putData(thumbnail);
       //.putFile(newThumbnail);

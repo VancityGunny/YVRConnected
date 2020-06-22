@@ -43,12 +43,13 @@ dependencies:
   firebase_storage: ^3.1.5
   flare_flutter: ^2.0.3
   social_share_plugin: ^0.3.1+1
-  image_picker: ^0.6.6+4
+  image_picker: ^0.6.7+1
   uuid: ^2.0.4
   path_provider: ^1.6.9
   fl_chart: ^0.9.4
   customgauge: ^1.0.1
   provider: ^4.1.2
+  international_phone_input: ^1.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
