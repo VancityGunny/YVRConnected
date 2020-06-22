@@ -79,6 +79,9 @@ class MyAppState extends State<MyApp> {
                   child: Text(delegate.loginFailed),
                 ));
               }
+               return Center(
+                      child: CircularProgressIndicator(),
+                    );
             },
           ),
         )));
