@@ -30,6 +30,8 @@ class CommonBloc extends InheritedWidget {
       BehaviorSubject<List<InteractionModel>>();
   final BehaviorSubject<List<FriendStatModel>> topFiveFriends =
       BehaviorSubject<List<FriendStatModel>>();
+  final BehaviorSubject<List<FriendStatModel>> needAttentionFriends =
+      BehaviorSubject<List<FriendStatModel>>();
 
   static List<ThoughtOptionModel> thoughtOptions =
       new List<ThoughtOptionModel>();
@@ -136,20 +138,46 @@ class CommonBloc extends InheritedWidget {
         allReceivedThoughts.add(newReceivedThoughtsList);
         allSentThoughts.add(newSentThoughtsList);
         topFiveFriends.add(fetchTopFive());
+        needAttentionFriends.add(fetchLowestFive());
       }
     });
   }
 
+  List<FriendStatModel> fetchLowestFive() {
+    var currentFriends = allFriends.value;
+    currentFriends.sort((a, b) {
+      return ((a.lastInteractionSentDate == null)
+              ? DateTime(1900)
+              : a.lastInteractionSentDate)
+          .compareTo((b.lastInteractionSentDate == null)
+              ? DateTime(1900)
+              : b.lastInteractionSentDate);
+      //return a.lastInteractionSentDate.compareTo(b.lastInteractionSentDate);
+    });
+    List<FriendStatModel> newStat = List<FriendStatModel>();
+    currentFriends.take(5).forEach((myFriend) {
+      // only care about my currentFriends
+      newStat.add(new FriendStatModel(myFriend, 0));
+    });
+    return newStat;
+  }
+
   List<FriendStatModel> fetchTopFive() {
-    var thoughtsSentLastMonth = allSentThoughts.value.where((t) =>
+    var interactionsSentLastMonth = allSentInteractions.value.where((t) =>
         t.createdDate.add(new Duration(days: 30)).compareTo(DateTime.now()) >=
         0);
-    var thoughtsSentByFriend =
-        groupBy(thoughtsSentLastMonth, (t) => t.toUserId);
+    // var thoughtsSentLastMonth = allSentThoughts.value.where((t) =>
+    //     t.createdDate.add(new Duration(days: 30)).compareTo(DateTime.now()) >=
+    //     0);
+    var interactionsSentByFriend =
+        groupBy(interactionsSentLastMonth, (t) => t.toUserId);
+
+    // var thoughtsSentByFriend =
+    // groupBy(thoughtsSentLastMonth, (t) => t.toUserId);
 
     var currentFriends = allFriends.value;
     List<FriendStatModel> newStat = List<FriendStatModel>();
-    thoughtsSentByFriend.forEach((index, value) {
+    interactionsSentByFriend.forEach((index, value) {
       // only care about my currentFriends
       if (currentFriends.any((f) => f.friendUserId == index)) {
         FriendModel myFriend =
@@ -157,6 +185,14 @@ class CommonBloc extends InheritedWidget {
         newStat.add(new FriendStatModel(myFriend, value.length));
       }
     });
+    // thoughtsSentByFriend.forEach((index, value) {
+    //   // only care about my currentFriends
+    //   if (currentFriends.any((f) => f.friendUserId == index)) {
+    //     FriendModel myFriend =
+    //         allFriends.value.where((f) => f.friendUserId == index).first;
+    //     newStat.add(new FriendStatModel(myFriend, value.length));
+    //   }
+    // });
     newStat.sort((a, b) {
       return b.thoughtSent
           .compareTo(a.thoughtSent); //order from most thought sent to

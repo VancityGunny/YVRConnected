@@ -166,59 +166,69 @@ class FriendDetailPageState extends State<FriendDetailPage> {
                               .inHours <
                           24);
 
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: CommonBloc.interactionOptions.map((intOpt) {
-                      var isRecentInteraction = false;
-                      var lastSentInteractionTime;
-                      var lastSentInteraction = recentInteractions
-                          .toList()
-                          .firstWhere(
-                              (f) => f.interactionOptionCode == intOpt.code,
-                              orElse: () => null);
+                  return Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: CommonBloc.interactionOptions.map((intOpt) {
+                        var isRecentInteraction = false;
+                        var lastSentInteractionTime;
+                        var lastSentInteraction = recentInteractions
+                            .toList()
+                            .firstWhere(
+                                (f) => f.interactionOptionCode == intOpt.code,
+                                orElse: () => null);
 
-                      if (lastSentInteraction != null) {
-                        isRecentInteraction = true;
-                        lastSentInteractionTime =
-                            CommonFunctions.formatPostDateForDisplay(
-                                lastSentInteraction.createdDate, context);
-                      }
+                        if (lastSentInteraction != null) {
+                          isRecentInteraction = true;
+                          lastSentInteractionTime =
+                              CommonFunctions.formatPostDateForDisplay(
+                                  lastSentInteraction.createdDate, context);
+                        }
 
-                      return Container(
-                          child: (isRecentInteraction)
-                              ? Wrap(
-                                  children: <Widget>[
-                                    Wrap(
-                                      spacing: 10.0,
-                                      children: <Widget>[
-                                        Icon(intOpt.icon.icon,
-                                            color: Colors.green, size: 18.0),
-                                        Column(
-                                          children: <Widget>[
-                                            Text(
-                                              delegate.dailyContactLabel,
-                                              style: TextStyle(fontSize: 10.0),
-                                            ),
-                                            Text(
-                                              lastSentInteractionTime,
-                                              style: TextStyle(fontSize: 10.0),
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                )
-                              : RaisedButton(
-                                  color: Colors.white,
-                                  onPressed: () {
-                                    sendInteraction(intOpt.code);
-                                  },
-                                  child: Icon(intOpt.icon.icon,
-                                      color: Colors.black),
-                                ));
-                    }).toList(),
-                  );
+                        return Container(
+                            child: (isRecentInteraction)
+                                ? Wrap(
+                                    children: <Widget>[
+                                      Wrap(
+                                        spacing: 10.0,
+                                        children: <Widget>[
+                                          Icon(intOpt.icon.icon,
+                                              color: Colors.green, size: 18.0),
+                                          Column(
+                                            children: <Widget>[
+                                              Text(
+                                                delegate.dailyContactLabel,
+                                                style:
+                                                    TextStyle(fontSize: 10.0),
+                                              ),
+                                              Text(
+                                                lastSentInteractionTime,
+                                                style:
+                                                    TextStyle(fontSize: 10.0),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  )
+                                : RaisedButton(
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      sendInteraction(intOpt.code);
+                                    },
+                                    child: Icon(intOpt.icon.icon,
+                                        color: Colors.black),
+                                  ));
+                      }).toList(),
+                    ),
+                    Text(delegate.latestInteractionCaption +
+                        ' :' +
+                        (widget.currentFriend.lastInteractionSentDate == null
+                            ? 'NULL'
+                            : widget.currentFriend.lastInteractionSentDate
+                                .toIso8601String()))
+                  ]);
                 }),
             Expanded(
               child: Column(

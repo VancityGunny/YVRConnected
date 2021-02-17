@@ -110,7 +110,7 @@ class FriendScreenState extends State<FriendScreen> {
                             child: Align(
                                 child: Text(curFriend.displayName,
                                     style: TextStyle(color: Colors.deepPurple)),
-                                alignment: Alignment.topLeft),
+                                alignment: Alignment.center),
                           ),
                         )
                       ],

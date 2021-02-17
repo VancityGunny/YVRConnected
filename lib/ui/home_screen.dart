@@ -68,7 +68,7 @@ class HomeScreenState extends State<HomeScreen> {
                     showAboutDialog(
                         context: context,
                         applicationName: 'YVRFriends',
-                        applicationVersion: '0.0.1b');
+                        applicationVersion: '0.0.6b');
                   },
                 ),
                 IconButton(

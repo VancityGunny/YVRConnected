@@ -21,10 +21,9 @@ class ThoughtRepository {
 
   Future<String> addThought(
       ThoughtModel newThought, File newImage, BuildContext context) async {
-        
     var uuid = new Uuid();
     var newThoughtId = uuid.v1();
-    
+
     var localPath = await CommonBloc.of(context).localPath;
     if (newImage != null) {
       IM.Image originalImage = IM.decodeImage(newImage.readAsBytesSync());
@@ -52,18 +51,18 @@ class ThoughtRepository {
 
   Future<String> addInteraction(
       InteractionModel newInteraction, BuildContext context) async {
-        
     var uuid = new Uuid();
     var newInteractionId = uuid.v1();
-    
-    
-    await this._thoughtProvider.addInteraction(newInteractionId, newInteraction);
+
+    await this
+        ._thoughtProvider
+        .addInteraction(newInteractionId, newInteraction);
 
     if (newInteractionId != null) {
       // update latestInteractionSent for that friend
       var friendProvider = FriendProvider();
-      friendProvider.updateFriendLastInteracted(
-          newInteraction.toUserId, newInteraction.interactionOptionCode, context);
+      friendProvider.updateFriendLastInteracted(newInteraction.toUserId,
+          newInteraction.interactionOptionCode, context);
     }
     return newInteractionId;
   }
@@ -75,6 +74,7 @@ class ThoughtRepository {
   void updateReceivedThoughts(List<ThoughtModel> updatedThoughts) {
     this._thoughtProvider.updateReceivedThoughts(updatedThoughts);
   }
+
   void updateSentInteractions(List<InteractionModel> updatedInteractions) {
     this._thoughtProvider.updateSentInteractions(updatedInteractions);
   }

@@ -1,5 +1,6 @@
 {
     "activeFriendsTitle": "仲の良いお友達",
+    "needyFriendsTitle": "疎遠な友達",
     "seeAllFriendsButton": "全てのお友達",
     "loginFailed": "登録失敗",
     "friendshipLabel": "友情",
@@ -37,5 +38,6 @@
     "codeMissYouOneWord":"想",
     "codeWishUWereHereOneWord":"願",
     "codeGoodOldTimeOneWord":"懐",
-    "codeGratefulForYouOneWord":"感謝"
+    "codeGratefulForYouOneWord":"感謝",
+    "latestInteractionCaption":"Latest Interaction"
 }

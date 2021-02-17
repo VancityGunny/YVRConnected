@@ -1,5 +1,6 @@
 {
     "activeFriendsTitle": "เพื่อนซี้ประจำสัปดาห์",
+    "needyFriendsTitle": "เพื่อนที่ห่างเหิน",
     "seeAllFriendsButton": "ดูเพื่อนทั้งหมด",
     "loginFailed": "ล๊อกอินไม่ได้",
     "friendshipLabel": "มิตรภาพ",
@@ -37,5 +38,6 @@
     "codeMissYouOneWord":"คิดถึง",
     "codeWishUWereHereOneWord":"ใกล้",
     "codeGoodOldTimeOneWord":"รำลึก",
-    "codeGratefulForYouOneWord":"ขอบคุณ"
+    "codeGratefulForYouOneWord":"ขอบคุณ",
+    "latestInteractionCaption":"ติดต่อล่าสุด"
 }

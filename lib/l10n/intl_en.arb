@@ -1,5 +1,6 @@
 {
     "activeFriendsTitle": "Active Friends",
+    "needyFriendsTitle": "Estranged Friends",
     "seeAllFriendsButton": "See All Friends",
     "loginFailed": "Login Failed",
     "friendshipLabel": "Friendship",
@@ -37,5 +38,6 @@
     "codeMissYouOneWord":"Miss",
     "codeWishUWereHereOneWord":"Wish",
     "codeGoodOldTimeOneWord":"Oldtime",
-    "codeGratefulForYouOneWord":"Grateful"
+    "codeGratefulForYouOneWord":"Grateful",
+    "latestInteractionCaption":"Latest Interaction"
 }

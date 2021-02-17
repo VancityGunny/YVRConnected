@@ -61,7 +61,7 @@ class _LoginOTPState extends State<LoginOTP> {
                             onChanged: (input) => _phoneNumber = input,
                             decoration: InputDecoration(
                               labelText: "Phone number",
-                              hintText: "+00 000 000 000",
+                              hintText: "+00 000-000-000",
                             ),
                             keyboardType: TextInputType.phone,
                             // onChanged: (value) => _phoneNumber = value,

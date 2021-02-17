@@ -27,7 +27,6 @@ class HomeLatestWidget extends StatefulWidget {
 
 class HomeLatestWidgetState extends State<HomeLatestWidget> {
   CommonBloc pageCommonBloc;
-  List<FriendStatModel> topFiveFriends = List<FriendStatModel>();
   List<FlSpot> graphData = List<FlSpot>();
   List<FlSpot> graphInteractionsData = new List<FlSpot>();
   List<Color> gradientColors = [
@@ -54,17 +53,6 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
   @override
   void initState() {
     super.initState();
-
-    //load latest thoughts
-    ThoughtProvider thoughtProvider = ThoughtProvider();
-
-    thoughtProvider.fetchTopFive(context).then((result) {
-      // If we need to rebuild the widget with the resulting data,
-      // make sure to use `setState`
-      setState(() {
-        topFiveFriends = result;
-      });
-    });
   }
 
   @override
@@ -101,6 +89,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                           size: 100, color: Color.fromARGB(15, 0, 0, 0)));
                 }
                 return ListView.builder(
+                    shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext ctxt, int index) {
@@ -111,61 +100,137 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
                       }
 
                       return Container(
-                          width: 70.0,
-                          child: Stack(children: <Widget>[
-                            FlareActor(
-                              (isBoy)
-                                  ? "graphics/boybody.flr"
-                                  : "graphics/girlbody.flr",
-                              animation: (isBoy) ? 'idleboy' : 'idlegirl',
-                              fit: BoxFit.contain,
-                              alignment: Alignment.bottomCenter,
-                            ),
+                        width: 80.0,
+                        child: Column(
+                          children: <Widget>[
+                            Hero(
+                                tag: snapshot.data[index].friend.friendUserId,
+                                child: Container(
+                                    //foregroundDecoration: friendDecoration,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: new DecorationImage(
+                                          image: FadeInImage(
+                                            width: 70.0,
+                                            height: 70.0,
+                                            placeholder: Image.asset(
+                                                    'graphics/default_user_thumbnail.png')
+                                                .image,
+                                            image: (snapshot.data[index].friend
+                                                        .thumbnail ==
+                                                    null)
+                                                ? Image.asset(
+                                                        'graphics/default_user_thumbnail.png')
+                                                    .image
+                                                : Image.network(snapshot
+                                                        .data[index]
+                                                        .friend
+                                                        .thumbnail)
+                                                    .image,
+                                          ).image,
+                                          fit: BoxFit.cover),
+                                    ),
+                                    width: 70,
+                                    height: 70)),
                             Container(
-                                alignment: Alignment.topCenter,
-                                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                // top: 10,
-                                // left: 12,
-                                child: ClipOval(
-                                    child: Align(
-                                        alignment: Alignment.center,
-                                        widthFactor: 0.80,
-                                        heightFactor: 1.0,
-                                        child: Hero(
-                                            tag: snapshot.data[index].friend
-                                                .friendUserId,
-                                            child: FadeInImage(
-                                                width: 50.0,
-                                                height: 50.0,
-                                                placeholder: Image.asset(
-                                                  'graphics/default_user_thumbnail.png',
-                                                  width: 50.0,
-                                                  height: 50.0,
-                                                ).image,
-                                                image: (snapshot.data[index]
-                                                            .friend.thumbnail ==
-                                                        null)
-                                                    ? Image.asset(
-                                                        'graphics/default_user_thumbnail.png',
-                                                        width: 50.0,
-                                                        height: 50.0,
-                                                      ).image
-                                                    : Image.network(
-                                                        snapshot.data[index]
-                                                            .friend.thumbnail,
-                                                        width: 50.0,
-                                                        height: 50.0,
-                                                      ).image))))),
-                            Container(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                  (isBoy)
-                                      ? "graphics/boyhair.png"
-                                      : 'graphics/girlhair.png',
-                                  width: 50.0,
-                                  height: 50.0),
+                              child: Flexible(
+                                child: Align(
+                                    child: Text(
+                                        snapshot.data[index].friend.displayName,
+                                        style: TextStyle(
+                                            color: Colors.deepPurple)),
+                                    alignment: Alignment.center),
+                              ),
                             )
-                          ]));
+                          ],
+                        ),
+                      );
+                    });
+              },
+            )),
+        Container(
+            padding: EdgeInsets.all(10),
+            child: RichText(
+                text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: [
+                  TextSpan(
+                      text: delegate.needyFriendsTitle,
+                      style: TextStyle(color: Colors.black, fontSize: 20))
+                ]))),
+        Container(
+            height: 110,
+            child: StreamBuilder(
+              stream: pageCommonBloc.needAttentionFriends.stream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.data.length == 0) {
+                  return Container(
+                      alignment: Alignment.center,
+                      child: FaIcon(FontAwesomeIcons.userPlus,
+                          size: 100, color: Color.fromARGB(15, 0, 0, 0)));
+                }
+                return ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext ctxt, int index) {
+                      var random = new Random();
+                      var isBoy = true;
+                      if (random.nextInt(2) == 1) {
+                        isBoy = false;
+                      }
+
+                      return Container(
+                        width: 80.0,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                                foregroundDecoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey,
+                                  backgroundBlendMode: BlendMode.saturation,
+                                ),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: new DecorationImage(
+                                      image: FadeInImage(
+                                        width: 70.0,
+                                        height: 70.0,
+                                        placeholder: Image.asset(
+                                                'graphics/default_user_thumbnail.png')
+                                            .image,
+                                        image: (snapshot.data[index].friend
+                                                    .thumbnail ==
+                                                null)
+                                            ? Image.asset(
+                                                    'graphics/default_user_thumbnail.png')
+                                                .image
+                                            : Image.network(snapshot.data[index]
+                                                    .friend.thumbnail)
+                                                .image,
+                                      ).image,
+                                      fit: BoxFit.cover),
+                                ),
+                                width: 70,
+                                height: 70),
+                            Container(
+                              child: Flexible(
+                                child: Align(
+                                    child: Text(
+                                        snapshot.data[index].friend.displayName,
+                                        style: TextStyle(
+                                            color: Colors.deepPurple)),
+                                    alignment: Alignment.center),
+                              ),
+                            )
+                          ],
+                        ),
+                      );
                     });
               },
             )),
@@ -463,7 +528,7 @@ class HomeLatestWidgetState extends State<HomeLatestWidget> {
               case 9:
                 return '9';
               case 12:
-                return  delegate.daysAgoSuffix;
+                return delegate.daysAgoSuffix;
             }
             return '';
           },
