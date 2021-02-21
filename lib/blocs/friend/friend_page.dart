@@ -39,6 +39,7 @@ class FriendPage extends StatefulWidget {
 class _FriendPageState extends State<FriendPage> {
   List<FriendModel> friends;
   Uint8List friendThumbnail;
+  String friendEmail;
   bool isMaxFriends = false;
   CommonBloc pageCommonBloc;
   @override
@@ -78,13 +79,16 @@ class _FriendPageState extends State<FriendPage> {
   void _addFriend() async {
     // make sure that the friend is not already in the list
     final PhoneContact contact = await FlutterContactPicker.pickPhoneContact();
+    CS.Contact foundContact;
     Uint8List thumbnail;
     // fetch more contact detail
     if (await Permission.contacts.request().isGranted) {
       Iterable<CS.Contact> foundContacts =
           await CS.ContactsService.getContacts(query: contact.fullName);
+      foundContact = foundContacts.first;
       if (foundContacts.length > 0) {
         thumbnail = foundContacts.first.avatar;
+        this.friendEmail = (foundContacts.first.emails.first?.value);
         this.friendThumbnail = (thumbnail.isEmpty == true) ? null : thumbnail;
       }
 
@@ -94,7 +98,7 @@ class _FriendPageState extends State<FriendPage> {
     var result = await showDialog(
         context: context,
         builder: (_) {
-          return FriendAddDialog(contact, thumbnail);
+          return FriendAddDialog(foundContact);
         });
     var newFriend;
     if (result != null) {
@@ -103,8 +107,9 @@ class _FriendPageState extends State<FriendPage> {
     } else {
       return;
     }
-    FriendModel dupFriend = pageCommonBloc.allFriends.value
-        .firstWhere((f) => f.phone == newFriend.phone, orElse: () => null);
+    FriendModel dupFriend = pageCommonBloc.allFriends.value.firstWhere(
+        (f) => f.phone == newFriend.phone || f.email == newFriend.email,
+        orElse: () => null);
 
     if (dupFriend == null) {
       BlocProvider.of<FriendBloc>(context)
@@ -116,9 +121,8 @@ class _FriendPageState extends State<FriendPage> {
 }
 
 class FriendAddDialog extends StatefulWidget {
-  final PhoneContact contact;
-  Uint8List thumbnail;
-  FriendAddDialog(this.contact, this.thumbnail);
+  final CS.Contact contact;
+  FriendAddDialog(this.contact);
 
   @override
   FriendAddDialogState createState() {
@@ -138,13 +142,13 @@ class FriendAddDialogState extends State<FriendAddDialog> {
   String errorMessage;
   final _friendFormKey = GlobalKey<FormState>();
   var newFriend =
-      new FriendModel(null, null, null, null, null, null, null, null);
+      new FriendModel(null, null, null, null, null, null, null, null, null);
   List<Country> allowedCountries = new List<Country>();
 
   @override
   void initState() {
     super.initState();
-    _image = widget.thumbnail;
+    _image = widget.contact.avatar;
     _formattedPhoneNumber = PhoneService.fetchCountryData(
             context, 'packages/international_phone_input/assets/countries.json')
         .then((list) {
@@ -152,7 +156,7 @@ class FriendAddDialogState extends State<FriendAddDialog> {
       allowedCountries.addAll(
           list.where((element) => allowedCountryCodes.contains(element.code)));
       var pureNumber = intRegex
-          .allMatches(widget.contact.phoneNumber.number)
+          .allMatches(widget.contact.phones.first?.value)
           .map((m) => m.group(0));
       var pureNumberString = pureNumber.fold(
           '', (previousValue, element) => previousValue + element);
@@ -174,7 +178,7 @@ class FriendAddDialogState extends State<FriendAddDialog> {
   @override
   Widget build(BuildContext context) {
     FriendModel newFriend =
-        new FriendModel(null, null, null, null, null, null, null, null);
+        new FriendModel(null, null, null, null, null, null, null, null, null);
     return SimpleDialog(
       children: <Widget>[
         Form(
@@ -182,7 +186,7 @@ class FriendAddDialogState extends State<FriendAddDialog> {
           child: Column(
             children: <Widget>[
               new TextFormField(
-                initialValue: widget.contact.fullName,
+                initialValue: widget.contact.displayName,
                 decoration: const InputDecoration(
                   icon: const FaIcon(FontAwesomeIcons.idCard),
                   hintText: 'You can change your friend display name here',
@@ -193,6 +197,20 @@ class FriendAddDialogState extends State<FriendAddDialog> {
                     val.isEmpty ? 'Friend name is required' : null,
                 onSaved: (String value) {
                   newFriend.displayName = value;
+                },
+              ),
+              new TextFormField(
+                initialValue: widget.contact.emails.first?.value,
+                decoration: const InputDecoration(
+                  icon: const FaIcon(FontAwesomeIcons.idCard),
+                  hintText: 'You can change your friend email address here',
+                  labelText: 'Friend Email',
+                ),
+                inputFormatters: [new LengthLimitingTextInputFormatter(50)],
+                validator: (val) =>
+                    val.isEmpty ? 'Friend email is required' : null,
+                onSaved: (String value) {
+                  newFriend.email = value;
                 },
               ),
               FutureBuilder(

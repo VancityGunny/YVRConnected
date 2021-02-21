@@ -32,7 +32,13 @@ class FriendProvider {
         .where('phone', isEqualTo: newFriend.phone)
         .limit(1)
         .getDocuments();
-    var newFriendFlag = (friendsRef.documents.length == 0);
+    var friendsByEmailRef = await _firestore
+        .collection('/users')
+        .where('email', isEqualTo: newFriend.email)
+        .limit(1)
+        .getDocuments();
+    var newFriendFlag = (friendsRef.documents.length == 0 &&
+        friendsByEmailRef.documents.length == 0);
     if (newFriendFlag) {
       var uuid = new Uuid();
       friendId = uuid.v1();
@@ -56,8 +62,8 @@ class FriendProvider {
       UserProvider userProvider = UserProvider();
       await userProvider.addUser(
           friendId,
-          UserModel(null, null, newFriend.displayName, newFriend.phone, [], [],
-              thumbPath));
+          UserModel(null, newFriend.email, newFriend.displayName,
+              newFriend.phone, [], [], thumbPath));
     }
 
     if (friendId != null) {
@@ -71,6 +77,7 @@ class FriendProvider {
             'friendId': friendId,
             'friendName': newFriend.displayName,
             'friendPhone': newFriend.phone,
+            'friendEmail': newFriend.email,
             'thumbnail': thumbUrl
           }
         ])
@@ -89,7 +96,6 @@ class FriendProvider {
   // update friendLast sent and the thoughts stat
   void updateFriendLastSent(
       String toUserId, String thoughtOptionCode, BuildContext context) async {
-   
     var userRef =
         _firestore.collection('/users').document(globals.currentUserId);
     var currentFriends = CommonBloc.of(context).allFriends.value;
@@ -151,6 +157,7 @@ class FriendProvider {
             'friendId': senderId,
             'friendName': sender.displayName,
             'friendPhone': sender.phone,
+            'friendEmail': sender.email,
             'thumbnail': sender.thumbnail
           }
         ])
@@ -163,13 +170,12 @@ class FriendProvider {
         await _firestore.collection('/users').document(fromUserId).get();
     var foundUser = UserModel.fromJson(foundFriend.data);
 
-    return FriendModel(fromUserId, foundUser.phone, foundUser.displayName,
-        foundUser.photoUrl, null, null, null, null);
+    return FriendModel(fromUserId, foundUser.phone, foundUser.email,
+        foundUser.displayName, foundUser.photoUrl, null, null, null, null);
   }
 
   void updateFriendLastInteracted(String toUserId, String interactionOptionCode,
       BuildContext context) async {
-    
     var userRef =
         _firestore.collection('/users').document(globals.currentUserId);
     var currentFriends = CommonBloc.of(context).allFriends.value;
