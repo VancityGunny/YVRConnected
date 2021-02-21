@@ -127,7 +127,7 @@ class FriendAddDialog extends StatefulWidget {
 }
 
 class FriendAddDialogState extends State<FriendAddDialog> {
-  List<String> allowedCountryCodes = ['JP', 'TH', 'CA', 'US', 'GB'];
+  List<String> allowedCountryCodes = ['JP', 'TH', 'CA', 'US', 'GB', 'HU'];
   Future<Map<String, dynamic>> _formattedPhoneNumber;
   final TextEditingController txtPhoneController = TextEditingController();
   final intRegex = RegExp(r'(\d+)', multiLine: true);
