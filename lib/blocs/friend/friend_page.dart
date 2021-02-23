@@ -274,6 +274,9 @@ class FriendAddDialogState extends State<FriendAddDialog> {
                       initialValue: snapshot.data,
                       textFieldController: controller,
                       inputBorder: OutlineInputBorder(),
+                      onSaved: (IPI.PhoneNumber value) {
+                        newFriend.phone = value.phoneNumber;
+                      },
                     );
                   }),
               Container(
@@ -314,6 +317,8 @@ class FriendAddDialogState extends State<FriendAddDialog> {
 
                       //   if (isValidPhoneNumber) {
                       // do save
+                      newFriend.phone =
+                          phoneNumber; // dont know why onsaved for phone textbox doesn't call before this
                       if (_image == null) {
                         Navigator.of(context)
                             .pop({"newFriend": newFriend, "thumbnail": null});
