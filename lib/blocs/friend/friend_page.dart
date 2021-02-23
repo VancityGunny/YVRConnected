@@ -6,8 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:international_phone_input/international_phone_input.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+import 'package:international_phone_input/international_phone_input.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart' as IPI;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:yvrfriends/blocs/friend/index.dart';
 import 'package:yvrfriends/common/common_bloc.dart';
@@ -88,7 +89,9 @@ class _FriendPageState extends State<FriendPage> {
       foundContact = foundContacts.first;
       if (foundContacts.length > 0) {
         thumbnail = foundContacts.first.avatar;
-        this.friendEmail = (foundContacts.first.emails.first?.value);
+        this.friendEmail = (foundContacts.first.emails.isEmpty
+            ? null
+            : foundContacts.first.emails.first.value);
         this.friendThumbnail = (thumbnail.isEmpty == true) ? null : thumbnail;
       }
 
@@ -132,7 +135,7 @@ class FriendAddDialog extends StatefulWidget {
 
 class FriendAddDialogState extends State<FriendAddDialog> {
   List<String> allowedCountryCodes = ['JP', 'TH', 'CA', 'US', 'GB', 'HU'];
-  Future<Map<String, dynamic>> _formattedPhoneNumber;
+
   final TextEditingController txtPhoneController = TextEditingController();
   final intRegex = RegExp(r'(\d+)', multiLine: true);
   String phoneNumber;
@@ -140,6 +143,11 @@ class FriendAddDialogState extends State<FriendAddDialog> {
   bool isValidPhoneNumber = false;
   Uint8List _image;
   String errorMessage;
+
+  final TextEditingController controller = TextEditingController();
+  String initialCountry = 'CA';
+  IPI.PhoneNumber _number = IPI.PhoneNumber(isoCode: 'CA');
+  Future<IPI.PhoneNumber> _formattedPhoneNumber;
   final _friendFormKey = GlobalKey<FormState>();
   var newFriend =
       new FriendModel(null, null, null, null, null, null, null, null, null);
@@ -155,23 +163,37 @@ class FriendAddDialogState extends State<FriendAddDialog> {
       // only match allowed country code
       allowedCountries.addAll(
           list.where((element) => allowedCountryCodes.contains(element.code)));
-      var pureNumber = intRegex
-          .allMatches(widget.contact.phones.first?.value)
-          .map((m) => m.group(0));
+      if (widget.contact.phones.length == 0) {
+        //phone not found
+        return IPI.PhoneNumber();
+      }
+      var tempPhoneNumber = widget.contact.phones.first?.value;
+      var tempCountryCode = 'CA';
+      var tempCountryDialCode = '+1';
+      var pureNumber =
+          intRegex.allMatches(tempPhoneNumber).map((m) => m.group(0));
       var pureNumberString = pureNumber.fold(
           '', (previousValue, element) => previousValue + element);
       List<Country> countries = PhoneService.getPotentialCountries(
           pureNumberString, allowedCountries);
       Map<String, dynamic> result = new Map<String, dynamic>();
       if (countries.length > 0) {
-        result.putIfAbsent('formattedCountryCode', () => countries.first.code);
-        //guessing this so extract that number out.
-        pureNumberString = pureNumberString
-            .toString()
-            .substring(countries.first.dialCode.length - 1);
+        tempCountryDialCode = countries.first.dialCode;
+        tempCountryCode = countries.first.code;
+        // result.putIfAbsent('formattedCountryCode', () => countries.first.code);
+        // //guessing this so extract that number out.
+        // pureNumberString = pureNumberString
+        //     .toString()
+        //     .substring(countries.first.dialCode.length - 1);
+      } else {
+        //if can't find country, maybe append default +1 country code rather than guessing
+        tempPhoneNumber = tempCountryDialCode + tempPhoneNumber;
       }
       result.putIfAbsent('formattedPhoneNumber', () => pureNumberString);
-      return result;
+      return IPI.PhoneNumber(
+          dialCode: tempCountryDialCode,
+          isoCode: tempCountryCode,
+          phoneNumber: tempPhoneNumber);
     });
   }
 
@@ -200,7 +222,9 @@ class FriendAddDialogState extends State<FriendAddDialog> {
                 },
               ),
               new TextFormField(
-                initialValue: widget.contact.emails.first?.value,
+                initialValue: (widget.contact.emails.isEmpty
+                    ? null
+                    : widget.contact.emails.first.value),
                 decoration: const InputDecoration(
                   icon: const FaIcon(FontAwesomeIcons.idCard),
                   hintText: 'You can change your friend email address here',
@@ -214,36 +238,44 @@ class FriendAddDialogState extends State<FriendAddDialog> {
                 },
               ),
               FutureBuilder(
-                future: this._formattedPhoneNumber,
-                builder: (BuildContext context,
-                    AsyncSnapshot<Map<String, dynamic>> snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: CircularProgressIndicator(),
+                  future: this._formattedPhoneNumber,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<IPI.PhoneNumber> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    // phoneNumber = snapshot.data['formattedPhoneNumber'];
+                    // if (snapshot.data['formattedCountryCode'] == null) {
+                    //   phoneISOCode = 'CA'; // currently default is CA +1
+                    // } else {
+                    //   phoneISOCode = snapshot.data['formattedCountryCode'];
+                    // }
+                    var pureNumberString = snapshot.data.phoneNumber
+                        .substring(snapshot.data.dialCode.length);
+                    controller.text = pureNumberString;
+                    return IPI.InternationalPhoneNumberInput(
+                      onInputChanged: (IPI.PhoneNumber number) {
+                        phoneNumber = number.phoneNumber;
+                        phoneISOCode = number.isoCode;
+                        //print(number);
+                      },
+                      onInputValidated: (bool value) {
+                        print(value);
+                      },
+                      selectorConfig: IPI.SelectorConfig(
+                        selectorType: IPI.PhoneInputSelectorType.BOTTOM_SHEET,
+                        backgroundColor: Colors.white,
+                      ),
+                      ignoreBlank: false,
+                      autoValidateMode: AutovalidateMode.disabled,
+                      selectorTextStyle: TextStyle(color: Colors.black),
+                      initialValue: snapshot.data,
+                      textFieldController: controller,
+                      inputBorder: OutlineInputBorder(),
                     );
-                  }
-                  phoneNumber = snapshot.data['formattedPhoneNumber'];
-                  if (snapshot.data['formattedCountryCode'] == null) {
-                    phoneISOCode = 'CA'; // currently default is CA +1
-                  } else {
-                    phoneISOCode = snapshot.data['formattedCountryCode'];
-                  }
-
-                  return InternationalPhoneInput(
-                    decoration:
-                        InputDecoration.collapsed(hintText: '(123) 123-1234'),
-                    initialPhoneNumber: snapshot.data['formattedPhoneNumber'],
-                    initialSelection: snapshot.data['formattedCountryCode'],
-                    enabledCountries: allowedCountryCodes,
-                    showCountryCodes: true,
-                    showCountryFlags: true,
-                    onPhoneNumberChange: onPhoneNumberChange,
-                    errorText: (isValidPhoneNumber != true)
-                        ? "Invalid Phone Number"
-                        : "",
-                  );
-                },
-              ),
+                  }),
               Container(
                 child: OutlineButton(
                   child: Text('Add Image'),
@@ -251,7 +283,7 @@ class FriendAddDialogState extends State<FriendAddDialog> {
                 ),
               ),
               Center(
-                child: _image == null
+                child: _image.isEmpty
                     ? Text('No image selected.')
                     : Image.memory(_image),
               ),
@@ -268,34 +300,34 @@ class FriendAddDialogState extends State<FriendAddDialog> {
                     }
                     form.save();
                     if (phoneNumber.length > 0) {
-                      PhoneService.parsePhoneNumber(phoneNumber, phoneISOCode)
-                          .then((value) {
-                        isValidPhoneNumber = value;
-                        if (isValidPhoneNumber) {
-                          newFriend.phone = this
-                                  .allowedCountries
-                                  .firstWhere(
-                                      (element) => element.code == phoneISOCode)
-                                  .dialCode +
-                              phoneNumber.trim();
-                        }
+                      // PhoneService.parsePhoneNumber(phoneNumber, phoneISOCode)
+                      //     .then((value) {
+                      //   isValidPhoneNumber = value;
+                      //   if (isValidPhoneNumber) {
+                      //     newFriend.phone = this
+                      //             .allowedCountries
+                      //             .firstWhere(
+                      //                 (element) => element.code == phoneISOCode)
+                      //             .dialCode +
+                      //         phoneNumber.trim();
+                      //   }
 
-                        if (isValidPhoneNumber) {
-                          // do save
-                          if (_image == null) {
-                            Navigator.of(context).pop(
-                                {"newFriend": newFriend, "thumbnail": null});
-                          } else {
-                            Navigator.of(context).pop(
-                                {"newFriend": newFriend, "thumbnail": _image});
-                          }
-                        } else {
-                          // do nothing
-                          setState(() {
-                            errorMessage = "Invalid phone number";
-                          });
-                        }
-                      });
+                      //   if (isValidPhoneNumber) {
+                      // do save
+                      if (_image == null) {
+                        Navigator.of(context)
+                            .pop({"newFriend": newFriend, "thumbnail": null});
+                      } else {
+                        Navigator.of(context)
+                            .pop({"newFriend": newFriend, "thumbnail": _image});
+                      }
+                      //   } else {
+                      //     // do nothing
+                      //     setState(() {
+                      //       errorMessage = "Invalid phone number";
+                      //     });
+                      //   }
+                      // });
                     } else {
                       isValidPhoneNumber = false;
                     }
@@ -312,11 +344,11 @@ class FriendAddDialogState extends State<FriendAddDialog> {
     );
   }
 
-  void onPhoneNumberChange(
-      String number, String internationalizedPhoneNumber, String isoCode) {
-    phoneNumber = number;
-    phoneISOCode = isoCode;
-  }
+  // void onPhoneNumberChange(
+  //     String number, String internationalizedPhoneNumber, String isoCode) {
+  //   phoneNumber = number;
+  //   phoneISOCode = isoCode;
+  // }
 
   Future getImage() async {
     var picker = ImagePicker();

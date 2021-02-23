@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:yvrfriends/blocs/authentication/auth_bloc.dart';
 import 'package:yvrfriends/blocs/authentication/auth_event.dart';
 import 'package:yvrfriends/blocs/authentication/auth_repository.dart';
@@ -17,6 +18,11 @@ class _LoginOTPState extends State<LoginOTP> {
   String _verId;
   String _phoneNumber;
   String _smsCode;
+
+  final TextEditingController controller = TextEditingController();
+  String initialCountry = 'CA';
+  PhoneNumber _number = PhoneNumber(isoCode: 'CA');
+
   @override
   Widget build(BuildContext context) {
     final delegate = S.of(context);
@@ -49,24 +55,25 @@ class _LoginOTPState extends State<LoginOTP> {
                           ),
                         ),
                       ),
-                      Container(
-                        height: 50.0,
-                        child: Theme(
-                          data: ThemeData(
-                            primaryColor: Colors.grey,
-                          ),
-                          child: TextField(
-                            // enabled: false,
-                            enabled: !sent,
-                            onChanged: (input) => _phoneNumber = input,
-                            decoration: InputDecoration(
-                              labelText: "Phone number",
-                              hintText: "+00 000-000-000",
-                            ),
-                            keyboardType: TextInputType.phone,
-                            // onChanged: (value) => _phoneNumber = value,
-                          ),
+                      InternationalPhoneNumberInput(
+                        onInputChanged: (PhoneNumber number) {
+                          _number = number;
+                          _phoneNumber = number.phoneNumber;
+                          print(number.phoneNumber);
+                        },
+                        onInputValidated: (bool value) {
+                          print(value);
+                        },
+                        selectorConfig: SelectorConfig(
+                          selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                          backgroundColor: Colors.black,
                         ),
+                        ignoreBlank: false,
+                        autoValidateMode: AutovalidateMode.disabled,
+                        selectorTextStyle: TextStyle(color: Colors.black),
+                        initialValue: _number,
+                        textFieldController: controller,
+                        inputBorder: OutlineInputBorder(),
                       ),
                       sent
                           ? Container(

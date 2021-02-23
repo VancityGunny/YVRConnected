@@ -11,7 +11,7 @@ description: Keep your friends even closer
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.0.6+6
+version: 0.0.7+7
 
 environment:
   sdk: ">=2.2.0 <3.0.0"
@@ -31,13 +31,13 @@ dependencies:
   # to access device permission
   permission_handler: ^5.0.0+hotfix.3
   # to access device contact
-  contacts_service: ^0.3.10
+  contacts_service: ^0.4.6
   rxdart: ^0.18.0
   bloc: ^4.0.0
   equatable: ^1.1.1
   flutter_bloc: ^4.0.0
   font_awesome_flutter: ^8.8.1
-  fluttercontactpicker: ^2.3.0
+  fluttercontactpicker: ^4.2.0
   cloud_firestore: ^0.13.5
   collection: ^1.14.11
   firebase_storage: ^3.1.5
@@ -49,6 +49,7 @@ dependencies:
   fl_chart: ^0.9.4
   customgauge: ^1.0.1
   provider: ^4.1.2
+  intl_phone_number_input: ^0.6.0
   international_phone_input: ^1.0.4
   image: ^2.1.19
 dev_dependencies:
