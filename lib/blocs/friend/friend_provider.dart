@@ -32,22 +32,22 @@ class FriendProvider {
         .where('phone', isEqualTo: newFriend.phone)
         .limit(1)
         .getDocuments();
-    var friendsByEmailRef = await _firestore
-        .collection('/users')
-        .where('email', isEqualTo: newFriend.email)
-        .limit(1)
-        .getDocuments();
-    var newFriendFlag = (friendsPhoneRef.documents.length == 0 &&
-        friendsByEmailRef.documents.length == 0);
+    // var friendsByEmailRef = await _firestore
+    //     .collection('/users')
+    //     .where('email', isEqualTo: newFriend.email)
+    //     .limit(1)
+    //     .getDocuments();
+    var newFriendFlag = friendsPhoneRef.documents.length == 0;
+    //  (friendsPhoneRef.documents.length == 0 &&        friendsByEmailRef.documents.length == 0);
     if (newFriendFlag) {
       var uuid = new Uuid();
       friendId = uuid.v1();
     } else {
-      if (friendsPhoneRef.documents.length > 0) {
-        friendId = friendsPhoneRef.documents[0].documentID;
-      } else {
-        friendId = friendsByEmailRef.documents[0].documentID;
-      }
+      // if (friendsPhoneRef.documents.length > 0) {
+      friendId = friendsPhoneRef.documents[0].documentID;
+      // } else {
+      // friendId = friendsByEmailRef.documents[0].documentID;
+      // }
     }
 
     String thumbPath = (thumbnail != null && thumbnail.isEmpty == true)

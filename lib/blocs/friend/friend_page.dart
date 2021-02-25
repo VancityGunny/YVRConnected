@@ -111,7 +111,10 @@ class _FriendPageState extends State<FriendPage> {
       return;
     }
     FriendModel dupFriend = pageCommonBloc.allFriends.value.firstWhere(
-        (f) => f.phone == newFriend.phone || f.email == newFriend.email,
+        (f) =>
+            f.phone == newFriend.phone ||
+            (newFriend.email.toString().isNotEmpty &&
+                f.email == newFriend.email),
         orElse: () => null);
 
     if (dupFriend == null) {
@@ -221,22 +224,6 @@ class FriendAddDialogState extends State<FriendAddDialog> {
                   newFriend.displayName = value;
                 },
               ),
-              new TextFormField(
-                initialValue: (widget.contact.emails.isEmpty
-                    ? null
-                    : widget.contact.emails.first.value),
-                decoration: const InputDecoration(
-                  icon: const FaIcon(FontAwesomeIcons.idCard),
-                  hintText: 'You can change your friend email address here',
-                  labelText: 'Friend Email',
-                ),
-                inputFormatters: [new LengthLimitingTextInputFormatter(50)],
-                validator: (val) =>
-                    val.isEmpty ? 'Friend email is required' : null,
-                onSaved: (String value) {
-                  newFriend.email = value;
-                },
-              ),
               FutureBuilder(
                   future: this._formattedPhoneNumber,
                   builder: (BuildContext context,
@@ -319,6 +306,10 @@ class FriendAddDialogState extends State<FriendAddDialog> {
                       // do save
                       newFriend.phone =
                           phoneNumber; // dont know why onsaved for phone textbox doesn't call before this
+                      // set default email if we found it from contact record
+                      newFriend.email = (widget.contact.emails.isEmpty
+                          ? null
+                          : widget.contact.emails.first.value);
                       if (_image == null) {
                         Navigator.of(context)
                             .pop({"newFriend": newFriend, "thumbnail": null});
