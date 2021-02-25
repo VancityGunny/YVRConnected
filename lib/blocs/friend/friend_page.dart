@@ -113,7 +113,7 @@ class _FriendPageState extends State<FriendPage> {
     FriendModel dupFriend = pageCommonBloc.allFriends.value.firstWhere(
         (f) =>
             f.phone == newFriend.phone ||
-            (newFriend.email.toString().isNotEmpty &&
+            (!["", null].contains(newFriend.email) &&
                 f.email == newFriend.email),
         orElse: () => null);
 
